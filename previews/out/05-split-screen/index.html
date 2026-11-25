@@ -55,9 +55,9 @@
   #R .people span { background:var(--g); }
   .sup { position:absolute; left:96px; right:96px; top:1610px; font:900 76px/0.98 'Inter'; letter-spacing:-.045em; opacity:0; }
   .same { position:absolute; left:0; right:0; top:1000px; text-align:center; font:900 120px/0.95 'Inter'; letter-spacing:-.05em; opacity:0; }
-  .diffc { position:absolute; left:120px; right:120px; padding:34px 40px; border-radius:26px; background:var(--glass); border:2px solid var(--line); opacity:0; }
-  .diffc b { font:800 58px 'Inter'; color:var(--g); } .diffc p { margin-top:14px; font:600 34px/1.3 'Inter'; color:var(--mist); }
-  .diffc .vs { margin-top:20px; display:flex; flex-direction:column; gap:10px; font:700 36px/1.2 'Inter'; }
+  .diffc { position:absolute; left:96px; right:96px; padding:34px 40px; border-radius:26px; background:var(--glass); border:2px solid var(--line); opacity:0; }
+  .diffc b { font:900 84px 'Inter'; letter-spacing:-.03em; color:var(--g); } .diffc p { margin-top:18px; font:600 42px/1.25 'Inter'; color:var(--mist); }
+  .diffc .vs { margin-top:34px; display:flex; flex-direction:column; gap:18px; font:800 50px/1.15 'Inter'; letter-spacing:-.02em; }
   .diffc .vs s { color:var(--grey); } .diffc .vs u { text-decoration:none; color:#fff; }
   #cta { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:0 110px; }
   #cta .h { font:900 112px/0.92 'Inter'; letter-spacing:-.05em; }
@@ -71,20 +71,20 @@
       
       <div id="splitw" class="clip" data-start="0" data-duration="27" data-track-index="1" data-layout-allow-overflow>
         <div id="split"><div class="half" id="L"><div class="bgc"></div><div class="hd">KEDAI A</div>
-      <div class="ad"><div class="img"><div class="cup"></div></div><div class="cap">Kopi susu. Sedap. RM12.</div><div class="px">RM12 · CONTOH</div><div class="btn">Beli</div></div>
+      <div class="ad"><div class="img"><div class="cup"></div></div><div class="cap">Kopi susu. Sedap. RM12.</div><div class="px">RM12</div><div class="btn">Beli</div></div>
       <div class="meter"><div class="lab">PELANGGAN · CONTOH</div><div class="bar"><i></i></div></div>
       <div class="people"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div><div class="half" id="R"><div class="bgc"></div><div class="hd">KEDAI B</div>
-      <div class="ad"><div class="img"><div class="cup"></div></div><div class="cap">Pagi kau sibuk? Kopi siap dalam 2 minit, tunggu di kaunter.</div><div class="px">RM12 · CONTOH</div><div class="btn">Tempah dulu</div></div>
+      <div class="ad"><div class="img"><div class="cup"></div></div><div class="cap">Pagi kau sibuk? Kopi siap dalam 2 minit, tunggu di kaunter.</div><div class="px">RM12</div><div class="btn">Tempah dulu</div></div>
       <div class="meter"><div class="lab">PELANGGAN · CONTOH</div><div class="bar"><i></i></div></div>
       <div class="people"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div></div>
         <div id="divider"></div>
       </div>
       <div class="same clip" id="same" data-start="1.0" data-duration="4.5" data-track-index="2">Produk <span class="gr">sama.</span><br>Harga <span class="gr">sama.</span></div>
       <div class="sup clip" id="u1" data-start="15" data-duration="11.5" data-track-index="3">Kenapa satu <span class="gr">laku?</span></div>
-      <div class="diffc clip" id="d1" data-start="27.4" data-duration="9.6" data-track-index="4" style="top:620px">
+      <div class="diffc clip" id="d1" data-start="27.4" data-duration="9.6" data-track-index="4" style="top:640px">
         <b>01 · OFFER</b><p>Apa pelanggan dapat, bukan apa kau jual.</p>
         <div class="vs"><s>"Kopi susu. RM12."</s><u>"Siap dalam 2 minit. Tempah dulu."</u></div></div>
-      <div class="diffc clip" id="d2" data-start="37.2" data-duration="9.6" data-track-index="4" style="top:620px">
+      <div class="diffc clip" id="d2" data-start="37.2" data-duration="9.6" data-track-index="4" style="top:640px">
         <b>02 · HOOK</b><p>Ayat pertama cakap masalah dia, bukan nama produk.</p>
         <div class="vs"><s>"Kopi susu sedap."</s><u>"Pagi kau sibuk?"</u></div></div>
       <div class="sup clip" id="u2" data-start="47" data-duration="5.5" data-track-index="3" style="top:1000px">Jangan tukar produk.<br><span class="gr">Tukar offer & hook.</span></div>
@@ -111,8 +111,7 @@
       tl.fromTo(".ad", {y:60, opacity:0}, {y:0, opacity:1, duration:.6, ease:"expo.out", stagger:.1}, 6.2);
       tl.fromTo("#L .bar i", {scaleX:0}, {scaleX:.22, duration:6, ease:"power2.out"}, 8.5);
       tl.fromTo("#R .bar i", {scaleX:0}, {scaleX:.86, duration:6, ease:"power2.out"}, 8.5);
-      tl.fromTo("#L .people span", {scale:0, opacity:0}, {scale:1, opacity:1, duration:.3, ease:"back.out(2)", stagger:{each:2.0, from:"start"}}, 8.8);
-      tl.set("#L .people span:nth-child(n+4)", {opacity:0, scale:0}, 14.9);
+      tl.fromTo("#L .people span:nth-child(-n+3)", {scale:0, opacity:0}, {scale:1, opacity:1, duration:.3, ease:"back.out(2)", stagger:2.0}, 8.8);
       tl.fromTo("#R .people span", {scale:0, opacity:0}, {scale:1, opacity:1, duration:.3, ease:"back.out(2)", stagger:.45}, 8.8);
       tl.to("#split", {scale:1.06, duration:12, ease:"sine.inOut"}, 14);
       tl.fromTo("#u1", {y:50, opacity:0}, {y:0, opacity:1, duration:.6, ease:"expo.out"}, 15.1);
