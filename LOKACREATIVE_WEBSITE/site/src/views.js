@@ -1,7 +1,7 @@
 'use strict';
 // Visual language follows the owner's Canva deck "Lokacreative Ventures" (see 01_BRAND_AND_BUSINESS/BRAND_SOURCES.md):
 // black #171717 / #292929, lime #D6FF3F, white; heavy uppercase headings; lime title bands with a "↗" label;
-// lime-outlined pills. No invented marks: LokaCreative has no logo file yet, so its wordmark is set in type as in the deck.
+// lime-outlined pills. Logos are the owner-supplied files in 07_ASSETS/logos/.
 
 // Every dynamic value goes through esc(). There is no raw-HTML path for database content.
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#96;' };
@@ -26,7 +26,8 @@ function field(c, key, { tag = 'span', cls = '', fallback = '' } = {}, draft = t
   return `<${tag} class="${cls}">${esc(value)}${mark}</${tag}>`;
 }
 
-const wordmark = () => '<span class="wordmark-text">LOKACREATIVE VENTURES</span>';
+// Owner-supplied logo (07_ASSETS/logos/lokacreative-ventures_logo_original.png), background removed for the dark site.
+const wordmark = () => '<img class="site-logo" src="/assets/brands/lokacreative-ventures.png" alt="LokaCreative Ventures" width="456" height="130">';
 
 // Deck-style section head: lime band, small "↗" label, heavy uppercase title, notch into the dark area below.
 function bandHead(label, title, extra = '') {
@@ -56,6 +57,7 @@ ${draft ? '<meta name="robots" content="noindex, nofollow">' : ''}
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;800;900&family=Open+Sans:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/brand-colors.css">
 </head>
 <body>
 <a class="skip" href="#main">Langkau ke kandungan</a>
@@ -112,7 +114,7 @@ function brandCard(b, draft) {
     ? (draft ? '<span class="tag tag-tbc">TBC</span> Fungsi jenama' : 'Akan diumumkan')
     : esc(b.role_line) + (draft && b.fact_status === 'proposal' ? ' <span class="tag tag-proposal">CADANGAN</span>' : '');
   const links = brandLinks(b);
-  return html`<li class="brand-card${b.status === 'active' ? ' is-active' : ''}">
+  return html`<li class="brand-card b-${esc(b.slug)}${b.status === 'active' ? ' is-active' : ''}">
     <a class="brand-mark-wrap" href="/brands/${esc(b.slug)}" aria-label="${esc(b.name)}">${brandMark(b)}</a>
     <div class="brand-meta">
       <span class="pill${b.status === 'active' ? ' pill-on' : ''}">${STATUS_LABEL[b.status] || ''}</span>
@@ -220,7 +222,7 @@ function brandPage({ b, draft }) {
   return html`<section class="page-head">${bandHead(STATUS_LABEL[b.status] || 'Jenama', esc(b.name))}</section>
   <section class="section"><div class="wrap dark-body split">
     <div>
-      <div class="brand-hero-mark">${brandMark(b, 'big')}</div>
+      <div class="brand-hero-mark b-${esc(b.slug)}">${brandMark(b, 'big')}</div>
       <p class="lede">${b.role_line && b.fact_status !== 'tbc' ? esc(b.role_line) : (draft ? '<span class="tag tag-tbc">TBC</span> Fungsi jenama' : '')}</p>
       <div class="prose">${desc}</div>
     </div>
@@ -298,8 +300,9 @@ function notFound() {
 
 function brandColorsCss(brands) {
   // accent values are validated as #RRGGBB on write; re-checked here before emitting CSS.
-  return brands.filter((b) => /^#[0-9A-Fa-f]{6}$/.test(b.accent) && /^[a-z0-9-]+$/.test(b.slug))
-    .map((b) => `.b-${b.slug}{--b:${b.accent}}`).join('\n');
+  const hex = (x) => /^#[0-9A-Fa-f]{6}$/.test(x || '');
+  return brands.filter((b) => hex(b.accent) && /^[a-z0-9-]+$/.test(b.slug))
+    .map((b) => `.b-${b.slug}{--b:${b.accent};--lbg:${hex(b.logo_bg) ? b.logo_bg : '#000000'}}`).join('\n');
 }
 
 module.exports = { esc, layout, home, brandsPage, brandPage, aboutPage, contactPage, newsPage, postPage, privacyPage, notFound, brandColorsCss, KINDS };

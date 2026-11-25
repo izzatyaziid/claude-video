@@ -3,10 +3,12 @@
 
 | Aset | Untuk | Status | Lokasi |
 |---|---|---|---|
-| Logo LokaCreative Ventures (SVG + PNG, terang/gelap) | Header, favicon, OG | ❌ TBC | — |
-| Logo LokaDigital | Kad jenama | 🟨 Render Canva 447px (perlu fail resolusi penuh) | [`site/public/assets/brands/lokadigital.png`](../site/public/assets/brands/lokadigital.png) |
-| Logo LokaFoodie | Kad jenama | 🟨 Render Canva 447px (perlu fail resolusi penuh) | [`site/public/assets/brands/lokafoodie.png`](../site/public/assets/brands/lokafoodie.png) |
-| Logo LokaDaily / LokaTalent / LokaCommerce / Loka Brands | Kad jenama | ❌ TBC | — |
+| Logo LokaCreative Ventures | Header, footer | ✅ PNG 500px dari pemilik (SVG: TBC) | [`logos/lokacreative-ventures_logo_original.png`](logos/lokacreative-ventures_logo_original.png) |
+| Logo LokaDigital ("LD") | Kad jenama | ✅ JPG 500px dari pemilik | [`logos/lokadigital_logo_original.jpg`](logos/lokadigital_logo_original.jpg) |
+| Logo LokaFoodie | Kad jenama | ✅ PNG 500px dari pemilik | [`logos/lokafoodie_logo_original.png`](logos/lokafoodie_logo_original.png) |
+| Logo LokaDaily | Kad jenama | ✅ PNG 500px dari pemilik | [`logos/lokadaily_logo_original.png`](logos/lokadaily_logo_original.png) |
+| Logo Lokatrication | Kad jenama | ✅ PNG 500px dari pemilik | [`logos/lokatrication_logo_original.png`](logos/lokatrication_logo_original.png) |
+| Logo LokaTalent / LokaCommerce / Loka Brands | Kad jenama | ❌ TBC | — |
 | Foto pasukan / kepimpinan | About | ❌ TBC (perlu izin) | — |
 | Foto pejabat / kerja | Home, About | ❌ TBC | — |
 | Imej Open Graph | Social preview | ❌ Akan dihasilkan selepas design direction | — |

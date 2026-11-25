@@ -19,7 +19,7 @@ module.exports = function publicRoutes(db, config) {
   }
 
   r.get('/brand-colors.css', (req, res) => {
-    res.type('text/css').set('Cache-Control', 'no-cache').send(v.brandColorsCss(db.prepare('SELECT slug, accent FROM brands').all()));
+    res.type('text/css').set('Cache-Control', 'no-cache').send(v.brandColorsCss(db.prepare('SELECT slug, accent, logo_bg FROM brands').all()));
   });
 
   r.get('/', (req, res) => {

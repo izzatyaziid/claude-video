@@ -22,6 +22,7 @@ Merancang website korporat **LokaCreative Ventures**, syarikat induk kepada **Lo
 **Fasa seterusnya (selepas approval):** 1) kunci strategi & sitemap → 2) design direction → 3) kandungan → 4) wireframe → 5) build (preview) → 6) review → 7) deploy.
 
 ## 🆕 Kemas kini terkini
+- **2026-11-25 (W07):** Semua logo diganti dengan fail yang dibekalkan pemilik (LokaCreative, LokaDigital, LokaFoodie, LokaDaily, **Lokatrication**). Hanya jenama yang ada logo dipaparkan; LokaTalent, LokaCommerce, Loka Brands disembunyikan buat masa ini. Fungsi LokaDaily & Lokatrication: TBC.
 - **2026-11-25 (W06):** **2FA wajib** untuk semua admin (TOTP + kod pemulihan). Website ditukar kepada **identiti brand sebenar** dari deck Canva (hitam/lime) dengan logo LokaDigital dan LokaFoodie; identiti rekaan dibuang. 51/51 ujian lulus. ⚠️ 4 percanggahan perlu keputusan: [`BRAND_SOURCES.md`](../01_BRAND_AND_BUSINESS/BRAND_SOURCES.md).
 - **2026-11-25 (W05):** Atas permintaan pemilik: audit rujukan bestfood.my, draf website dan admin dashboard (backend + frontend) dibina dalam [`site/`](../site/README.md) dengan semakan keselamatan. Semua fakta belum disahkan kekal TBC. Belum deploy.
 - **2026-11-25:** Projek dimulakan. Struktur dokumentasi 00–07 dicipta dengan maklumat sedia ada dan TBC untuk semua yang belum disahkan.

@@ -96,19 +96,22 @@ CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_log(created_at);
 // Only facts with a source (see 01_BRAND_AND_BUSINESS/BRAND_SOURCES.md). Everything else is TBC.
 // Colour: only LokaDigital has a documented brand colour; others stay neutral until supplied.
 const NEUTRAL = '#8A8A8A';
+// Logos: files supplied by the owner on 2026-11-25 (07_ASSETS/logos/). logo_bg = the logo file's own background colour.
+// Owner asked to show only brands that have a logo for now; the others stay in the dashboard as hidden.
 const SEED_BRANDS = [
   { code: 'LCV-01', slug: 'lokadigital', name: 'LokaDigital', role_line: 'Agensi digital marketing high-end',
     description: 'Strategi content dan ads berasaskan insight audience dan data.', fact_status: 'confirmed', status: 'active',
-    accent: '#602AC8', logo: '/assets/brands/lokadigital.png',
+    accent: '#602AC8', logo: '/assets/brands/lokadigital.png', logo_bg: '#000000',
     instagram_url: 'https://www.instagram.com/lokadigitalmy', facebook_url: 'https://www.facebook.com/lokadigitalmy' },
   { code: 'LCV-02', slug: 'lokafoodie', name: 'LokaFoodie', role_line: 'Food review, kempen dan advertising',
     description: 'Media food review untuk audience niche: foodie, lifestyle dan travel. Berpangkalan di Kuala Lumpur.',
-    fact_status: 'confirmed', status: 'active', accent: NEUTRAL, logo: '/assets/brands/lokafoodie.png',
+    fact_status: 'confirmed', status: 'active', accent: NEUTRAL, logo: '/assets/brands/lokafoodie.png', logo_bg: '#000000',
     instagram_url: 'https://www.instagram.com/lokafoodie' },
-  { code: 'LCV-03', slug: 'lokadaily', name: 'LokaDaily', accent: NEUTRAL },
-  { code: 'LCV-04', slug: 'lokatalent', name: 'LokaTalent', accent: NEUTRAL },
-  { code: 'LCV-05', slug: 'lokacommerce', name: 'LokaCommerce', accent: NEUTRAL },
-  { code: 'LCV-06', slug: 'loka-brands', name: 'Loka Brands', accent: NEUTRAL },
+  { code: 'LCV-03', slug: 'lokadaily', name: 'LokaDaily', accent: '#055D24', logo: '/assets/brands/lokadaily.png', logo_bg: '#055D24' },
+  { code: 'LCV-04', slug: 'lokatalent', name: 'LokaTalent', accent: NEUTRAL, status: 'hidden' },
+  { code: 'LCV-05', slug: 'lokacommerce', name: 'LokaCommerce', accent: NEUTRAL, status: 'hidden' },
+  { code: 'LCV-06', slug: 'loka-brands', name: 'Loka Brands', accent: NEUTRAL, status: 'hidden' },
+  { code: 'LCV-07', slug: 'lokatrication', name: 'Lokatrication', accent: '#005D92', logo: '/assets/brands/lokatrication.png', logo_bg: '#005D92' },
 ];
 
 // [key, label, group, value, status, max_len]
@@ -153,16 +156,17 @@ function migrate(db) {
   add('admins', 'totp_last_step', 'INTEGER NOT NULL DEFAULT 0');
   add('admins', 'recovery_hashes', "TEXT NOT NULL DEFAULT '[]'");
   add('brands', 'logo', "TEXT NOT NULL DEFAULT ''");
+  add('brands', 'logo_bg', "TEXT NOT NULL DEFAULT '#000000'");
 }
 
 function seed(db) {
   const now = Date.now();
   const hasBrands = db.prepare('SELECT COUNT(*) AS n FROM brands').get().n > 0;
   if (!hasBrands) {
-    const ins = db.prepare(`INSERT INTO brands (code, slug, name, role_line, description, fact_status, status, accent, sort_order, instagram_url, facebook_url, logo, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    const ins = db.prepare(`INSERT INTO brands (code, slug, name, role_line, description, fact_status, status, accent, sort_order, instagram_url, facebook_url, logo, logo_bg, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
     SEED_BRANDS.forEach((b, i) => ins.run(b.code, b.slug, b.name, b.role_line || '', b.description || '',
-      b.fact_status || 'tbc', b.status || 'coming_soon', b.accent, i + 1, b.instagram_url || '', b.facebook_url || '', b.logo || '', now));
+      b.fact_status || 'tbc', b.status || 'coming_soon', b.accent, i + 1, b.instagram_url || '', b.facebook_url || '', b.logo || '', b.logo_bg || '#000000', now));
   }
   const insC = db.prepare(`INSERT OR IGNORE INTO content (key, label, grp, value, status, max_len, sort_order, updated_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);

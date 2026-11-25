@@ -23,7 +23,21 @@ Canva: tiada Brand Kit. Google Drive: tiada fail "loka"/"logo".
 | Font body | **TBC**. Web guna **Open Sans** sebagai padanan terdekat | Perlu pengesahan |
 | Logo LokaCreative | **Tiada fail.** Deck hanya guna teks "LOKACREATIVE VENTURES" huruf besar lime, jadi website ikut cara itu | Bekalkan logo jika ada |
 
-## Logo jenama dalam website
+## Logo jenama dalam website (W07, fail dibekalkan pemilik 2026-11-25)
+Logo Canva lama (segitiga LokaDigital, LokaFoodie "kilat") **diganti** atas arahan pemilik. Fail asal disimpan dalam [`07_ASSETS/logos/`](../07_ASSETS/logos/); versi web (latar dibuang, dipotong) dalam `site/public/assets/brands/`.
+
+| Jenama | Fail asal | Latar logo (sampel) | Dipaparkan |
+|---|---|---|---|
+| LokaCreative Ventures | `lokacreative-ventures_logo_original.png` | `#000000` | Header & footer |
+| LokaDigital | `lokadigital_logo_original.jpg` (simbol "LD" bulat) | `#000000` | ✅ |
+| LokaFoodie | `lokafoodie_logo_original.png` ("MALAYSIA") | `#000000` | ✅ |
+| LokaDaily | `lokadaily_logo_original.png` | `#055D24` hijau | ✅ |
+| **Lokatrication** (jenama baru, tiada dalam senarai W01) | `lokatrication_logo_original.png` ("MALAYSIA") | `#005D92` biru | ✅ |
+| LokaTalent, LokaCommerce, Loka Brands | Tiada logo | — | **Disembunyikan** (boleh diaktifkan semula di dashboard) |
+
+Nota: logo LokaDigital baru ("LD" bulat) berbeza daripada wordmark + Signal Line dalam `LOKADIGITAL/01_BRAND_GUIDELINES`. Guideline video LokaDigital belum dikemas kini.
+
+## Logo jenama (rekod lama, W06, diganti)
 | Jenama | Status | Fail |
 |---|---|---|
 | LokaDigital | ✅ Logo rasmi (render Canva 447px, latar hitam dibuang) | `site/public/assets/brands/lokadigital.png` |
