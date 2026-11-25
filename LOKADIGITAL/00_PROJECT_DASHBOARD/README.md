@@ -15,13 +15,14 @@ Menghasilkan siri video content LokaDigital yang **premium, sinematik dan berasa
 **Workflow:** Reference Analysis → Concept → On-screen Text Script → Storyboard → ✋ **Approval** → Production → Final Review
 
 ## 🆕 Kemas kini terkini
+- **2026-11-25:** Style frames **v2** (diperbetulkan) siap untuk final approval. v1 diarkib.
 - **2026-11-25:** EP02 storyboard v5 diluluskan; Scene 06 → *Cari yang beli*. **3 style frames siap** untuk semakan ([lihat](../06_VIDEO_PROJECTS/EP02/ASSETS/STYLE_FRAMES/README.md)).
 - **2026-11-25:** Sistem dokumentasi `LOKADIGITAL/` diwujudkan. Dokumen lama (`docs/`, `ep01/docs/`, `ep02/docs/`) dipindahkan ke sini.
 - **2026-11-25:** EP02 storyboard final v4 (67 s) dengan ujian "Faham tanpa suara" untuk setiap scene.
 - **2026-11-25:** Keputusan muktamad D10–D15: tiada claim AI, contoh F&B, CTA DM LOKADIGITAL, EP03 brief, tiada VO, jangan tanya semula.
 
 ## ✋ Keputusan diperlukan daripada kau
-1. **Approval 3 style frames EP02** ([`STYLE_FRAMES`](../06_VIDEO_PROJECTS/EP02/ASSETS/STYLE_FRAMES/README.md)). Ini satu-satunya halangan untuk beat map dan animatic.
+1. **Final approval 3 style frames EP02 (v2)** ([`STYLE_FRAMES`](../06_VIDEO_PROJECTS/EP02/ASSETS/STYLE_FRAMES/README.md)). Ini satu-satunya halangan untuk beat map dan animatic.
 2. **Fail logo rasmi LokaDigital** (SVG/PNG) dan peraturan penggunaan. Sehingga dibekalkan, video guna wordmark tipografi seperti EP01.
 3. **Muzik:** dijana secara prosedur seperti EP01 (default), atau guna muzik berlesen? *Tidak menghalang. Jika tiada jawapan, default digunakan.*
 

@@ -1,15 +1,22 @@
 # EP02 · Style Frames (look development)
 
-> **Status:** 🟡 **Menunggu approval kau.** Beat map dan animatic tidak dimulakan sebelum style frames diluluskan.
+> **Status:** 🟡 **v2 (diperbetulkan) menunggu final approval kau.** Beat map dan animatic tidak dimulakan sebelum style frames diluluskan.
 > Ini imej pegun (stills) sahaja, bukan video atau production. Dirender dengan kod yang sama seperti pipeline EP01 (HTML/Canvas → Playwright).
 
-![Board](EP02_STYLE_FRAMES_BOARD.jpg)
+![Board v2](v2/EP02_STYLE_FRAMES_BOARD_v2.jpg)
 
-| Frame | Momen dalam video | Fail (2160×3840) | 1080×1920 | Dengan nota gerak |
+## Versi semasa: v2
+| Frame | Momen dalam video | Penuh 2160×3840 | 1080×1920 | Dengan nota gerak |
 |---|---|---|---|---|
-| **SF1 · HOOK "SIAPA."** | Scene 01 ≈ 6.2 s | [`EP02_SF1_HOOK_SIAPA.jpg`](EP02_SF1_HOOK_SIAPA.jpg) | [1080](EP02_SF1_HOOK_SIAPA_1080.jpg) | [annotated](EP02_SF1_HOOK_SIAPA_annotated.jpg) |
-| **SF2 · CAKAP "masalah dia."** | Scene 04 ≈ 34.5 s | [`EP02_SF2_CAKAP_MASALAH_DIA.jpg`](EP02_SF2_CAKAP_MASALAH_DIA.jpg) | [1080](EP02_SF2_CAKAP_MASALAH_DIA_1080.jpg) | [annotated](EP02_SF2_CAKAP_MASALAH_DIA_annotated.jpg) |
-| **SF3 · SAMBUNG "yang betul."** | Scene 05 ≈ 47.5 s | [`EP02_SF3_SAMBUNG_YANG_BETUL.jpg`](EP02_SF3_SAMBUNG_YANG_BETUL.jpg) | [1080](EP02_SF3_SAMBUNG_YANG_BETUL_1080.jpg) | [annotated](EP02_SF3_SAMBUNG_YANG_BETUL_annotated.jpg) |
+| **SF1 · HOOK "SIAPA."** | Scene 01 ≈ 6.2 s | [`EP02_SF1_HOOK_SIAPA_v2.jpg`](v2/EP02_SF1_HOOK_SIAPA_v2.jpg) | [1080](v2/EP02_SF1_HOOK_SIAPA_v2_1080.jpg) | [annotated](v2/EP02_SF1_HOOK_SIAPA_v2_annotated.jpg) |
+| **SF2 · CAKAP "masalah dia."** | Scene 04 ≈ 34.5 s | [`EP02_SF2_CAKAP_MASALAH_DIA_v2.jpg`](v2/EP02_SF2_CAKAP_MASALAH_DIA_v2.jpg) | [1080](v2/EP02_SF2_CAKAP_MASALAH_DIA_v2_1080.jpg) | [annotated](v2/EP02_SF2_CAKAP_MASALAH_DIA_v2_annotated.jpg) |
+| **SF3 · SAMBUNG "yang betul."** | Scene 05 ≈ 47.5 s | [`EP02_SF3_SAMBUNG_YANG_BETUL_v2.jpg`](v2/EP02_SF3_SAMBUNG_YANG_BETUL_v2.jpg) | [1080](v2/EP02_SF3_SAMBUNG_YANG_BETUL_v2_1080.jpg) | [annotated](v2/EP02_SF3_SAMBUNG_YANG_BETUL_v2_annotated.jpg) |
+
+## Sejarah versi
+| Versi | Tarikh | Perubahan | Status | Fail |
+|---|---|---|---|---|
+| v1 | 2026-11-25 | Style frames pertama (commit `5f7caa1`) | Disemak: approve dengan pembetulan | [`v1/`](v1/) |
+| **v2** | 2026-11-25 | **SF1:** jalur kabus diganti dengan 5 lapisan kedalaman manusia yang jarang, jadi individu di belakang siluet utama boleh dibaca. Kamera sedikit di atas paras kepala supaya lapisan tersebar menegak. Signal Line dipendekkan (≈110 px) dan diturunkan ke paras kepala siluet, jadi tidak lagi selari dengan underline SIAPA. **SF2:** serpihan "KAMI TER…" dibuang (iklan lama sudah hilang pada 28.9 s). **SF3:** kepadatan dan kecerahan siluet kuning di tengah dan bawah ditingkatkan, dan warna "kuning-putih" dikurangkan; latar kekal gelap untuk kontras. Typography, font, palet, komposisi dan focal point tidak diubah | 🟡 Menunggu final approval | [`v2/`](v2/) |
 
 ## Tujuan setiap frame
 - **SF1: lautan beku, satu manusia.** Mengunci rupa hook: orang ramai kelabu yang beku, satu siluet manusia yang terbentuk daripada titik cahaya (K1), titik kuning yang mula memanjang jadi Signal Line, dan typography paling besar dalam video (**SIAPA.**) dengan underline yang sedang dilukis.
@@ -29,4 +36,4 @@
 ```bash
 node LOKADIGITAL/06_VIDEO_PROJECTS/EP02/ASSETS/STYLE_FRAMES/src/render_styleframes.js <outDir>
 ```
-PNG 2160×3840 (±15 MB setiap satu) tidak disimpan dalam Git (`.gitignore`); JPG di folder ini ialah versi semakan. Font: Inter Display (sistem) dan JetBrains Mono (SIL OFL, `src/fonts/`).
+PNG 2160×3840 (±15 MB setiap satu) tidak disimpan dalam Git (`.gitignore`); JPG dalam `v1/` dan `v2/` ialah versi semakan. Kod sumber semasa menghasilkan v2; v1 boleh dijana semula dari commit `5f7caa1`. Font: Inter Display (sistem) dan JetBrains Mono (SIL OFL, `src/fonts/`).

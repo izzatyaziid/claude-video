@@ -170,26 +170,28 @@ function SF1(annot){
   atmosphere(ctx,{seed:11, fog:0.35, lights:[[W*0.5,H*0.6,900,C.p2,0.55],[W*0.78,H*0.22,700,C.p1,0.22],[W*0.2,H*0.95,600,C.p2,0.4]]});
   const [gl,g] = layer(); const [pl,p] = layer();
   const r=rng(101); const lib=[0,1,2,3,4,5].map(i=>samplePerson(rng(500+i), 900));
-  const hor=H*0.62, F=1500, zf=4.0, people=[];
-  for (let i=0;i<1500;i++){ const z=(r()<0.012?1.7:5.5)+Math.pow(r(),0.85)*62; const X=(r()*2-1)*0.5*z; people.push({z,X,k:Math.floor(r()*6)}); }
+  // v2: discrete depth layers, sparse jittered spacing -> individuals stay readable (no fog band)
+  const hor=1000, F=1500, camH=2.0, zf=4.5, people=[];
+  const LAYERS=[[6,9,9],[10,16,18],[18,30,30],[34,55,44],[60,95,60]];
+  for (const [z0,z1,n] of LAYERS) for (let i=0;i<n;i++){ const z=z0+r()*(z1-z0); const u=(i+0.5+(r()-0.5)*0.8)/n; people.push({z,X:(-0.44+0.88*u)*z,k:Math.floor(r()*6)}); }
+  people.push({z:2.3,X:-0.62,k:1},{z:2.6,X:0.66,k:4});            // two out-of-focus foreground figures at the edges
   people.sort((a,b)=>b.z-a.z);
   for (const q of people){
-    const s=F/q.z, cx=W/2+q.X*F/q.z+80, gy=hor+1.05*s;
+    const s=F/q.z, cx=W/2+q.X*F/q.z, gy=hor+camH*s;
     if (cx<-s||cx>W+s) continue;
-    if (Math.abs(q.z-zf)<0.35 && Math.abs(cx-W*0.33)<120) continue;
-    const blur=Math.min(60,Math.abs(1/q.z-1/zf)*(q.z<zf?140:55)), near=q.z<zf;
-    drawPerson(p,cx,gy,s,{pts:lib[q.k],density:near?2.2:2.8,r:Math.max(0.7,s*0.0055),col:mix(C.grey,C.lav,0.35),alpha:near?0.14:Math.max(0.07,0.42-q.z*0.0055),blur});
+    const near=q.z<zf, blur=near?Math.min(40,(1/q.z-1/zf)*140):Math.min(10,(1/zf-1/q.z)*45);
+    drawPerson(p,cx,gy,s,{pts:lib[q.k],density:3,r:Math.max(0.8,s*0.005),col:mix(C.grey,C.lav,0.4),alpha:near?0.2:Math.max(0.12,0.7-q.z*0.0065),blur});
   }
   // the resolved person: dots converging into a crisp silhouette (motion cue: inward streaks)
-  const hero=samplePerson(rng(77),1600), hx=W*0.3, hgy=hor+1.05*(F/zf), hs=F/zf;
+  const hero=samplePerson(rng(77),1600), hx=W*0.32, hgy=hor+camH*(F/zf), hs=F/zf;
   drawPerson(p,hx,hgy,hs,{pts:hero,density:8,r:1.6,col:'#EEE9FF',alpha:1,blur:0,
     scatter:(pt,i)=>{ const rr=rng(i*7+3)(); if (rr<0.82) return [0,0,1]; const d=(rr-0.82)*900; const a=Math.atan2(pt[1]+0.1,pt[0]); return [Math.cos(a)*d*0.6,Math.sin(a)*d*0.6,0.6]; }});
   p.save(); p.globalCompositeOperation='lighter'; const hg=p.createRadialGradient(hx,hgy-hs*0.75,0,hx,hgy-hs*0.75,hs*0.9); hg.addColorStop(0,hexA(C.lav,0.3)); hg.addColorStop(1,hexA(C.lav,0)); p.fillStyle=hg; p.fillRect(0,0,W,H); p.restore();
   ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.globalCompositeOperation='lighter'; ctx.drawImage(pl,0,0); ctx.restore();
   // Signal: yellow point beginning to stretch into a line (anamorphic)
-  const sy=1060, sx=W*0.68;
-  signalLine(g,[[sx-250,sy+2],[sx-90,sy],[sx,sy-1]],{w:2.6,flare:1.25,taper:true});
-  g.fillStyle=hexA(C.y,0.9); g.beginPath(); g.arc(sx,sy-1,5,0,7); g.fill();
+  const sy=1250, sx=W*0.66;
+  signalLine(g,[[sx-110,sy+1],[sx-40,sy],[sx,sy]],{w:2.2,flare:0.5,taper:true});
+  g.fillStyle=hexA(C.y,0.9); g.beginPath(); g.arc(sx,sy,4,0,7); g.fill();
   // typography: previous line exiting (masked-rise out), main word in
   txt(ctx,'Masalahnya bukan berapa ramai.',96,470,{font:'700 54px "Inter Display"',ls:'-1.5px',col:C.white,alpha:0.18,blur:5});
   const w=txt(ctx,'SIAPA.',90,760,{font:'800 250px "Inter Display"',ls:'-10px',col:C.y});
@@ -200,8 +202,8 @@ function SF1(annot){
   if (annot){
     note(ctx,560,330,['TYPOGRAPHY · SUARA SIGNAL','"SIAPA." naik dari garis dasar','(masked rise 6 frame, expo-out).','Ayat sebelum keluar ke atas + kabur'],420,640);
     note(ctx,560,860,['UNDERLINE','dilukis kiri → kanan 0.30 s,','hujung bercahaya = signal ping'],760,808);
-    note(ctx,40,1290,['ZARAH MANUSIA · K1','titik berkumpul jadi satu siluet','(2.7–3.4 s), kemudian lebur','semula jadi satu titik'],hx,hgy-hs*0.7);
-    note(ctx,600,1250,['SIGNAL LINE','titik kuning memanjang jadi garis;','kamera berpusing 90° mengikutnya','(transition ke Scene 02)'],sx,sy);
+    note(ctx,40,960,['ZARAH MANUSIA · K1','titik berkumpul jadi satu siluet','(2.7–3.4 s), kemudian lebur','semula jadi satu titik'],hx,hgy-hs*0.7);
+    note(ctx,600,1330,['SIGNAL LINE','titik kuning memanjang jadi garis;','kamera berpusing 90° mengikutnya','(transition ke Scene 02)'],sx,sy);
     note(ctx,560,1700,['KAMERA','dolly-in perlahan menembus orang','ramai yang beku (expo-in), rack','focus pada siluet. Orang ramai kelabu'],null,null);
   }
 }
@@ -221,11 +223,6 @@ function SF2(annot){
     drawPerson(p,cx,gy,s,{pts:lib[i%6],density:2.4,r:Math.max(0.7,s*0.005),col:mix(C.grey,C.lav,0.25),alpha:z<7?0.1:Math.max(0.06,0.34-z*0.0055),blur,streak: z<14?[ -dir*s*0.05, 0]:null});
   }
   ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.globalCompositeOperation='lighter'; ctx.drawImage(pl,0,0); ctx.restore();
-  // old self-centred ad dissolving into particles (struck, drifting left/up)
-  const tc=document.createElement('canvas'); tc.width=900; tc.height=200; const tx=tc.getContext('2d'); tx.font='800 64px "Inter Display"'; tx.fillStyle='#fff'; tx.fillText('KAMI YANG',10,80); tx.fillText('TERBAIK!',10,160);
-  const td=tx.getImageData(0,0,900,200).data; const rr=rng(31);
-  for (let y=0;y<200;y+=3) for (let x=0;x<900;x+=3){ if (td[(y*900+x)*4+3]<128) continue; const prog=Math.max(0,(x-120)/520); const dx=-prog*prog*260*(0.6+rr()), dy=-prog*140*(rr()-0.2);
-    if (rr()<prog*0.55) continue; dot(ctx,96+x*0.6+dx,660+y*0.6+dy,0.9,mix(C.grey,C.lav,0.4),0.5*(1-prog*0.6),prog>0.3?1.6:0); }
   // the ad card (glass, slight perspective)
   ctx.save(); ctx.translate(96,820); ctx.transform(1,-0.045,0,1,0,0);
   const cw=800, ch=330;
@@ -264,7 +261,6 @@ function SF2(annot){
   bloom(ctx,gl,0.5,0.65);
   finish(ctx,9002);
   if (annot){
-    note(ctx,560,620,['IKLAN LAMA · SUARA NOISE','"KAMI YANG TERBAIK!" dipotong','Signal Line → huruf pecah jadi','zarah yang hanyut ke kiri'],170,700);
     note(ctx,560,1160,['TYPEWRITER · SYSTEM → SIGNAL','2 baris ditaip, cursor kuning,','hold ≥ 2.6 s selepas lengkap'],760,1040);
     note(ctx,40,1250,['PANCARAN','gelombang lavender yang luas jadi','pancaran kuning SEMPIT ke kelompok'],770,1300);
     note(ctx,40,1420,['ZARAH MANUSIA','kelompok F&B berpaling ke arah','mesej (condong + sisi bercahaya).','Orang ramai kelabu hanyut menjauh'],600,1640);
@@ -282,7 +278,7 @@ function SF3(annot){
   const r=rng(303); const lib=[0,1,2,3,4,5].map(i=>samplePerson(rng(700+i),900));
   // high oblique view over a city-like grid of people
   const hor=H*0.30, F=1150, camH=7.5, people=[];
-  for (let i=0;i<5200;i++){
+  for (let i=0;i<7200;i++){
     let Xw=(r()*2-1)*60, Zw=3+Math.pow(r(),1.25)*110;
     if (r()<0.7){ if (r()<0.5) Xw=Math.round(Xw/6)*6+(r()-0.5)*1.2; else Zw=Math.round(Zw/7)*7+(r()-0.5)*1.4; }   // streets
     people.push([Xw,Zw,Math.floor(r()*6),r()]);
@@ -290,9 +286,9 @@ function SF3(annot){
   people.sort((a,b)=>b[1]-a[1]);
   for (const q of people){ const z=q[1], s=F/z*0.9, cx=W/2+q[0]*F/z, gy=hor+camH*F/z;
     if (cx<-60||cx>W+60||gy>H+200) continue;
-    const yellow = q[3] < 0.95; const blur = z<6 ? Math.min(26,(6-z)*8) : 0;
-    const col = yellow ? (q[3]<0.25?'#FFFFF0':C.y) : C.lav;
-    if (s>28) drawPerson(yellow?g:p,cx,gy,s,{pts:lib[q[2]],density:3,r:Math.max(0.8,s*0.005),col,alpha:yellow?0.7:0.25,blur});
+    const yellow = q[3] < 0.96; const blur = z<6 ? Math.min(26,(6-z)*8) : 0;
+    const col = yellow ? (q[3]<0.08?'#FFFFF0':C.y) : C.lav;
+    if (s>28) drawPerson(yellow?g:p,cx,gy,s,{pts:lib[q[2]],density:yellow?6:3,r:Math.max(0.9,s*0.0058),col,alpha:yellow?0.85:0.25,blur:blur*0.6});
     else { const tl=yellow?g:p; dot(tl,cx,gy-s*0.7,Math.max(0.7,s*0.065),col,yellow?Math.min(1,0.5+s*0.03):0.25,0); }
   }
   ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.globalCompositeOperation='lighter'; ctx.drawImage(pl,0,0); ctx.restore();
@@ -305,8 +301,8 @@ function SF3(annot){
   [[W*0.17,1250],[W*0.84,1330]].forEach(([x,y])=>{ ctx.strokeStyle=hexA(C.lav,0.5); ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(x-9,y-9); ctx.lineTo(x+9,y+9); ctx.moveTo(x+9,y-9); ctx.lineTo(x-9,y+9); ctx.stroke(); });
   signalLine(g,path,{w:4.2,flare:1.1,sparks:9});
   // foreground: a few large yellow silhouettes out of focus (depth)
-  drawPerson(g,W*0.12,H+60,560,{pts:lib[2],density:2.6,r:1.6,col:C.y,alpha:0.32,blur:14});
-  drawPerson(g,W*0.93,H+30,470,{pts:lib[4],density:2.6,r:1.6,col:C.y,alpha:0.28,blur:12});
+  drawPerson(g,W*0.12,H+60,560,{pts:lib[2],density:4,r:1.8,col:C.y,alpha:0.5,blur:12});
+  drawPerson(g,W*0.93,H+30,470,{pts:lib[4],density:4,r:1.8,col:C.y,alpha:0.45,blur:10});
   // HUD + headline
   rail(ctx,g,2);
   txt(ctx,'Lebih ramai',96,440,{font:'700 104px "Inter Display"',ls:'-3.5px',col:C.white});
