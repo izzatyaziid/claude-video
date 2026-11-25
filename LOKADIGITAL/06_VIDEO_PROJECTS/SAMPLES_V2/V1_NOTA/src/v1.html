@@ -130,7 +130,7 @@ window.renderFrame = (t, f) => {
     marker(x, 'untuk akak? :)', -170, 132, 50, T.write + 2.8, t, INK, 500);
     x.restore(); }
   // ---- index cards (the method) pinned around the note
-  if (t > T.cards) { const pos = [[300, 520, -.06], [700, 1500, .05], [330, 1640, -.03]];
+  if (t > T.cards) { const pos = [[300, 560, -.06], [720, 1450, .05], [330, 1700, -.03]];
     CARDS.forEach((c, i) => { const u = P(SM(t), T.cards + i * .55, T.cards + i * .55 + .35); if (u <= 0) return; const [cx, cy, r] = pos[i];
       x.save(); x.translate(cx, cy + (1 - back(u, 1.4)) * -60); x.rotate(r + (1 - eo(u)) * .2); x.globalAlpha = Math.min(1, u * 3); x.shadowColor = 'rgba(20,14,10,0.25)'; x.shadowBlur = 14; x.shadowOffsetY = 10; x.drawImage(c, -280, -100); x.shadowColor = 'transparent';
       x.fillStyle = '#B0302E'; x.beginPath(); x.arc(0, -82, 13, 0, 7); x.fill(); x.fillStyle = 'rgba(255,255,255,0.5)'; x.beginPath(); x.arc(-4, -86, 4, 0, 7); x.fill(); x.restore();
@@ -151,7 +151,7 @@ window.renderFrame = (t, f) => {
   const kA = P(t, T.cards + 1.6, T.cards + 2) * (1 - P(t, T.cta - .3, T.cta)); plate(kA * .7);
   if (kA > 0) { x.save(); x.globalAlpha = kA; x.font = '500 24px DMMono'; x.letterSpacing = '6px'; x.fillStyle = PURPLE; x.fillText('CARA KAMI MENULIS', 96, 230); x.restore(); }
   // ---- CTA: everything else fades, serif line + rubber stamp
-  const cA = eo(P(t, T.cta, T.cta + .6)); if (cA > 0) { x.fillStyle = `rgba(239,233,223,${cA * .82})`; x.fillRect(0, 0, W, H);
+  const cA = eo(P(t, T.cta, T.cta + .6)); if (cA > 0) { x.fillStyle = `rgba(239,233,223,${cA * .93})`; x.fillRect(0, 0, W, H);
     serif(x, 'Kami tulis nota itu', 96, 640, 86, { p: P(t, T.cta + .1, T.cta + .45), w: 400, italic: true });
     serif(x, 'untuk bisnes anda.', 96, 750, 86, { p: P(t, T.cta + .35, T.cta + .7) });
     const su = P(t, T.stamp, T.stamp + .14); if (su > 0) { const sc = lerp(1.6, 1, eo(su)); x.save(); x.translate(540, 1080); x.rotate(-.07); x.scale(sc, sc); x.globalAlpha = Math.min(1, su * 2);
@@ -159,7 +159,7 @@ window.renderFrame = (t, f) => {
       x.font = '58px ArchivoBlack'; x.textAlign = 'center'; x.fillStyle = PURPLE; x.fillText('DM LOKADIGITAL', 0, 22);
       x.font = '500 20px DMMono'; x.letterSpacing = '5px'; x.fillText('CONTENT & ADS STRATEGY', 0, 72);
       x.globalCompositeOperation = 'destination-out'; for (let k = 0; k < 900; k++) { x.globalAlpha = r() * .7; x.fillRect((r() - .5) * 760, (r() - .5) * 240, 2 + r() * 4, 1 + r() * 3); } x.restore(); }
-    const nA = P(t, T.stamp + .5, T.stamp + 1); if (nA > 0) { x.save(); x.globalAlpha = nA; x.translate(780, 1430); x.rotate(.05); x.scale(.55, .55); x.shadowColor = 'rgba(20,14,10,0.25)'; x.shadowBlur = 12; x.shadowOffsetY = 8; x.drawImage(NOTE, -210, -210); x.shadowColor = 'transparent';
+    const nA = P(t, T.stamp + .5, T.stamp + 1); if (nA > 0) { x.save(); x.globalAlpha = nA; x.translate(760, 1480); x.rotate(.05); x.scale(.7, .7); x.shadowColor = 'rgba(20,14,10,0.25)'; x.shadowBlur = 12; x.shadowOffsetY = 8; x.drawImage(NOTE, -210, -210); x.shadowColor = 'transparent';
       x.font = '700 70px Caveat'; x.fillStyle = INK; x.fillText('Untuk anda.', -170, 20); x.restore(); } }
   // ---- finish: warm vignette + paper grain
   x.setTransform(1, 0, 0, 1, 0, 0); const v = x.createRadialGradient(W / 2, H / 2, H * .3, W / 2, H / 2, H * .8); v.addColorStop(0, 'rgba(60,40,20,0)'); v.addColorStop(1, 'rgba(60,40,20,0.28)'); x.fillStyle = v; x.fillRect(0, 0, W, H);
