@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>LokaDigital Preview 07 · Infinite Zoom</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+  :root { --ink:#07040C; --p1:#46096B; --p2:#240538; --mag:#B800F0; --g:#B4FF39; --mist:#D9D0F0; --grey:#8C83A6;
+          --line:rgba(255,255,255,.14); --glass:rgba(255,255,255,.045); }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:1080px; height:1920px; overflow:hidden; background:var(--ink); }
+  #root { position:relative; width:1080px; height:1920px; overflow:hidden; background:var(--ink); font-family:'Inter',sans-serif; color:#fff; }
+  .bgfill { position:absolute; inset:0; background:radial-gradient(120% 45% at 100% 0%, #46096B 0%, transparent 62%), radial-gradient(90% 35% at 0% 100%, #240538 0%, transparent 70%), var(--ink); }
+  .grain { position:absolute; inset:0; opacity:.06; pointer-events:none; mix-blend-mode:overlay;
+           background-image:repeating-radial-gradient(circle at 17% 32%, #fff 0 1px, transparent 1px 3px), repeating-radial-gradient(circle at 71% 63%, #fff 0 1px, transparent 1px 4px); }
+  .vig { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(0,0,0,.72) 100%); }
+  .logo { position:absolute; left:96px; top:262px; width:120px; height:120px; mix-blend-mode:screen; }
+  .pill { position:absolute; right:120px; top:296px; font:600 28px 'Inter'; letter-spacing:.22em; color:var(--g); border:2px solid var(--g); padding:12px 24px; border-radius:99px; }
+  .lab { font:700 28px 'Inter'; letter-spacing:.28em; color:var(--mist); text-transform:uppercase; }
+  .h { font:800 96px/0.98 'Inter'; letter-spacing:-.04em; }
+  .gr { color:var(--g); }
+  .glass { background:var(--glass); border:2px solid var(--line); border-radius:28px; box-shadow:0 40px 110px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08); }
+  .ctablock { background:var(--g); color:var(--ink); border-radius:26px; padding:34px 40px; display:flex; justify-content:space-between; align-items:center; }
+  .ctablock label { display:block; font:800 26px 'Inter'; letter-spacing:.24em; }
+  .ctablock small { display:block; margin-top:8px; font:600 26px 'Inter'; opacity:.75; }
+  .ctablock b { font:900 50px 'Inter'; letter-spacing:-.03em; white-space:nowrap; }
+
+  #zoomw { position:absolute; inset:0; overflow:hidden; }
+  #zoom { position:absolute; left:0; top:0; width:1080px; height:1920px; }
+  .lay { position:absolute; left:0; top:0; width:1080px; height:1920px; overflow:hidden; }
+  .lay .bgm, .lay .bgc { position:absolute; inset:0; }
+  .lay .bgc { background:radial-gradient(120% 45% at 100% 0%, #46096B 0%, transparent 62%), #0d0816; opacity:0; }
+  .hole { position:absolute; left:432px; top:768px; width:216px; height:384px; border-radius:6px; box-shadow:0 0 0 6px rgba(255,255,255,.18); }
+  .tm, .tc { position:absolute; left:80px; right:80px; top:300px; text-align:center; line-height:1; }
+  .tm { font-size:150px; }
+  .tc { font:900 140px/0.92 'Inter'; letter-spacing:-.05em; color:#fff; opacity:0; }
+  .tc em { font-style:normal; color:var(--g); }
+  .tag2 { position:absolute; left:0; right:0; top:1300px; text-align:center; font:700 40px 'Inter'; letter-spacing:.3em; color:rgba(255,255,255,.75); }
+  .stripe { position:absolute; left:0; right:0; height:40px; }
+  .sup { position:absolute; left:96px; right:96px; top:1500px; font:900 84px/0.96 'Inter'; letter-spacing:-.045em; opacity:0; text-shadow:0 20px 60px rgba(0,0,0,.9); }
+  .x { position:absolute; left:96px; right:96px; top:560px; display:grid; grid-template-columns:1fr 1fr; gap:16px; opacity:0; }
+  .x div { padding:28px; border-radius:20px; font-size:60px; text-align:center; background:rgba(255,255,255,.04); border:2px solid var(--line); }
+  #cta { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:0 110px; }
+  #cta .h { font:900 112px/0.92 'Inter'; letter-spacing:-.05em; }
+  #cta .rule { width:200px; height:12px; border-radius:6px; background:var(--g); margin:36px 0 40px; }
+</style>
+  </head>
+  <body>
+
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60.0" data-width="1080" data-height="1920">
+      <div class="bgfill clip" id="bgfill" data-start="0" data-duration="60.0" data-track-index="0"></div>
+      
+      <div id="zoomw" class="clip" data-start="0" data-duration="50" data-track-index="1" data-layout-allow-overflow data-layout-ignore><div id="zoom"><div class="lay" id="L0">
+          <div class="bgm" style="background:#2a1612"></div><div class="bgc"></div>
+          <div class="stripe" style="top:0;background:#ff4d4d;opacity:.9" id="st0"></div>
+          <div class="tm" id="tm0" style="font-family:'Playfair Display';color:#ff4d4d">Kopi Atok</div>
+          <div class="tc" id="tc0">KOPI <em>ATOK</em></div>
+          <div class="hole"></div><div class="tag2">SIGNBOARD</div></div><div class="lay" id="L1">
+          <div class="bgm" style="background:#1b1b2f"></div><div class="bgc"></div>
+          <div class="stripe" style="top:0;background:#ff9f1c;opacity:.9" id="st1"></div>
+          <div class="tm" id="tm1" style="font-family:'Oswald';color:#ff9f1c">PROMO!!!</div>
+          <div class="tc" id="tc1">PAGI LEBIH CEPAT</div>
+          <div class="hole"></div><div class="tag2">POSTER KEDAI</div></div><div class="lay" id="L2">
+          <div class="bgm" style="background:#0f1a24"></div><div class="bgc"></div>
+          <div class="stripe" style="top:0;background:#3fa9f5;opacity:.9" id="st2"></div>
+          <div class="tm" id="tm2" style="font-family:'Montserrat';color:#3fa9f5">kopiatok_official</div>
+          <div class="tc" id="tc2">@kopiatok</div>
+          <div class="hole"></div><div class="tag2">INSTAGRAM</div></div><div class="lay" id="L3">
+          <div class="bgm" style="background:#0e1d14"></div><div class="bgc"></div>
+          <div class="stripe" style="top:0;background:#2ecc71;opacity:.9" id="st3"></div>
+          <div class="tm" id="tm3" style="font-family:'League Gothic';color:#2ecc71">KOPI ATOK ENTERPRISE</div>
+          <div class="tc" id="tc3">KOPI <em>ATOK</em></div>
+          <div class="hole"></div><div class="tag2">WHATSAPP</div></div><div class="lay" id="L4">
+          <div class="bgm" style="background:#24121d"></div><div class="bgc"></div>
+          <div class="stripe" style="top:0;background:#e84393;opacity:.9" id="st4"></div>
+          <div class="tm" id="tm4" style="font-family:'EB Garamond';color:#e84393">~ kopi atok ~</div>
+          <div class="tc" id="tc4">KOPI <em>ATOK</em></div>
+          <div class="tag2">PEMBUNGKUS</div></div></div></div>
+      <div class="x clip" id="xgrid" data-start="24" data-duration="6" data-track-index="2">
+        <div style="font-family:'Playfair Display';color:#ff4d4d">Kopi</div><div style="font-family:'Oswald';color:#ff9f1c">PROMO!!!</div><div style="font-family:'Montserrat';color:#3fa9f5">kopiatok_official</div><div style="font-family:'League Gothic';color:#2ecc71">KOPI</div>
+      </div>
+      <div class="sup clip" id="u1" data-start="24" data-duration="6" data-track-index="3">Satu kedai.<br><span class="gr">Lima muka berbeza.</span></div>
+      <div class="sup clip" id="u2" data-start="46.5" data-duration="4" data-track-index="3">Satu brand.<br><span class="gr">Satu muka. Semua tempat.</span></div>
+      <div id="cta" class="clip" data-start="50.5" data-duration="9.5" data-track-index="4">
+        <div class="h"><span class="el">ORANG INGAT</span><br><span class="el">YANG</span><br><span class="el gr">KONSISTEN.</span></div>
+        <div class="rule" id="ctarule"></div>
+        <div class="ctablock" id="ctab"><div><label>BRAND IDENTITY SYSTEM</label><small>Logo, warna & font yang seragam</small></div><b>DM LOKADIGITAL</b></div>
+      </div>
+      
+      <img class="logo clip" id="logo" src="assets/logo.jpg" alt="LOKADIGITAL" data-start="0" data-duration="60.0" data-track-index="8">
+      <div class="pill clip" id="pill" data-start="0" data-duration="60.0" data-track-index="8">BRAND CHECK · CONTOH</div>
+      <div class="vig clip" id="vig" data-start="0" data-duration="60.0" data-track-index="9" data-layout-ignore></div>
+      <div class="grain clip" id="grain" data-start="0" data-duration="60.0" data-track-index="9" data-layout-ignore></div>
+      <audio id="mix" src="assets/mix.wav" class="clip" data-start="0" data-duration="60.0" data-track-index="10"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.set("#L0", {scale:1.0, transformOrigin:"50% 50%"}, 0);
+      tl.set("#L1", {scale:0.2, transformOrigin:"50% 50%"}, 0);
+      tl.set("#L2", {scale:0.04, transformOrigin:"50% 50%"}, 0);
+      tl.set("#L3", {scale:0.008, transformOrigin:"50% 50%"}, 0);
+      tl.set("#L4", {scale:0.0016, transformOrigin:"50% 50%"}, 0);
+      tl.set("#zoom", {scale:1, transformOrigin:"50% 50%"}, 0);
+      tl.to("#zoom", {scale:5, duration:4.50, ease:"power2.inOut"}, 1.50);
+      tl.to("#L0", {opacity:0, duration:.3}, 5.90);
+      tl.to("#zoom", {scale:25, duration:4.50, ease:"power2.inOut"}, 6.00);
+      tl.to("#L1", {opacity:0, duration:.3}, 10.40);
+      tl.to("#zoom", {scale:125, duration:4.50, ease:"power2.inOut"}, 10.50);
+      tl.to("#L2", {opacity:0, duration:.3}, 14.90);
+      tl.to("#zoom", {scale:625, duration:4.50, ease:"power2.inOut"}, 15.00);
+      tl.to("#L3", {opacity:0, duration:.3}, 19.40);
+      tl.to("#zoomw", {opacity:.18, duration:.5}, 23.6);
+      tl.fromTo("#xgrid", {opacity:0, y:40}, {opacity:1, y:0, duration:.6, ease:"expo.out"}, 24.1);
+      tl.fromTo("#u1", {opacity:0, y:40}, {opacity:1, y:0, duration:.6, ease:"expo.out"}, 24.3);
+      tl.to("#zoomw", {opacity:1, duration:.5}, 29.6);
+      tl.to("#L0 .bgc", {opacity:1, duration:.6}, 29.60);
+      tl.to("#tm0", {opacity:0, duration:.3}, 29.60);
+      tl.fromTo("#tc0", {opacity:0, scale:1.2}, {opacity:1, scale:1, duration:.6, ease:"expo.out"}, 29.80);
+      tl.to("#st0", {backgroundColor:"#B4FF39", duration:.4}, 29.60);
+      tl.to("#L1 .bgc", {opacity:1, duration:.6}, 29.70);
+      tl.to("#tm1", {opacity:0, duration:.3}, 29.70);
+      tl.fromTo("#tc1", {opacity:0, scale:1.2}, {opacity:1, scale:1, duration:.6, ease:"expo.out"}, 29.90);
+      tl.to("#st1", {backgroundColor:"#B4FF39", duration:.4}, 29.70);
+      tl.to("#L2 .bgc", {opacity:1, duration:.6}, 29.80);
+      tl.to("#tm2", {opacity:0, duration:.3}, 29.80);
+      tl.fromTo("#tc2", {opacity:0, scale:1.2}, {opacity:1, scale:1, duration:.6, ease:"expo.out"}, 30.00);
+      tl.to("#st2", {backgroundColor:"#B4FF39", duration:.4}, 29.80);
+      tl.to("#L3 .bgc", {opacity:1, duration:.6}, 29.90);
+      tl.to("#tm3", {opacity:0, duration:.3}, 29.90);
+      tl.fromTo("#tc3", {opacity:0, scale:1.2}, {opacity:1, scale:1, duration:.6, ease:"expo.out"}, 30.10);
+      tl.to("#st3", {backgroundColor:"#B4FF39", duration:.4}, 29.90);
+      tl.to("#L4 .bgc", {opacity:1, duration:.6}, 30.00);
+      tl.to("#tm4", {opacity:0, duration:.3}, 30.00);
+      tl.fromTo("#tc4", {opacity:0, scale:1.2}, {opacity:1, scale:1, duration:.6, ease:"expo.out"}, 30.20);
+      tl.to("#st4", {backgroundColor:"#B4FF39", duration:.4}, 30.00);
+      tl.set("#L3", {opacity:1}, 30.00);
+      tl.to("#zoom", {scale:125, duration:4, ease:"power2.inOut"}, 30.00);
+      tl.set("#L2", {opacity:1}, 34.00);
+      tl.to("#zoom", {scale:25, duration:4, ease:"power2.inOut"}, 34.00);
+      tl.set("#L1", {opacity:1}, 38.00);
+      tl.to("#zoom", {scale:5, duration:4, ease:"power2.inOut"}, 38.00);
+      tl.set("#L0", {opacity:1}, 42.00);
+      tl.to("#zoom", {scale:1, duration:4, ease:"power2.inOut"}, 42.00);
+      tl.fromTo("#u2", {opacity:0, y:40}, {opacity:1, y:0, duration:.6, ease:"expo.out"}, 46.6);
+      tl.to("#zoomw", {opacity:0, duration:.5}, 50);
+      tl.fromTo("#cta .el", {yPercent:100, opacity:0}, {yPercent:0, opacity:1, duration:.6, ease:"expo.out", stagger:.18}, 50.7);
+      tl.fromTo("#ctarule", {scaleX:0, transformOrigin:"0% 50%"}, {scaleX:1, duration:.7, ease:"expo.inOut"}, 51.6);
+      tl.fromTo("#ctab", {y:60, opacity:0}, {y:0, opacity:1, duration:.7, ease:"expo.out"}, 52.1);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

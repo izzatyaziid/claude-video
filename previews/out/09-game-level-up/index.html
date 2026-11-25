@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>LokaDigital Preview 09 · Game Level Up</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+  :root { --ink:#07040C; --p1:#46096B; --p2:#240538; --mag:#B800F0; --g:#B4FF39; --mist:#D9D0F0; --grey:#8C83A6;
+          --line:rgba(255,255,255,.14); --glass:rgba(255,255,255,.045); }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:1080px; height:1920px; overflow:hidden; background:var(--ink); }
+  #root { position:relative; width:1080px; height:1920px; overflow:hidden; background:var(--ink); font-family:'Inter',sans-serif; color:#fff; }
+  .bgfill { position:absolute; inset:0; background:radial-gradient(120% 45% at 100% 0%, #46096B 0%, transparent 62%), radial-gradient(90% 35% at 0% 100%, #240538 0%, transparent 70%), var(--ink); }
+  .grain { position:absolute; inset:0; opacity:.06; pointer-events:none; mix-blend-mode:overlay;
+           background-image:repeating-radial-gradient(circle at 17% 32%, #fff 0 1px, transparent 1px 3px), repeating-radial-gradient(circle at 71% 63%, #fff 0 1px, transparent 1px 4px); }
+  .vig { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(0,0,0,.72) 100%); }
+  .logo { position:absolute; left:96px; top:262px; width:120px; height:120px; mix-blend-mode:screen; }
+  .pill { position:absolute; right:120px; top:296px; font:600 28px 'Inter'; letter-spacing:.22em; color:var(--g); border:2px solid var(--g); padding:12px 24px; border-radius:99px; }
+  .lab { font:700 28px 'Inter'; letter-spacing:.28em; color:var(--mist); text-transform:uppercase; }
+  .h { font:800 96px/0.98 'Inter'; letter-spacing:-.04em; }
+  .gr { color:var(--g); }
+  .glass { background:var(--glass); border:2px solid var(--line); border-radius:28px; box-shadow:0 40px 110px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08); }
+  .ctablock { background:var(--g); color:var(--ink); border-radius:26px; padding:34px 40px; display:flex; justify-content:space-between; align-items:center; }
+  .ctablock label { display:block; font:800 26px 'Inter'; letter-spacing:.24em; }
+  .ctablock small { display:block; margin-top:8px; font:600 26px 'Inter'; opacity:.75; }
+  .ctablock b { font:900 50px 'Inter'; letter-spacing:-.03em; white-space:nowrap; }
+
+  .mono { font-family:'Space Mono',monospace; }
+  #hud { position:absolute; left:80px; right:80px; top:430px; display:flex; justify-content:space-between; align-items:flex-start; font:700 34px 'Space Mono'; }
+  #hud .lv { color:var(--g); }
+  .hpw { width:420px; } .hpw small { display:block; font:700 26px 'Space Mono'; letter-spacing:.2em; color:var(--mist); margin-bottom:8px; }
+  .hp { height:40px; border:4px solid #fff; padding:4px; } .hp i { display:block; height:100%; background:var(--g); transform-origin:0 50%; }
+  #stars { font:700 44px 'Space Mono'; color:var(--grey); letter-spacing:.1em; text-align:right; } #stars small { display:block; font-size:26px; letter-spacing:.2em; color:var(--mist); }
+  #world { position:absolute; left:0; right:0; top:620px; height:900px; overflow:hidden; }
+  #ground { position:absolute; left:-200px; right:-200px; top:640px; height:260px; background:
+            repeating-linear-gradient(90deg, #240538 0 60px, #46096B 60px 120px); border-top:8px solid var(--g); }
+  #sky { position:absolute; inset:0; background:repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 4px, transparent 4px 8px); }
+  #sprite { position:absolute; left:180px; top:440px; display:grid; grid-template-columns:repeat(10,20px); }
+  #sprite i { width:20px; height:20px; display:block; }
+  #btn { position:absolute; left:540px; top:340px; width:420px; padding:28px 0; text-align:center; background:#B800F0; border:6px solid #fff; font:700 44px 'Space Mono'; box-shadow:0 14px 0 #46096B; }
+  .float { position:absolute; font:700 40px 'Space Mono'; color:var(--grey); opacity:0; }
+  #over { position:absolute; left:0; right:0; top:820px; text-align:center; font:700 130px/1 'Space Mono'; color:#B800F0; letter-spacing:-.04em; opacity:0; }
+  #over small { display:block; margin-top:30px; font:700 44px 'Space Mono'; color:#fff; letter-spacing:.1em; }
+  .pw { position:absolute; left:110px; right:110px; top:680px; padding:34px 40px; border:6px solid var(--g); background:#07040C; opacity:0; }
+  .pw b { display:block; font:700 30px 'Space Mono'; color:var(--g); letter-spacing:.2em; } .pw h3 { margin-top:14px; font:900 70px/1 'Inter'; letter-spacing:-.04em; }
+  .pw p { margin-top:14px; font:600 36px 'Inter'; color:var(--mist); }
+  .coin { position:absolute; width:60px; height:60px; border-radius:50%; background:var(--g); border:6px solid #fff; opacity:0; }
+  #clear { position:absolute; left:0; right:0; top:760px; text-align:center; font:700 120px/1 'Space Mono'; color:var(--g); opacity:0; }
+  #clear small { display:block; margin-top:30px; font:900 64px/1.05 'Inter'; color:#fff; letter-spacing:-.03em; }
+  .sup { position:absolute; left:96px; right:96px; top:1560px; font:900 72px/1 'Inter'; letter-spacing:-.04em; opacity:0; }
+  #cta { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:0 110px; }
+  #cta .k { font:700 34px 'Space Mono'; color:var(--g); letter-spacing:.2em; margin-bottom:20px; }
+  #cta .h { font:900 112px/0.92 'Inter'; letter-spacing:-.05em; }
+  #cta .rule { width:200px; height:12px; background:var(--g); margin:36px 0 40px; }
+</style>
+  </head>
+  <body>
+
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60.0" data-width="1080" data-height="1920">
+      <div class="bgfill clip" id="bgfill" data-start="0" data-duration="60.0" data-track-index="0"></div>
+      
+      <div id="hud" class="clip" data-start="0" data-duration="52" data-track-index="2">
+        <div class="hpw"><small id="lvl" class="lv">LEVEL 1 · BAJET IKLAN</small><div class="hp"><i id="hpbar"></i></div></div>
+        <div id="stars">☆☆☆☆<small>PELANGGAN</small></div>
+      </div>
+      <div id="world" class="clip" data-start="0" data-duration="52" data-track-index="1">
+        <div id="sky"></div><div id="ground"></div><div id="sprite"><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:#B4FF39"></i><i style="background:#B4FF39"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:#B4FF39"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:#B4FF39"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:#B4FF39"></i><i style="background:#B4FF39"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:#D9D0F0"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:#7B16B8"></i><i style="background:#D9D0F0"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#D9D0F0"></i><i style="background:transparent"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:#7B16B8"></i><i style="background:#D9D0F0"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#7B16B8"></i><i style="background:#D9D0F0"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:#D9D0F0"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:transparent"></i><i style="background:#B4FF39"></i><i style="background:#B4FF39"></i><i style="background:#B4FF39"></i><i style="background:#B4FF39"></i><i style="background:#B4FF39"></i><i style="background:#B4FF39"></i><i style="background:#B4FF39"></i><i style="background:#B4FF39"></i><i style="background:#B4FF39"></i><i style="background:transparent"></i></div>
+        <div id="btn">BOOST POST</div>
+        <div class="float" id="fl0" style="left:560px;top:260px">+ likes</div><div class="float" id="fl1" style="left:700px;top:260px">+ likes</div><div class="float" id="fl2" style="left:560px;top:260px">+ likes</div><div class="float" id="fl3" style="left:700px;top:260px">+ likes</div><div class="float" id="fl4" style="left:560px;top:260px">+ likes</div>
+        <div class="coin" id="cn0" style="left:620px;top:470px"></div><div class="coin" id="cn1" style="left:690px;top:470px"></div><div class="coin" id="cn2" style="left:760px;top:470px"></div><div class="coin" id="cn3" style="left:830px;top:470px"></div>
+      </div>
+      <div class="sup clip" id="u0" data-start="0.4" data-duration="5.4" data-track-index="3">Strategi iklan kau:<br><span class="gr">tekan butang ni.</span></div>
+      <div id="over" class="clip" data-start="14.2" data-duration="8.8" data-track-index="4">GAME<br>OVER<small>BAJET HABIS · PELANGGAN 0</small></div>
+      <div class="sup clip" id="u1" data-start="17.6" data-duration="5.4" data-track-index="3">Boost post = engagement.<br><span class="gr">Bukan jualan.</span></div>
+      <div class="sup clip" id="u2" data-start="23.2" data-duration="4.6" data-track-index="3" style="top:860px;text-align:center;font-family:'Space Mono';font-weight:700;color:var(--g)">CONTINUE? ▶ YA</div>
+      <div class="pw clip" id="pw0" data-start="28.0" data-duration="3.4" data-track-index="4"><b>POWER-UP 1/4</b><h3>OBJEKTIF BETUL</h3><p>Mesej / jualan, bukan likes</p></div><div class="pw clip" id="pw1" data-start="31.6" data-duration="3.4" data-track-index="4"><b>POWER-UP 2/4</b><h3>PIXEL & TRACKING</h3><p>Tahu iklan mana bawa jualan</p></div><div class="pw clip" id="pw2" data-start="35.2" data-duration="3.4" data-track-index="4"><b>POWER-UP 3/4</b><h3>UJI 3 CREATIVE</h3><p>Biar data pilih yang menang</p></div><div class="pw clip" id="pw3" data-start="38.8" data-duration="3.4" data-track-index="4"><b>POWER-UP 4/4</b><h3>AUDIENS TEPAT</h3><p>Bukan semua orang</p></div>
+      <div id="clear" class="clip" data-start="42.6" data-duration="9.4" data-track-index="4">LEVEL<br>CLEAR<small>Iklan yang dibina,<br><span class="gr">bukan ditekan.</span></small></div>
+      <div id="cta" class="clip" data-start="52.2" data-duration="7.8" data-track-index="5">
+        <div class="k">PLAYER 2 MASUK?</div>
+        <div class="h"><span class="el">STOP</span><br><span class="el">BOOST.</span><br><span class="el gr">MULA KEMPEN.</span></div>
+        <div class="rule" id="ctarule"></div>
+        <div class="ctablock" id="ctab"><div><label>META & TIKTOK ADS SETUP</label><small>Objektif, pixel & testing</small></div><b>DM LOKADIGITAL</b></div>
+      </div>
+      
+      <img class="logo clip" id="logo" src="assets/logo.jpg" alt="LOKADIGITAL" data-start="0" data-duration="60.0" data-track-index="8">
+      <div class="pill clip" id="pill" data-start="0" data-duration="60.0" data-track-index="8">PLAYER 1 · CONTOH</div>
+      <div class="vig clip" id="vig" data-start="0" data-duration="60.0" data-track-index="9" data-layout-ignore></div>
+      <div class="grain clip" id="grain" data-start="0" data-duration="60.0" data-track-index="9" data-layout-ignore></div>
+      <audio id="mix" src="assets/mix.wav" class="clip" data-start="0" data-duration="60.0" data-track-index="10"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#u0", {opacity:0}, {opacity:1, duration:.2, ease:"steps(2)"}, .5);
+      tl.fromTo("#sprite", {y:-300}, {y:0, duration:.6, ease:"bounce.out"}, .4);
+      tl.to("#ground", {x:-240, duration:52, ease:"none"}, 0);
+      tl.to("#btn", {y:12, duration:.08, yoyo:true, repeat:1}, 6.00);
+      tl.to("#hpbar", {scaleX:0.80, duration:.3, ease:"steps(3)"}, 6.10);
+      tl.fromTo("#fl0", {y:0, opacity:1}, {y:-140, opacity:0, duration:1.2, ease:"power1.out"}, 6.10);
+      tl.to("#sprite", {y:-60, duration:.15, yoyo:true, repeat:1, ease:"power2.out"}, 6.00);
+      tl.to("#btn", {y:12, duration:.08, yoyo:true, repeat:1}, 7.60);
+      tl.to("#hpbar", {scaleX:0.60, duration:.3, ease:"steps(3)"}, 7.70);
+      tl.fromTo("#fl1", {y:0, opacity:1}, {y:-140, opacity:0, duration:1.2, ease:"power1.out"}, 7.70);
+      tl.to("#sprite", {y:-60, duration:.15, yoyo:true, repeat:1, ease:"power2.out"}, 7.60);
+      tl.to("#btn", {y:12, duration:.08, yoyo:true, repeat:1}, 9.20);
+      tl.to("#hpbar", {scaleX:0.40, duration:.3, ease:"steps(3)"}, 9.30);
+      tl.fromTo("#fl2", {y:0, opacity:1}, {y:-140, opacity:0, duration:1.2, ease:"power1.out"}, 9.30);
+      tl.to("#sprite", {y:-60, duration:.15, yoyo:true, repeat:1, ease:"power2.out"}, 9.20);
+      tl.to("#btn", {y:12, duration:.08, yoyo:true, repeat:1}, 10.80);
+      tl.to("#hpbar", {scaleX:0.20, duration:.3, ease:"steps(3)"}, 10.90);
+      tl.fromTo("#fl3", {y:0, opacity:1}, {y:-140, opacity:0, duration:1.2, ease:"power1.out"}, 10.90);
+      tl.to("#sprite", {y:-60, duration:.15, yoyo:true, repeat:1, ease:"power2.out"}, 10.80);
+      tl.to("#btn", {y:12, duration:.08, yoyo:true, repeat:1}, 12.40);
+      tl.to("#hpbar", {scaleX:0.00, duration:.3, ease:"steps(3)"}, 12.50);
+      tl.fromTo("#fl4", {y:0, opacity:1}, {y:-140, opacity:0, duration:1.2, ease:"power1.out"}, 12.50);
+      tl.to("#sprite", {y:-60, duration:.15, yoyo:true, repeat:1, ease:"power2.out"}, 12.40);
+      tl.to("#hpbar", {backgroundColor:"#B800F0", duration:.1}, 11);
+      tl.to("#sprite", {rotation:90, y:60, duration:.4, ease:"steps(4)"}, 13.6);
+      tl.to("#world", {opacity:.2, duration:.3}, 14.1);
+      tl.fromTo("#over", {scale:2, opacity:0}, {scale:1, opacity:1, duration:.3, ease:"steps(4)"}, 14.2);
+      tl.fromTo("#u1", {opacity:0}, {opacity:1, duration:.2, ease:"steps(2)"}, 17.7);
+      tl.to("#over", {opacity:0, duration:.2}, 22.8);
+      tl.fromTo("#u2", {opacity:0}, {opacity:1, duration:.2, ease:"steps(2)", repeat:5, yoyo:true}, 23.3);
+      tl.set("#lvl", {textContent:"LEVEL 2 · KEMPEN"}, 27.6); tl.set("#hpbar", {scaleX:1, backgroundColor:"#B4FF39"}, 27.6);
+      tl.to("#world", {opacity:1, duration:.3}, 27.6); tl.set("#sprite", {rotation:0, y:0}, 27.6); tl.set("#btn", {opacity:0}, 27.6);
+      tl.fromTo("#pw0", {x:-200, opacity:0}, {x:0, opacity:1, duration:.3, ease:"steps(4)"}, 28.00);
+      tl.to("#pw0", {x:200, opacity:0, duration:.25, ease:"steps(3)"}, 31.10);
+      tl.fromTo("#cn0", {opacity:1, y:0}, {y:-200, opacity:0, duration:.6, ease:"power2.out"}, 28.20);
+      tl.to("#sprite", {y:-120, duration:.2, yoyo:true, repeat:1, ease:"power2.out"}, 28.10);
+      tl.set("#stars", {color:"#B4FF39"}, 28.30); tl.set("#stars", {innerHTML:"★☆☆☆<small>PELANGGAN</small>"}, 28.30);
+      tl.fromTo("#pw1", {x:-200, opacity:0}, {x:0, opacity:1, duration:.3, ease:"steps(4)"}, 31.60);
+      tl.to("#pw1", {x:200, opacity:0, duration:.25, ease:"steps(3)"}, 34.70);
+      tl.fromTo("#cn1", {opacity:1, y:0}, {y:-200, opacity:0, duration:.6, ease:"power2.out"}, 31.80);
+      tl.to("#sprite", {y:-120, duration:.2, yoyo:true, repeat:1, ease:"power2.out"}, 31.70);
+      tl.set("#stars", {color:"#B4FF39"}, 31.90); tl.set("#stars", {innerHTML:"★★☆☆<small>PELANGGAN</small>"}, 31.90);
+      tl.fromTo("#pw2", {x:-200, opacity:0}, {x:0, opacity:1, duration:.3, ease:"steps(4)"}, 35.20);
+      tl.to("#pw2", {x:200, opacity:0, duration:.25, ease:"steps(3)"}, 38.30);
+      tl.fromTo("#cn2", {opacity:1, y:0}, {y:-200, opacity:0, duration:.6, ease:"power2.out"}, 35.40);
+      tl.to("#sprite", {y:-120, duration:.2, yoyo:true, repeat:1, ease:"power2.out"}, 35.30);
+      tl.set("#stars", {color:"#B4FF39"}, 35.50); tl.set("#stars", {innerHTML:"★★★☆<small>PELANGGAN</small>"}, 35.50);
+      tl.fromTo("#pw3", {x:-200, opacity:0}, {x:0, opacity:1, duration:.3, ease:"steps(4)"}, 38.80);
+      tl.to("#pw3", {x:200, opacity:0, duration:.25, ease:"steps(3)"}, 41.90);
+      tl.fromTo("#cn3", {opacity:1, y:0}, {y:-200, opacity:0, duration:.6, ease:"power2.out"}, 39.00);
+      tl.to("#sprite", {y:-120, duration:.2, yoyo:true, repeat:1, ease:"power2.out"}, 38.90);
+      tl.set("#stars", {color:"#B4FF39"}, 39.10); tl.set("#stars", {innerHTML:"★★★★<small>PELANGGAN</small>"}, 39.10);
+      tl.to("#world", {opacity:.25, duration:.3}, 42.4);
+      tl.fromTo("#clear", {scale:2, opacity:0}, {scale:1, opacity:1, duration:.35, ease:"steps(5)"}, 42.6);
+      tl.fromTo("#cta .el", {yPercent:100, opacity:0}, {yPercent:0, opacity:1, duration:.4, ease:"steps(5)", stagger:.18}, 52.6);
+      tl.fromTo("#ctarule", {scaleX:0, transformOrigin:"0% 50%"}, {scaleX:1, duration:.5, ease:"steps(6)"}, 53.5);
+      tl.fromTo("#ctab", {y:60, opacity:0}, {y:0, opacity:1, duration:.4, ease:"steps(5)"}, 54);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

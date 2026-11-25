@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>LokaDigital Preview 08 · Kolaj Kertas</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+  :root { --ink:#07040C; --p1:#46096B; --p2:#240538; --mag:#B800F0; --g:#B4FF39; --mist:#D9D0F0; --grey:#8C83A6;
+          --line:rgba(255,255,255,.14); --glass:rgba(255,255,255,.045); }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:1080px; height:1920px; overflow:hidden; background:var(--ink); }
+  #root { position:relative; width:1080px; height:1920px; overflow:hidden; background:var(--ink); font-family:'Inter',sans-serif; color:#fff; }
+  .bgfill { position:absolute; inset:0; background:radial-gradient(120% 45% at 100% 0%, #46096B 0%, transparent 62%), radial-gradient(90% 35% at 0% 100%, #240538 0%, transparent 70%), var(--ink); }
+  .grain { position:absolute; inset:0; opacity:.06; pointer-events:none; mix-blend-mode:overlay;
+           background-image:repeating-radial-gradient(circle at 17% 32%, #fff 0 1px, transparent 1px 3px), repeating-radial-gradient(circle at 71% 63%, #fff 0 1px, transparent 1px 4px); }
+  .vig { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(0,0,0,.72) 100%); }
+  .logo { position:absolute; left:96px; top:262px; width:120px; height:120px; mix-blend-mode:screen; }
+  .pill { position:absolute; right:120px; top:296px; font:600 28px 'Inter'; letter-spacing:.22em; color:var(--g); border:2px solid var(--g); padding:12px 24px; border-radius:99px; }
+  .lab { font:700 28px 'Inter'; letter-spacing:.28em; color:var(--mist); text-transform:uppercase; }
+  .h { font:800 96px/0.98 'Inter'; letter-spacing:-.04em; }
+  .gr { color:var(--g); }
+  .glass { background:var(--glass); border:2px solid var(--line); border-radius:28px; box-shadow:0 40px 110px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08); }
+  .ctablock { background:var(--g); color:var(--ink); border-radius:26px; padding:34px 40px; display:flex; justify-content:space-between; align-items:center; }
+  .ctablock label { display:block; font:800 26px 'Inter'; letter-spacing:.24em; }
+  .ctablock small { display:block; margin-top:8px; font:600 26px 'Inter'; opacity:.75; }
+  .ctablock b { font:900 50px 'Inter'; letter-spacing:-.03em; white-space:nowrap; }
+
+  .paperbg { position:absolute; inset:0; background:
+     repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 5px),
+     radial-gradient(120% 45% at 100% 0%, #46096B 0%, transparent 62%), #120c18; }
+  .rn { position:absolute; left:80px; right:80px; top:560px; display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+  .rn span { display:inline-block; padding:10px 18px; font-size:120px; line-height:1; color:#07040C; box-shadow:6px 8px 0 rgba(0,0,0,.45); }
+  .stk { position:absolute; padding:26px 34px; font:900 54px 'Inter'; letter-spacing:-.02em; color:#07040C; box-shadow:8px 10px 0 rgba(0,0,0,.5);
+         clip-path:polygon(0 4%, 6% 0, 40% 3%, 72% 0, 100% 5%, 98% 50%, 100% 96%, 60% 100%, 30% 97%, 2% 100%, 0 55%); }
+  #brandcard { position:absolute; left:300px; top:880px; width:480px; padding:40px; background:#07040C; border:4px solid var(--g); text-align:center; font:900 64px 'Inter'; letter-spacing:-.03em; color:var(--g); }
+  #brandcard small { display:block; font:700 26px 'Inter'; letter-spacing:.3em; color:var(--mist); margin-top:10px; }
+  .q { position:absolute; left:96px; right:96px; top:1420px; font:900 96px/0.94 'Inter'; letter-spacing:-.05em; opacity:0; }
+  .tearL, .tearR { position:absolute; top:420px; width:540px; height:1200px; background:#D9D0F0; }
+  .tearL { left:0; clip-path:polygon(0 0, 100% 0, 92% 10%, 100% 22%, 90% 35%, 100% 48%, 91% 62%, 100% 75%, 92% 88%, 100% 100%, 0 100%); }
+  .tearR { left:540px; clip-path:polygon(8% 0, 100% 0, 100% 100%, 8% 100%, 0 88%, 8% 75%, -1% 62%, 9% 48%, 0 35%, 10% 22%, 0 10%); background:#c9bfe6; }
+  .tear-t { position:absolute; left:110px; right:110px; top:800px; font:900 100px/0.94 'Inter'; letter-spacing:-.05em; color:#07040C; text-align:center; }
+  .pil { position:absolute; top:520px; width:200px; height:880px; padding:30px 18px; color:#07040C; box-shadow:10px 12px 0 rgba(0,0,0,.5);
+         clip-path:polygon(0 1%, 50% 0, 100% 1.5%, 99% 99%, 50% 100%, 1% 98.5%); }
+  .pil b { display:block; font:900 64px 'Inter'; letter-spacing:-.04em; }
+  .pil h3 { margin-top:30px; font:900 56px/1 'Inter'; letter-spacing:-.04em; writing-mode:vertical-rl; transform:rotate(180deg); height:420px; }
+  .pil p { position:absolute; left:18px; right:18px; bottom:30px; font:700 28px/1.2 'Inter'; }
+  .rule2 { position:absolute; left:96px; right:96px; top:1450px; font:900 70px/1 'Inter'; letter-spacing:-.04em; opacity:0; }
+  #cta { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:0 110px; }
+  #cta .h { font:900 112px/0.92 'Inter'; letter-spacing:-.05em; }
+  #cta .rule { width:200px; height:12px; border-radius:6px; background:var(--g); margin:36px 0 40px; }
+</style>
+  </head>
+  <body>
+
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60.0" data-width="1080" data-height="1920">
+      <div class="bgfill clip" id="bgfill" data-start="0" data-duration="60.0" data-track-index="0"></div>
+      
+      <div class="paperbg clip" id="pbg" data-start="0" data-duration="60" data-track-index="1"></div>
+      <div class="rn clip" id="rn" data-start="0" data-duration="6.6" data-track-index="2"><span class="ltr" id="lt0" style="font-family:'Archivo Black';background:#D9D0F0;transform:rotate(-7deg)">I</span><span class="ltr" id="lt1" style="font-family:'Playfair Display';background:#B4FF39;transform:rotate(5deg)">K</span><span class="ltr" id="lt2" style="font-family:'Oswald';background:#C99BFF;transform:rotate(-3deg)">U</span><span class="ltr" id="lt3" style="font-family:'Space Mono';background:#ffffff;transform:rotate(8deg)">T</span><span style="background:none;box-shadow:none;width:30px"></span><span class="ltr" id="lt5" style="font-family:'EB Garamond';background:#e9e4f7;transform:rotate(4deg)">T</span><span class="ltr" id="lt6" style="font-family:'Montserrat';background:#D9D0F0;transform:rotate(-8deg)">R</span><span class="ltr" id="lt7" style="font-family:'Archivo Black';background:#B4FF39;transform:rotate(-7deg)">E</span><span class="ltr" id="lt8" style="font-family:'Playfair Display';background:#C99BFF;transform:rotate(5deg)">N</span><span class="ltr" id="lt9" style="font-family:'Oswald';background:#ffffff;transform:rotate(-3deg)">D</span><span class="ltr" id="lt10" style="font-family:'Space Mono';background:#B800F0;transform:rotate(8deg)">?</span></div>
+      <div id="brandcard" class="clip" data-start="6.4" data-duration="11.6" data-track-index="2">KEDAI KAU<small>BRAND · CONTOH</small></div>
+      <div class="stk clip" id="sk0" data-start="7.0" data-duration="11.0" data-track-index="3" style="left:140px;top:640px;background:#D9D0F0">Dance trend</div><div class="stk clip" id="sk1" data-start="8.3" data-duration="9.7" data-track-index="3" style="left:520px;top:760px;background:#B4FF39">Filter popular</div><div class="stk clip" id="sk2" data-start="9.6" data-duration="8.4" data-track-index="3" style="left:160px;top:940px;background:#C99BFF">Audio trending</div><div class="stk clip" id="sk3" data-start="10.9" data-duration="7.1" data-track-index="3" style="left:470px;top:1100px;background:#ffffff">Meme minggu ni</div><div class="stk clip" id="sk4" data-start="12.2" data-duration="5.8" data-track-index="3" style="left:220px;top:1240px;background:#B800F0">Challenge baru</div><div class="stk clip" id="sk5" data-start="13.5" data-duration="4.5" data-track-index="3" style="left:420px;top:700px;background:#e9e4f7">Format orang lain</div>
+      <div class="q clip" id="q1" data-start="15" data-duration="3" data-track-index="4">Brand kau <span class="gr">mana?</span></div>
+      <div class="clip" id="tear" data-start="18" data-duration="6.2" data-track-index="5"><div class="tearL"></div><div class="tearR"></div><div class="tear-t" id="tt">Orang ingat trend.<br>Bukan kau.</div></div>
+      <div class="clip" id="pills" data-start="24.4" data-duration="27.6" data-track-index="2">
+        <div class="pil" id="pl0" style="left:86px;background:#B4FF39"><b>01</b><h3>AJAR</h3><p>Tips yang berguna</p></div><div class="pil" id="pl1" style="left:318px;background:#D9D0F0"><b>02</b><h3>TUNJUK</h3><p>Proses & belakang tabir</p></div><div class="pil" id="pl2" style="left:550px;background:#C99BFF"><b>03</b><h3>BUKTI</h3><p>Ulasan & hasil sebenar</p></div><div class="pil" id="pl3" style="left:782px;background:#ffffff"><b>04</b><h3>JUAL</h3><p>Offer yang jelas</p></div>
+      </div>
+      <div class="rule2 clip" id="r1" data-start="36" data-duration="7.8" data-track-index="4">Trend boleh.<br><span class="gr">Kalau masuk tiang kau.</span></div>
+      <div class="rule2 clip" id="r2" data-start="44" data-duration="8" data-track-index="4">4 tiang. Setiap minggu.<br><span class="gr">Orang mula kenal kau.</span></div>
+      <div id="cta" class="clip" data-start="52.2" data-duration="7.8" data-track-index="6">
+        <div class="h"><span class="el">KONSISTEN</span><br><span class="el gr">LEBIH KUAT</span><br><span class="el">DARI IKUT-IKUT.</span></div>
+        <div class="rule" id="ctarule"></div>
+        <div class="ctablock" id="ctab"><div><label>CONTENT PILLARS & PLAN</label><small>Pelan content bulanan</small></div><b>DM LOKADIGITAL</b></div>
+      </div>
+      
+      <img class="logo clip" id="logo" src="assets/logo.jpg" alt="LOKADIGITAL" data-start="0" data-duration="60.0" data-track-index="8">
+      <div class="pill clip" id="pill" data-start="0" data-duration="60.0" data-track-index="8">CONTENT PILLARS</div>
+      <div class="vig clip" id="vig" data-start="0" data-duration="60.0" data-track-index="9" data-layout-ignore></div>
+      <div class="grain clip" id="grain" data-start="0" data-duration="60.0" data-track-index="9" data-layout-ignore></div>
+      <audio id="mix" src="assets/mix.wav" class="clip" data-start="0" data-duration="60.0" data-track-index="10"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#lt0", {scale:0, opacity:0}, {scale:1, opacity:1, duration:.25, ease:"steps(3)"}, 0.30);
+      tl.fromTo("#lt1", {scale:0, opacity:0}, {scale:1, opacity:1, duration:.25, ease:"steps(3)"}, 0.52);
+      tl.fromTo("#lt2", {scale:0, opacity:0}, {scale:1, opacity:1, duration:.25, ease:"steps(3)"}, 0.74);
+      tl.fromTo("#lt3", {scale:0, opacity:0}, {scale:1, opacity:1, duration:.25, ease:"steps(3)"}, 0.96);
+      tl.fromTo("#lt5", {scale:0, opacity:0}, {scale:1, opacity:1, duration:.25, ease:"steps(3)"}, 1.40);
+      tl.fromTo("#lt6", {scale:0, opacity:0}, {scale:1, opacity:1, duration:.25, ease:"steps(3)"}, 1.62);
+      tl.fromTo("#lt7", {scale:0, opacity:0}, {scale:1, opacity:1, duration:.25, ease:"steps(3)"}, 1.84);
+      tl.fromTo("#lt8", {scale:0, opacity:0}, {scale:1, opacity:1, duration:.25, ease:"steps(3)"}, 2.06);
+      tl.fromTo("#lt9", {scale:0, opacity:0}, {scale:1, opacity:1, duration:.25, ease:"steps(3)"}, 2.28);
+      tl.fromTo("#lt10", {scale:0, opacity:0}, {scale:1, opacity:1, duration:.25, ease:"steps(3)"}, 2.50);
+      tl.to("#rn", {rotation:"+=1.0", duration:.125, ease:"steps(1)", yoyo:true, repeat:25}, 2.80);
+      tl.to("#rn", {y:-900, rotation:-8, duration:.5, ease:"steps(6)"}, 6.1);
+      tl.fromTo("#brandcard", {scale:0, rotation:-10}, {scale:1, rotation:-2, duration:.4, ease:"steps(5)"}, 6.4);
+      tl.fromTo("#sk0", {scale:2.2, rotation:-28, opacity:0}, {scale:1, rotation:-14, opacity:1, duration:.3, ease:"steps(4)"}, 7.00);
+      tl.to("#sk0", {rotation:"+=0.8", duration:.125, ease:"steps(1)", yoyo:true, repeat:83}, 7.30);
+      tl.fromTo("#sk1", {scale:2.2, rotation:18, opacity:0}, {scale:1, rotation:9, opacity:1, duration:.3, ease:"steps(4)"}, 8.30);
+      tl.to("#sk1", {rotation:"+=0.8", duration:.125, ease:"steps(1)", yoyo:true, repeat:71}, 8.60);
+      tl.fromTo("#sk2", {scale:2.2, rotation:-12, opacity:0}, {scale:1, rotation:-6, opacity:1, duration:.3, ease:"steps(4)"}, 9.60);
+      tl.to("#sk2", {rotation:"+=0.8", duration:.125, ease:"steps(1)", yoyo:true, repeat:61}, 9.90);
+      tl.fromTo("#sk3", {scale:2.2, rotation:24, opacity:0}, {scale:1, rotation:12, opacity:1, duration:.3, ease:"steps(4)"}, 10.90);
+      tl.to("#sk3", {rotation:"+=0.8", duration:.125, ease:"steps(1)", yoyo:true, repeat:51}, 11.20);
+      tl.fromTo("#sk4", {scale:2.2, rotation:-20, opacity:0}, {scale:1, rotation:-10, opacity:1, duration:.3, ease:"steps(4)"}, 12.20);
+      tl.to("#sk4", {rotation:"+=0.8", duration:.125, ease:"steps(1)", yoyo:true, repeat:41}, 12.50);
+      tl.fromTo("#sk5", {scale:2.2, rotation:14, opacity:0}, {scale:1, rotation:7, opacity:1, duration:.3, ease:"steps(4)"}, 13.50);
+      tl.to("#sk5", {rotation:"+=0.8", duration:.125, ease:"steps(1)", yoyo:true, repeat:31}, 13.80);
+      tl.fromTo("#q1", {opacity:0}, {opacity:1, duration:.3, ease:"steps(3)"}, 15.1);
+      tl.fromTo(".tearL, .tearR", {opacity:0}, {opacity:1, duration:.2, ease:"steps(2)"}, 18);
+      tl.fromTo("#tt", {opacity:0}, {opacity:1, duration:.3, ease:"steps(3)"}, 18.6);
+      tl.to(".tearL", {x:-620, rotation:-6, duration:.7, ease:"steps(8)"}, 23.4);
+      tl.to(".tearR", {x:620, rotation:6, duration:.7, ease:"steps(8)"}, 23.4);
+      tl.to("#tt", {opacity:0, duration:.2}, 23.4);
+      tl.fromTo("#pl0", {y:1300, rotation:-8}, {y:0, rotation:-1.5, duration:.5, ease:"steps(6)"}, 24.80);
+      tl.to("#pl0", {rotation:"+=0.6", duration:.125, ease:"steps(1)", yoyo:true, repeat:207}, 25.30);
+      tl.fromTo("#pl1", {y:1300, rotation:6}, {y:0, rotation:1, duration:.5, ease:"steps(6)"}, 27.40);
+      tl.to("#pl1", {rotation:"+=0.6", duration:.125, ease:"steps(1)", yoyo:true, repeat:187}, 27.90);
+      tl.fromTo("#pl2", {y:1300, rotation:-5}, {y:0, rotation:-1, duration:.5, ease:"steps(6)"}, 30.00);
+      tl.to("#pl2", {rotation:"+=0.6", duration:.125, ease:"steps(1)", yoyo:true, repeat:167}, 30.50);
+      tl.fromTo("#pl3", {y:1300, rotation:7}, {y:0, rotation:1.5, duration:.5, ease:"steps(6)"}, 32.60);
+      tl.to("#pl3", {rotation:"+=0.6", duration:.125, ease:"steps(1)", yoyo:true, repeat:145}, 33.10);
+      tl.fromTo("#r1", {opacity:0, y:30}, {opacity:1, y:0, duration:.3, ease:"steps(3)"}, 36.1);
+      tl.fromTo("#r2", {opacity:0, y:30}, {opacity:1, y:0, duration:.3, ease:"steps(3)"}, 44.1);
+      tl.to("#pills", {scale:.9, y:-60, duration:8, ease:"none"}, 44);
+      tl.fromTo("#cta .el", {yPercent:100, opacity:0}, {yPercent:0, opacity:1, duration:.4, ease:"steps(5)", stagger:.18}, 52.4);
+      tl.fromTo("#ctarule", {scaleX:0, transformOrigin:"0% 50%"}, {scaleX:1, duration:.5, ease:"steps(6)"}, 53.3);
+      tl.fromTo("#ctab", {y:60, opacity:0}, {y:0, opacity:1, duration:.4, ease:"steps(5)"}, 53.8);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

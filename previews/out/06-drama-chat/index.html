@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>LokaDigital Preview 06 · Drama Chat</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+  :root { --ink:#07040C; --p1:#46096B; --p2:#240538; --mag:#B800F0; --g:#B4FF39; --mist:#D9D0F0; --grey:#8C83A6;
+          --line:rgba(255,255,255,.14); --glass:rgba(255,255,255,.045); }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:1080px; height:1920px; overflow:hidden; background:var(--ink); }
+  #root { position:relative; width:1080px; height:1920px; overflow:hidden; background:var(--ink); font-family:'Inter',sans-serif; color:#fff; }
+  .bgfill { position:absolute; inset:0; background:radial-gradient(120% 45% at 100% 0%, #46096B 0%, transparent 62%), radial-gradient(90% 35% at 0% 100%, #240538 0%, transparent 70%), var(--ink); }
+  .grain { position:absolute; inset:0; opacity:.06; pointer-events:none; mix-blend-mode:overlay;
+           background-image:repeating-radial-gradient(circle at 17% 32%, #fff 0 1px, transparent 1px 3px), repeating-radial-gradient(circle at 71% 63%, #fff 0 1px, transparent 1px 4px); }
+  .vig { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(0,0,0,.72) 100%); }
+  .logo { position:absolute; left:96px; top:262px; width:120px; height:120px; mix-blend-mode:screen; }
+  .pill { position:absolute; right:120px; top:296px; font:600 28px 'Inter'; letter-spacing:.22em; color:var(--g); border:2px solid var(--g); padding:12px 24px; border-radius:99px; }
+  .lab { font:700 28px 'Inter'; letter-spacing:.28em; color:var(--mist); text-transform:uppercase; }
+  .h { font:800 96px/0.98 'Inter'; letter-spacing:-.04em; }
+  .gr { color:var(--g); }
+  .glass { background:var(--glass); border:2px solid var(--line); border-radius:28px; box-shadow:0 40px 110px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08); }
+  .ctablock { background:var(--g); color:var(--ink); border-radius:26px; padding:34px 40px; display:flex; justify-content:space-between; align-items:center; }
+  .ctablock label { display:block; font:800 26px 'Inter'; letter-spacing:.24em; }
+  .ctablock small { display:block; margin-top:8px; font:600 26px 'Inter'; opacity:.75; }
+  .ctablock b { font:900 50px 'Inter'; letter-spacing:-.03em; white-space:nowrap; }
+
+  #chat { position:absolute; left:60px; right:60px; top:420px; height:1180px; overflow:hidden; }
+  #feed1 { position:absolute; left:0; right:0; bottom:0; display:flex; flex-direction:column; gap:22px; }
+  #feed2 { position:absolute; left:0; right:0; top:150px; display:flex; flex-direction:column; gap:22px; }
+  .b { max-width:760px; padding:30px 36px; border-radius:40px; font:600 44px/1.25 'Inter'; letter-spacing:-.01em; opacity:0; }
+  .b.in { background:#221a2e; color:#fff; border-bottom-left-radius:12px; align-self:flex-start; }
+  .b.out { background:var(--g); color:var(--ink); border-bottom-right-radius:12px; align-self:flex-end; }
+  .b.img { background:linear-gradient(135deg,#7B16B8,#240538); color:var(--mist); height:300px; display:flex; align-items:center; justify-content:center; font:700 32px 'Inter'; letter-spacing:.08em; align-self:flex-end; width:560px; }
+  .b.typing { padding:28px 34px; align-self:flex-end; background:#2b2238; display:flex; gap:12px; }
+  .b.typing i { width:18px; height:18px; border-radius:50%; background:var(--mist); display:block; }
+  .b.seen { padding:0; background:none; align-self:flex-end; font:600 30px 'Inter'; color:var(--grey); }
+  .hdr { position:absolute; left:60px; right:60px; top:420px; display:flex; align-items:center; gap:22px; padding-bottom:26px; border-bottom:1px solid var(--line); }
+  .hdr .av { width:84px; height:84px; border-radius:50%; background:linear-gradient(135deg,var(--mag),var(--p1)); }
+  .hdr b { font:800 40px 'Inter'; } .hdr small { display:block; font:500 28px 'Inter'; color:var(--grey); }
+  .big { position:absolute; left:96px; right:96px; font:900 110px/0.94 'Inter'; letter-spacing:-.05em; opacity:0; }
+  .cntr { position:absolute; left:0; right:0; top:900px; text-align:center; font:900 220px 'Inter'; letter-spacing:-.06em; color:var(--grey); opacity:0; }
+  .rules { position:absolute; left:96px; right:96px; top:700px; display:flex; flex-direction:column; gap:26px; }
+  .rule1 { display:flex; gap:28px; align-items:center; padding:30px 36px; border-radius:26px; background:var(--glass); border:2px solid var(--line); opacity:0; }
+  .rule1 b { font:900 70px 'Inter'; color:var(--g); min-width:110px; } .rule1 p { font:800 46px/1.1 'Inter'; letter-spacing:-.02em; }
+  #cta { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:0 110px; }
+  #cta .h { font:900 112px/0.92 'Inter'; letter-spacing:-.05em; }
+  #cta .rule { width:200px; height:12px; border-radius:6px; background:var(--g); margin:36px 0 40px; }
+</style>
+  </head>
+  <body>
+
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60.0" data-width="1080" data-height="1920">
+      <div class="bgfill clip" id="bgfill" data-start="0" data-duration="60.0" data-track-index="0"></div>
+      
+      <div class="hdr clip" id="hdr" data-start="0" data-duration="49" data-track-index="1"><div class="av"></div><div><b>Kedai Kek (contoh)</b><small>Business · biasanya balas dalam 1 jam</small></div></div>
+      <div id="chatw" class="clip" data-start="0" data-duration="49" data-track-index="2"><div id="chat">
+        <div id="feed1"><div class="b in" id="a0">Kek coklat 1kg berapa?</div><div class="b typing" id="a1"><i></i><i></i><i></i></div><div class="b out" id="a2">RM90.</div><div class="b seen" id="a3">Dilihat</div></div>
+        <div id="feed2"><div class="b in" id="b0">Kek coklat 1kg berapa?</div><div class="b typing" id="b1"><i></i><i></i><i></i></div><div class="b out" id="b2">Untuk majlis apa ya? Birthday anak? 🎂</div><div class="b in" id="b3">Ha'ah, anak umur 6.</div><div class="b out" id="b4">Kek coklat lembap, tulis nama dia free. Ramai mak ayah ambil yang ni untuk birthday.</div><div class="b img" id="b5">[ gambar 3 kek birthday · CONTOH ]</div><div class="b out" id="b6">1kg RM90, siap dalam 2 hari. Nak saya lock tarikh?</div><div class="b in" id="b7">Ok nak! Sabtu boleh?</div></div>
+      </div></div>
+      <div class="cntr clip" id="cntr" data-start="7" data-duration="6" data-track-index="3"><span id="cn">1 jam</span></div>
+      <div class="big clip" id="big1" data-start="13" data-duration="5.6" data-track-index="3" style="top:820px">Senyap.<br><span style="color:var(--grey)">Selamanya.</span></div>
+      <div class="big clip" id="big2" data-start="18.8" data-duration="10.6" data-track-index="3" style="top:520px;font-size:96px">Harga je,<br>tanpa nilai,<br><span class="gr">orang banding</span><br><span class="gr">harga je.</span></div>
+      <div class="big clip" id="big3" data-start="25.4" data-duration="4" data-track-index="4" style="top:1300px;font-size:64px;color:var(--mist)">Cuba sekali lagi.</div>
+      <div class="rules clip" id="rules" data-start="49" data-duration="4.8" data-track-index="3">
+        <div class="rule1"><b>01</b><p>Tanya dulu, <span class="gr">kenal dia.</span></p></div>
+        <div class="rule1"><b>02</b><p>Tunjuk bukti & cerita.</p></div>
+        <div class="rule1"><b>03</b><p>Harga datang <span class="gr">selepas nilai.</span></p></div>
+      </div>
+      <div id="cta" class="clip" data-start="53.8" data-duration="6.2" data-track-index="5">
+        <div class="h"><span class="el">NILAI DULU.</span><br><span class="el gr">HARGA</span><br><span class="el gr">KEMUDIAN.</span></div>
+        <div class="rule" id="ctarule"></div>
+        <div class="ctablock" id="ctab"><div><label>SKRIP DM & SALES</label><small>Chat yang jadi tempahan</small></div><b>DM LOKADIGITAL</b></div>
+      </div>
+      
+      <img class="logo clip" id="logo" src="assets/logo.jpg" alt="LOKADIGITAL" data-start="0" data-duration="60.0" data-track-index="8">
+      <div class="pill clip" id="pill" data-start="0" data-duration="60.0" data-track-index="8">CONTOH · KEDAI KEK</div>
+      <div class="vig clip" id="vig" data-start="0" data-duration="60.0" data-track-index="9" data-layout-ignore></div>
+      <div class="grain clip" id="grain" data-start="0" data-duration="60.0" data-track-index="9" data-layout-ignore></div>
+      <audio id="mix" src="assets/mix.wav" class="clip" data-start="0" data-duration="60.0" data-track-index="10"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#hdr", {y:-40, opacity:0}, {y:0, opacity:1, duration:.5, ease:"expo.out"}, .2);
+      tl.fromTo("#a0", {opacity:0, y:40, scale:.9, transformOrigin:"0% 100%"}, {opacity:1, y:0, scale:1, duration:.35, ease:"back.out(1.7)"}, 1.20);
+      tl.fromTo("#a1", {opacity:0, scale:.6}, {opacity:1, scale:1, duration:.25, ease:"back.out(2)"}, 3.00);
+      tl.fromTo("#a1 i", {y:0}, {y:-10, duration:.2, yoyo:true, repeat:5, stagger:.1, ease:"sine.inOut"}, 3.00);
+      tl.to("#a1", {opacity:0, height:0, padding:0, duration:.15}, 4.25);
+      tl.fromTo("#a2", {opacity:0, y:40, scale:.9, transformOrigin:"100% 100%"}, {opacity:1, y:0, scale:1, duration:.35, ease:"back.out(1.7)"}, 4.40);
+      tl.fromTo("#a3", {opacity:0, y:40, scale:.9, transformOrigin:"100% 100%"}, {opacity:1, y:0, scale:1, duration:.35, ease:"back.out(1.7)"}, 5.60);
+      tl.fromTo("#b0", {opacity:0, y:40, scale:.9, transformOrigin:"0% 100%"}, {opacity:1, y:0, scale:1, duration:.35, ease:"back.out(1.7)"}, 30.00);
+      tl.fromTo("#b1", {opacity:0, scale:.6}, {opacity:1, scale:1, duration:.25, ease:"back.out(2)"}, 31.80);
+      tl.fromTo("#b1 i", {y:0}, {y:-10, duration:.2, yoyo:true, repeat:5, stagger:.1, ease:"sine.inOut"}, 31.80);
+      tl.to("#b1", {opacity:0, height:0, padding:0, duration:.15}, 32.85);
+      tl.fromTo("#b2", {opacity:0, y:40, scale:.9, transformOrigin:"100% 100%"}, {opacity:1, y:0, scale:1, duration:.35, ease:"back.out(1.7)"}, 33.00);
+      tl.fromTo("#b3", {opacity:0, y:40, scale:.9, transformOrigin:"0% 100%"}, {opacity:1, y:0, scale:1, duration:.35, ease:"back.out(1.7)"}, 35.60);
+      tl.fromTo("#b4", {opacity:0, y:40, scale:.9, transformOrigin:"100% 100%"}, {opacity:1, y:0, scale:1, duration:.35, ease:"back.out(1.7)"}, 37.60);
+      tl.fromTo("#b5", {opacity:0, y:40, scale:.9, transformOrigin:"100% 100%"}, {opacity:1, y:0, scale:1, duration:.35, ease:"back.out(1.7)"}, 40.60);
+      tl.fromTo("#b6", {opacity:0, y:40, scale:.9, transformOrigin:"100% 100%"}, {opacity:1, y:0, scale:1, duration:.35, ease:"back.out(1.7)"}, 42.60);
+      tl.fromTo("#b7", {opacity:0, y:40, scale:.9, transformOrigin:"0% 100%"}, {opacity:1, y:0, scale:1, duration:.35, ease:"back.out(1.7)"}, 45.40);
+      tl.set("#feed2", {opacity:0}, 0); tl.set("#feed2", {opacity:1}, 29.6);
+      tl.to("#feed1", {opacity:0, duration:.4}, 29.2);
+      tl.to("#chat", {y:-40, duration:1, ease:"power2.out"}, 6.2);
+      tl.to("#feed2", {y:-300, duration:1.2, ease:"power2.inOut"}, 40.2);
+      tl.fromTo("#cntr", {opacity:0, scale:.7}, {opacity:1, scale:1, duration:.5, ease:"expo.out"}, 7.1);
+      tl.to("#chatw", {opacity:.25, duration:.6}, 7);
+      tl.to("#chatw", {opacity:1, duration:.4}, 29.4);
+      tl.to("#chatw", {opacity:.15, duration:.4}, 13);
+      tl.set("#cn", {textContent:"3 jam"}, 8.60);
+      tl.set("#cn", {textContent:"1 hari"}, 10.00);
+      tl.set("#cn", {textContent:"3 hari"}, 11.40);
+      tl.fromTo("#big1", {y:50, opacity:0}, {y:0, opacity:1, duration:.6, ease:"expo.out"}, 13.1);
+      tl.fromTo("#big2", {y:50, opacity:0}, {y:0, opacity:1, duration:.7, ease:"expo.out"}, 18.9);
+      tl.fromTo("#big3", {opacity:0}, {opacity:1, duration:.5}, 25.6);
+      tl.to("#chatw", {opacity:.2, duration:.4}, 48.4);
+      tl.fromTo(".rule1", {x:-100, opacity:0}, {x:0, opacity:1, duration:.5, ease:"expo.out", stagger:.5}, 49.1);
+      tl.fromTo("#cta .el", {yPercent:100, opacity:0}, {yPercent:0, opacity:1, duration:.6, ease:"expo.out", stagger:.18}, 54);
+      tl.fromTo("#ctarule", {scaleX:0, transformOrigin:"0% 50%"}, {scaleX:1, duration:.7, ease:"expo.inOut"}, 54.9);
+      tl.fromTo("#ctab", {y:60, opacity:0}, {y:0, opacity:1, duration:.7, ease:"expo.out"}, 55.4);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
