@@ -4,7 +4,7 @@
 <style>
 /* ===== EDIT HERE: brand tokens ===== */
 :root{
-  --black:#07040C; --purple:#2A0F5E; --purple-deep:#150731; --purple-lite:#5B2FC0;
+  --black:#07040C; --purple:#46096B; --purple-deep:#240538; --logo-purple:#B800F0;  /* hue matched to logo magenta-purple */
   --green:#B4FF39; --white:#FFFFFF; --mist:#D9D0F0; --line:rgba(255,255,255,.14);
 }
 @page{size:210mm 297mm;margin:0}
@@ -13,9 +13,9 @@ html,body{width:210mm;height:297mm;background:var(--black);font-family:'Inter',A
 .page{position:relative;width:210mm;height:297mm;overflow:hidden;padding:13mm 14mm 11mm;display:flex;flex-direction:column;
   background:radial-gradient(120% 55% at 100% 0%,var(--purple) 0%,transparent 62%),radial-gradient(90% 40% at 0% 100%,var(--purple-deep) 0%,transparent 70%),var(--black)}
 header{display:flex;justify-content:space-between;align-items:center}
-.logo{height:38mm;display:block;margin:-9.5mm 0 -8mm -9.5mm;mix-blend-mode:screen}
+.logo{height:38mm;display:block;margin:-9.5mm 0 -8mm -4.8mm;mix-blend-mode:screen}
 .tag{font:600 8pt 'Inter';letter-spacing:.22em;color:var(--green);border:1px solid var(--green);padding:2mm 3.4mm;border-radius:99px}
-.hero{margin-top:9mm}
+.hero{margin-top:7mm}
 .hero small{font:600 9pt 'Inter';letter-spacing:.3em;color:var(--green);display:block;margin-bottom:3.5mm}
 .hero h1{font:800 34pt/1 'Inter Display','Inter';letter-spacing:-.025em}
 .hero h1 span{color:var(--green)}
@@ -49,7 +49,6 @@ footer b{color:var(--white);font-weight:700}
 </header>
 
 <section class="hero">
-  <small>MONTHLY RETAINER</small>
   <h1>LOKADIGITAL<br><span>MARKETING</span><br>PACKAGE</h1>
   <div class="rule"></div>
 </section>
