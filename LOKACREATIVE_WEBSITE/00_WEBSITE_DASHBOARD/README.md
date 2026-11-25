@@ -13,19 +13,23 @@ Merancang website korporat **LokaCreative Ventures**, syarikat induk kepada **Lo
 |---|---|
 | 01 Brand & business | 🟥 Kebanyakan TBC: perlukan input kau |
 | 02 Strategi | 🟨 Cadangan sedia, menunggu keputusan |
-| 03 Design & UI/UX | 🟨 Draf guna konsep "Loka Index" (A Neutral corporate + sistem warna jenama). Menunggu kelulusan |
+| 03 Design & UI/UX | 🟨 Draf ikut identiti deck Canva pemilik (hitam #171717, lime #D6FF3F). Font rasmi TBC |
 | 04 Kandungan | 🟥 Struktur sahaja; teks bergantung pada maklumat TBC |
-| 05 Teknikal | 🟨 Draf: Node.js + Express + SQLite, admin dashboard, 42/42 ujian keselamatan lulus ([`SECURITY_REVIEW.md`](../05_TECHNICAL_DEVELOPMENT/SECURITY_REVIEW.md)) |
+| 05 Teknikal | 🟨 Draf: Node.js + Express + SQLite, admin dashboard, 51/51 ujian keselamatan lulus, 2FA wajib ([`SECURITY_REVIEW.md`](../05_TECHNICAL_DEVELOPMENT/SECURITY_REVIEW.md)) |
 | 08 Rujukan | 🟩 Audit bestfood.my siap ([`REF-W01`](../08_REFERENCES/REF-W01_BESTFOOD_AUDIT.md)) |
 | 07 Aset | 🟥 Tiada logo / foto lagi |
 
 **Fasa seterusnya (selepas approval):** 1) kunci strategi & sitemap → 2) design direction → 3) kandungan → 4) wireframe → 5) build (preview) → 6) review → 7) deploy.
 
 ## 🆕 Kemas kini terkini
+- **2026-11-25 (W06):** **2FA wajib** untuk semua admin (TOTP + kod pemulihan). Website ditukar kepada **identiti brand sebenar** dari deck Canva (hitam/lime) dengan logo LokaDigital dan LokaFoodie; identiti rekaan dibuang. 51/51 ujian lulus. ⚠️ 4 percanggahan perlu keputusan: [`BRAND_SOURCES.md`](../01_BRAND_AND_BUSINESS/BRAND_SOURCES.md).
 - **2026-11-25 (W05):** Atas permintaan pemilik: audit rujukan bestfood.my, draf website dan admin dashboard (backend + frontend) dibina dalam [`site/`](../site/README.md) dengan semakan keselamatan. Semua fakta belum disahkan kekal TBC. Belum deploy.
 - **2026-11-25:** Projek dimulakan. Struktur dokumentasi 00–07 dicipta dengan maklumat sedia ada dan TBC untuk semua yang belum disahkan.
 
 ## ✋ Keputusan & maklumat diperlukan daripada kau
+**Percanggahan brand (baru, W06)**
+0. Deck Canva sebut LokaCreative ialah *digital marketing agency*, tapi W02 kata *corporate group*. Mana satu? Emel rasmi kumpulan? ([`BRAND_SOURCES.md`](../01_BRAND_AND_BUSINESS/BRAND_SOURCES.md))
+
 **Perniagaan (paling penting: ia menentukan semua yang lain)**
 1. Fungsi ringkas (1 ayat) untuk **LokaFoodie, LokaDaily, LokaTalent, LokaCommerce, Loka Brands**.
 2. Struktur: setiap jenama ialah subsidiari, divisyen atau jenama dagangan? Jenama mana dipaparkan semasa pelancaran?

@@ -82,21 +82,33 @@ CREATE TABLE IF NOT EXISTS audit_log (
   ip_hash TEXT NOT NULL DEFAULT '',
   created_at INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS mfa_challenges (
+  id_hash TEXT PRIMARY KEY,
+  admin_id INTEGER NOT NULL REFERENCES admins(id) ON DELETE CASCADE,
+  attempts INTEGER NOT NULL DEFAULT 0,
+  expires_at INTEGER NOT NULL
+);
 CREATE INDEX IF NOT EXISTS idx_sessions_admin ON sessions(admin_id);
 CREATE INDEX IF NOT EXISTS idx_inquiries_created ON inquiries(created_at);
 CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_log(created_at);
 `;
 
-// Only facts recorded in LOKACREATIVE_WEBSITE docs (W01–W03). Everything else is TBC.
+// Only facts with a source (see 01_BRAND_AND_BUSINESS/BRAND_SOURCES.md). Everything else is TBC.
+// Colour: only LokaDigital has a documented brand colour; others stay neutral until supplied.
+const NEUTRAL = '#8A8A8A';
 const SEED_BRANDS = [
   { code: 'LCV-01', slug: 'lokadigital', name: 'LokaDigital', role_line: 'Agensi digital marketing high-end',
     description: 'Strategi content dan ads berasaskan insight audience dan data.', fact_status: 'confirmed', status: 'active',
-    accent: '#602AC8', instagram_url: 'https://www.instagram.com/lokadigitalmy', facebook_url: 'https://www.facebook.com/lokadigitalmy' },
-  { code: 'LCV-02', slug: 'lokafoodie', name: 'LokaFoodie', accent: '#C2410C' },
-  { code: 'LCV-03', slug: 'lokadaily', name: 'LokaDaily', accent: '#0B7285' },
-  { code: 'LCV-04', slug: 'lokatalent', name: 'LokaTalent', accent: '#A61E4D' },
-  { code: 'LCV-05', slug: 'lokacommerce', name: 'LokaCommerce', accent: '#2B8A3E' },
-  { code: 'LCV-06', slug: 'loka-brands', name: 'Loka Brands', accent: '#5C5F66' },
+    accent: '#602AC8', logo: '/assets/brands/lokadigital.png',
+    instagram_url: 'https://www.instagram.com/lokadigitalmy', facebook_url: 'https://www.facebook.com/lokadigitalmy' },
+  { code: 'LCV-02', slug: 'lokafoodie', name: 'LokaFoodie', role_line: 'Food review, kempen dan advertising',
+    description: 'Media food review untuk audience niche: foodie, lifestyle dan travel. Berpangkalan di Kuala Lumpur.',
+    fact_status: 'confirmed', status: 'active', accent: NEUTRAL, logo: '/assets/brands/lokafoodie.png',
+    instagram_url: 'https://www.instagram.com/lokafoodie' },
+  { code: 'LCV-03', slug: 'lokadaily', name: 'LokaDaily', accent: NEUTRAL },
+  { code: 'LCV-04', slug: 'lokatalent', name: 'LokaTalent', accent: NEUTRAL },
+  { code: 'LCV-05', slug: 'lokacommerce', name: 'LokaCommerce', accent: NEUTRAL },
+  { code: 'LCV-06', slug: 'loka-brands', name: 'Loka Brands', accent: NEUTRAL },
 ];
 
 // [key, label, group, value, status, max_len]
@@ -114,9 +126,10 @@ const SEED_CONTENT = [
   ['proof_note', 'Bukti / pencapaian yang boleh disahkan', 'Laman utama', '', 'tbc', 400],
   ['partner_cta_title', 'Tajuk CTA kerjasama', 'Laman utama', 'Mari bina sesuatu bersama.', 'proposal', 80],
   ['partner_cta_body', 'Teks CTA kerjasama', 'Laman utama', '', 'tbc', 300],
-  ['contact_email', 'Emel rasmi', 'Hubungi', '', 'tbc', 120],
-  ['contact_phone', 'Telefon rasmi', 'Hubungi', '', 'tbc', 30],
-  ['contact_address', 'Alamat', 'Hubungi', '', 'tbc', 300],
+  // Source: Canva deck "Lokacreative Ventures" (closing page) and "Rate Card LokaFoodie". Proposal until the owner confirms.
+  ['contact_email', 'Emel rasmi', 'Hubungi', 'lokadigitalmy@gmail.com', 'proposal', 120],
+  ['contact_phone', 'Telefon rasmi', 'Hubungi', '013-996 7524', 'proposal', 30],
+  ['contact_address', 'Alamat', 'Hubungi', 'Kuala Lumpur, Malaysia', 'proposal', 300],
 ];
 
 function openDb(file) {
@@ -125,18 +138,31 @@ function openDb(file) {
   db.exec('PRAGMA foreign_keys = ON;');
   if (file !== ':memory:') db.exec('PRAGMA journal_mode = WAL;');
   db.exec(SCHEMA);
+  migrate(db);
   seed(db);
   return db;
+}
+
+// Adds columns introduced after the first release, so existing databases keep working.
+function migrate(db) {
+  const cols = (t) => new Set(db.prepare(`PRAGMA table_info(${t})`).all().map((c) => c.name));
+  const add = (t, name, def) => { if (!cols(t).has(name)) db.exec(`ALTER TABLE ${t} ADD COLUMN ${name} ${def}`); };
+  add('admins', 'totp_secret_enc', "TEXT NOT NULL DEFAULT ''");
+  add('admins', 'totp_pending_enc', "TEXT NOT NULL DEFAULT ''");
+  add('admins', 'totp_enabled', 'INTEGER NOT NULL DEFAULT 0');
+  add('admins', 'totp_last_step', 'INTEGER NOT NULL DEFAULT 0');
+  add('admins', 'recovery_hashes', "TEXT NOT NULL DEFAULT '[]'");
+  add('brands', 'logo', "TEXT NOT NULL DEFAULT ''");
 }
 
 function seed(db) {
   const now = Date.now();
   const hasBrands = db.prepare('SELECT COUNT(*) AS n FROM brands').get().n > 0;
   if (!hasBrands) {
-    const ins = db.prepare(`INSERT INTO brands (code, slug, name, role_line, description, fact_status, status, accent, sort_order, instagram_url, facebook_url, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    const ins = db.prepare(`INSERT INTO brands (code, slug, name, role_line, description, fact_status, status, accent, sort_order, instagram_url, facebook_url, logo, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
     SEED_BRANDS.forEach((b, i) => ins.run(b.code, b.slug, b.name, b.role_line || '', b.description || '',
-      b.fact_status || 'tbc', b.status || 'coming_soon', b.accent, i + 1, b.instagram_url || '', b.facebook_url || '', now));
+      b.fact_status || 'tbc', b.status || 'coming_soon', b.accent, i + 1, b.instagram_url || '', b.facebook_url || '', b.logo || '', now));
   }
   const insC = db.prepare(`INSERT OR IGNORE INTO content (key, label, grp, value, status, max_len, sort_order, updated_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);

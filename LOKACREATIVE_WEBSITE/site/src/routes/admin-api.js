@@ -6,9 +6,14 @@ const {
   str, oneOf, email, httpsUrl, hexColor, slug, intId,
 } = require('../security');
 const { createSession, destroySession, requireAuth, requireRole, requireCsrf } = require('../auth');
+const QRCode = require('qrcode');
+const totp = require('../totp');
+const { makeBox } = require('../secret-box');
+const { sha256, randomToken, safeEqual } = require('../security');
 
 module.exports = function adminApi(db, config) {
   const r = express.Router();
+  const box = makeBox(config);
 
   r.use((req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
   r.use(requireSameOrigin(config));
@@ -42,26 +47,147 @@ module.exports = function adminApi(db, config) {
     const ok = verifyPassword(pw, admin?.password_hash); // always runs: constant-ish timing
     if (!admin || !admin.active) { log(req, 'login_failed', 'admin', '', 'unknown or inactive'); return fail(); }
     if (admin.locked_until && admin.locked_until > now) { log(req, 'login_locked', 'admin', admin.id); return fail(); }
-    if (!ok) {
-      const attempts = admin.failed_attempts + 1;
-      const lock = attempts >= config.lockoutAfter ? now + config.lockoutMs : null;
-      db.prepare('UPDATE admins SET failed_attempts = ?, locked_until = ? WHERE id = ?').run(lock ? 0 : attempts, lock, admin.id);
-      log(req, lock ? 'account_locked' : 'login_failed', 'admin', admin.id);
-      return fail();
+    if (!ok) { recordFailure(req, admin, 'login_failed'); return fail(); }
+    if (admin.totp_enabled) {
+      // Step 1 passed. Issue a short-lived, single-purpose challenge token; no session yet.
+      const token = randomToken(32);
+      db.prepare('DELETE FROM mfa_challenges WHERE admin_id = ? OR expires_at < ?').run(admin.id, now);
+      db.prepare('INSERT INTO mfa_challenges (id_hash, admin_id, expires_at) VALUES (?, ?, ?)').run(sha256(token), admin.id, now + config.mfaChallengeMs);
+      log(req, 'login_password_ok', 'admin', admin.id, 'awaiting 2FA');
+      return res.json({ mfa_required: true, mfa_token: token });
     }
-    db.prepare('UPDATE admins SET failed_attempts = 0, locked_until = NULL, last_login_at = ? WHERE id = ?').run(now, admin.id);
+    finishLogin(req, res, admin);
+  });
+
+  function recordFailure(req, admin, action) {
+    const attempts = admin.failed_attempts + 1;
+    const lock = attempts >= config.lockoutAfter ? Date.now() + config.lockoutMs : null;
+    db.prepare('UPDATE admins SET failed_attempts = ?, locked_until = ? WHERE id = ?').run(lock ? 0 : attempts, lock, admin.id);
+    if (lock) db.prepare('DELETE FROM mfa_challenges WHERE admin_id = ?').run(admin.id);
+    log(req, lock ? 'account_locked' : action, 'admin', admin.id);
+  }
+
+  function finishLogin(req, res, admin) {
+    db.prepare('UPDATE admins SET failed_attempts = 0, locked_until = NULL, last_login_at = ? WHERE id = ?').run(Date.now(), admin.id);
     // New session on every login (prevents session fixation); old session for this browser is dropped.
     if (req.sessionIdHash) db.prepare('DELETE FROM sessions WHERE id_hash = ?').run(req.sessionIdHash);
     const csrf = createSession(db, config, res, admin.id);
     req.admin = { id: admin.id };
-    log(req, 'login', 'admin', admin.id);
-    res.json({ user: { id: admin.id, email: admin.email, name: admin.name, role: admin.role }, csrf });
+    log(req, 'login', 'admin', admin.id, admin.totp_enabled ? '2FA' : 'password only');
+    res.json({ user: publicUser(admin), csrf });
+  }
+
+  const publicUser = (a) => ({ id: a.id, email: a.email, name: a.name, role: a.role, mfa: !!a.totp_enabled, require2fa: config.require2fa });
+
+  // Step 2: TOTP code or a one-time recovery code.
+  r.post('/login/mfa', loginLimiter, (req, res) => {
+    const token = typeof req.body?.mfa_token === 'string' ? req.body.mfa_token.slice(0, 100) : '';
+    const now = Date.now();
+    const fail = (status = 401) => res.status(status).json({ error: 'Kod pengesahan salah atau tamat tempoh. Log masuk semula jika perlu.' });
+    const ch = token ? db.prepare('SELECT * FROM mfa_challenges WHERE id_hash = ?').get(sha256(token)) : undefined;
+    if (!ch || ch.expires_at < now || ch.attempts >= config.mfaMaxAttempts) return fail();
+    const admin = db.prepare('SELECT * FROM admins WHERE id = ?').get(ch.admin_id);
+    if (!admin || !admin.active || !admin.totp_enabled || (admin.locked_until && admin.locked_until > now)) return fail();
+
+    let okStep = null; let usedRecovery = false;
+    if (req.body?.recovery) {
+      const hashes = JSON.parse(admin.recovery_hashes || '[]');
+      const h = sha256(totp.normalizeRecovery(req.body.recovery));
+      const idx = hashes.findIndex((x) => safeEqual(x, h));
+      if (idx >= 0) {
+        hashes.splice(idx, 1);
+        db.prepare('UPDATE admins SET recovery_hashes = ? WHERE id = ?').run(JSON.stringify(hashes), admin.id);
+        usedRecovery = true;
+      }
+    } else {
+      okStep = totp.verify(box.open(admin.totp_secret_enc), req.body?.code, admin.totp_last_step, now);
+    }
+    if (okStep === null && !usedRecovery) {
+      db.prepare('UPDATE mfa_challenges SET attempts = attempts + 1 WHERE id_hash = ?').run(ch.id_hash);
+      recordFailure(req, admin, 'mfa_failed');
+      return fail();
+    }
+    if (okStep !== null) db.prepare('UPDATE admins SET totp_last_step = ? WHERE id = ?').run(okStep, admin.id);
+    db.prepare('DELETE FROM mfa_challenges WHERE id_hash = ?').run(ch.id_hash);
+    if (usedRecovery) log(req, 'recovery_code_used', 'admin', admin.id);
+    finishLogin(req, res, admin);
   });
 
   // Everything below needs a session; mutations also need the CSRF token.
   r.use(requireAuth, requireCsrf);
 
-  r.get('/me', (req, res) => res.json({ user: req.admin, csrf: req.csrf }));
+  // Until an admin has enrolled in 2FA, only the enrolment endpoints are reachable.
+  const ENROL_PATHS = new Set(['GET /me', 'GET /me/2fa', 'POST /logout', 'POST /me/2fa/setup', 'POST /me/2fa/enable']);
+  r.use((req, res, next) => {
+    if (!config.require2fa || req.admin.mfa || ENROL_PATHS.has(`${req.method} ${req.path}`)) return next();
+    res.status(403).json({ error: 'Aktifkan pengesahan dua langkah (2FA) dahulu.', mfa_setup_required: true });
+  });
+
+  r.get('/me', (req, res) => res.json({ user: { ...req.admin, require2fa: config.require2fa }, csrf: req.csrf }));
+
+  // ---------- 2FA ----------
+  const adminRow = (id) => db.prepare('SELECT * FROM admins WHERE id = ?').get(id);
+  const needPassword = (row, pw) => { if (!verifyPassword(String(pw || ''), row.password_hash)) throw new ValidationError('Kata laluan salah.'); };
+  const needCode = (row, code) => {
+    const step = totp.verify(box.open(row.totp_secret_enc), code, row.totp_last_step);
+    if (step === null) throw new ValidationError('Kod 2FA salah atau sudah digunakan.');
+    db.prepare('UPDATE admins SET totp_last_step = ? WHERE id = ?').run(step, row.id);
+  };
+  const issueRecovery = (id) => {
+    const codes = totp.newRecoveryCodes();
+    db.prepare('UPDATE admins SET recovery_hashes = ? WHERE id = ?').run(JSON.stringify(codes.map((c) => sha256(totp.normalizeRecovery(c)))), id);
+    return codes;
+  };
+
+  r.post('/me/2fa/setup', async (req, res) => {
+    const row = adminRow(req.admin.id);
+    if (row.totp_enabled) throw new ValidationError('2FA sudah aktif.');
+    needPassword(row, req.body?.password);
+    const secret = totp.newSecret();
+    db.prepare('UPDATE admins SET totp_pending_enc = ? WHERE id = ?').run(box.seal(secret), row.id);
+    const uri = totp.otpauthUri({ secret, account: row.email, issuer: config.issuer });
+    const svg = await QRCode.toString(uri, { type: 'svg', margin: 1, errorCorrectionLevel: 'M' });
+    log(req, '2fa_setup_started', 'admin', row.id);
+    res.json({ secret, uri, qr: `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}` });
+  });
+
+  r.post('/me/2fa/enable', (req, res) => {
+    const row = adminRow(req.admin.id);
+    if (row.totp_enabled) throw new ValidationError('2FA sudah aktif.');
+    if (!row.totp_pending_enc) throw new ValidationError('Mulakan persediaan 2FA dahulu.');
+    const step = totp.verify(box.open(row.totp_pending_enc), req.body?.code, 0);
+    if (step === null) throw new ValidationError('Kod salah. Pastikan masa telefon tepat dan cuba kod terbaru.');
+    db.prepare("UPDATE admins SET totp_secret_enc = totp_pending_enc, totp_pending_enc = '', totp_enabled = 1, totp_last_step = ? WHERE id = ?").run(step, row.id);
+    const codes = issueRecovery(row.id);
+    db.prepare('DELETE FROM sessions WHERE admin_id = ? AND id_hash != ?').run(row.id, req.sessionIdHash);
+    log(req, '2fa_enabled', 'admin', row.id);
+    res.json({ ok: true, recovery_codes: codes });
+  });
+
+  r.post('/me/2fa/recovery', (req, res) => {
+    const row = adminRow(req.admin.id);
+    if (!row.totp_enabled) throw new ValidationError('2FA belum aktif.');
+    needPassword(row, req.body?.password);
+    needCode(row, req.body?.code);
+    const codes = issueRecovery(row.id);
+    log(req, '2fa_recovery_regenerated', 'admin', row.id);
+    res.json({ recovery_codes: codes });
+  });
+
+  r.post('/me/2fa/disable', (req, res) => {
+    const row = adminRow(req.admin.id);
+    if (!row.totp_enabled) throw new ValidationError('2FA belum aktif.');
+    needPassword(row, req.body?.password);
+    needCode(row, req.body?.code);
+    db.prepare("UPDATE admins SET totp_enabled = 0, totp_secret_enc = '', totp_pending_enc = '', recovery_hashes = '[]', totp_last_step = 0 WHERE id = ?").run(row.id);
+    log(req, '2fa_disabled', 'admin', row.id);
+    res.json({ ok: true });
+  });
+
+  r.get('/me/2fa', (req, res) => {
+    const row = adminRow(req.admin.id);
+    res.json({ enabled: !!row.totp_enabled, recovery_left: JSON.parse(row.recovery_hashes || '[]').length, required: config.require2fa });
+  });
 
   r.post('/logout', (req, res) => {
     log(req, 'logout', 'admin', req.admin.id);
@@ -204,7 +330,7 @@ module.exports = function adminApi(db, config) {
 
   // ---------- admins (owner only) ----------
   r.get('/admins', requireRole('owner'), (req, res) => {
-    res.json(db.prepare('SELECT id, email, name, role, active, locked_until, created_at, last_login_at FROM admins ORDER BY id').all());
+    res.json(db.prepare('SELECT id, email, name, role, active, locked_until, created_at, last_login_at, totp_enabled FROM admins ORDER BY id').all());
   });
   r.post('/admins', requireRole('owner'), (req, res) => {
     const b = req.body || {};
@@ -228,6 +354,12 @@ module.exports = function adminApi(db, config) {
     const active = req.body?.active === undefined ? target.active : (req.body.active ? 1 : 0);
     db.prepare('UPDATE admins SET role = ?, active = ?, locked_until = CASE WHEN ? THEN NULL ELSE locked_until END, failed_attempts = 0 WHERE id = ?')
       .run(role, active, req.body?.unlock ? 1 : 0, id);
+    if (req.body?.reset_2fa) {
+      // Break-glass for a lost phone: the admin must enrol again at next login.
+      db.prepare("UPDATE admins SET totp_enabled = 0, totp_secret_enc = '', totp_pending_enc = '', recovery_hashes = '[]', totp_last_step = 0 WHERE id = ?").run(id);
+      db.prepare('DELETE FROM sessions WHERE admin_id = ?').run(id);
+      log(req, '2fa_reset_by_owner', 'admin', id);
+    }
     if (!active) db.prepare('DELETE FROM sessions WHERE admin_id = ?').run(id);
     log(req, 'admin_updated', 'admin', id, `role=${role} active=${active}`);
     res.json({ ok: true });

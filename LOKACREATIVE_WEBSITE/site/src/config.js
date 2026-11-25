@@ -21,6 +21,13 @@ const baseConfig = {
   lockoutAfter: 5, // failed attempts before an account is locked
   lockoutMs: 15 * 60 * 1000,
   contactLimit: 5, // contact form posts per IP per hour
+  // 32-byte hex key encrypting 2FA secrets at rest. Required in production; dev keeps a key file beside the DB.
+  dataKey: process.env.DATA_ENC_KEY || '',
+  // Every admin must enrol in 2FA before using the dashboard. Set REQUIRE_2FA=0 only for local testing.
+  require2fa: process.env.REQUIRE_2FA !== '0',
+  mfaChallengeMs: 5 * 60 * 1000,
+  mfaMaxAttempts: 5,
+  issuer: 'LokaCreative Ventures',
 };
 
 function assertProdConfig(c) {
@@ -28,6 +35,8 @@ function assertProdConfig(c) {
   const missing = [];
   if (!/^https:\/\/[^/]+$/.test(c.siteOrigin)) missing.push('SITE_ORIGIN (https://domain, no trailing slash)');
   if (!process.env.IP_HASH_SALT || process.env.IP_HASH_SALT.length < 16) missing.push('IP_HASH_SALT (min 16 chars)');
+  if (!/^[0-9a-fA-F]{64}$/.test(c.dataKey)) missing.push('DATA_ENC_KEY (64 hex chars)');
+  if (!c.require2fa) missing.push('REQUIRE_2FA must not be 0 in production');
   if (missing.length) throw new Error('Missing production config: ' + missing.join(', '));
 }
 

@@ -24,9 +24,15 @@ Laman awam: http://localhost:3000 · Dashboard: http://localhost:3000/admin
 
 ## Production (selepas kelulusan sahaja)
 ```bash
-NODE_ENV=production SITE_ORIGIN=https://domain-anda SITE_DRAFT=0 IP_HASH_SALT='<rentetan rawak 32+ aksara>' TRUST_PROXY=1 npm start
+NODE_ENV=production SITE_ORIGIN=https://domain-anda SITE_DRAFT=0 IP_HASH_SALT='<rentetan rawak 32+ aksara>' DATA_ENC_KEY='<64 aksara hex>' TRUST_PROXY=1 npm start
 ```
 Lihat `../05_TECHNICAL_DEVELOPMENT/SECURITY_REVIEW.md` untuk senarai semak sebelum pelancaran.
+
+## 2FA
+Semua admin **wajib** aktifkan 2FA pada log masuk pertama (Akaun saya, kemudian imbas QR dengan Google Authenticator, Microsoft Authenticator atau Authy). Simpan 10 kod pemulihan. Jika Owner tunggal hilang telefon dan kod pemulihan:
+```bash
+ADMIN_EMAIL=anda@domain.my ADMIN_PASSWORD='KataLaluanBaru-123!' ADMIN_RESET_2FA=1 npm run create-admin
+```
 
 ## Dashboard
 - **Ringkasan:** pertanyaan baru, medan TBC, kesempurnaan kandungan.

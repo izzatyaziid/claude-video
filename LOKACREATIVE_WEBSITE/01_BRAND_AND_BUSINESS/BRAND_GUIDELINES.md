@@ -2,7 +2,7 @@
 > **Peraturan:** tiada fakta, angka, revenue, klien atau pencapaian rekaan. `TBC` = belum disahkan. **CADANGAN** = idea perancangan yang perlu approval, bukan fakta.
 
 ## Status
-Brand guidelines korporat **belum wujud**. Semua elemen di bawah **TBC**.
+Guideline rasmi belum wujud, tetapi identiti visual **sudah wujud dalam deck Canva pemilik** dan kini digunakan: hitam `#171717`, lime `#D6FF3F`, putih. Sumber, kaedah dan percanggahan: [`BRAND_SOURCES.md`](BRAND_SOURCES.md).
 
 | Elemen | Nilai |
 |---|---|

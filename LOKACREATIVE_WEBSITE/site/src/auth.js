@@ -42,7 +42,7 @@ function destroySession(db, config, req, res) {
 // Attaches req.admin and req.csrf when a valid session cookie is present.
 function sessionMiddleware(db, config) {
   const find = db.prepare(`SELECT s.id_hash, s.csrf, s.created_at, s.last_seen_at,
-      a.id, a.email, a.name, a.role, a.active
+      a.id, a.email, a.name, a.role, a.active, a.totp_enabled
     FROM sessions s JOIN admins a ON a.id = s.admin_id WHERE s.id_hash = ?`);
   const touch = db.prepare('UPDATE sessions SET last_seen_at = ? WHERE id_hash = ?');
   const del = db.prepare('DELETE FROM sessions WHERE id_hash = ?');
@@ -70,7 +70,7 @@ function sessionMiddleware(db, config) {
     if (now - row.last_seen_at > 60 * 1000) touch.run(now, idHash);
     req.sessionIdHash = idHash;
     req.csrf = row.csrf;
-    req.admin = { id: row.id, email: row.email, name: row.name, role: row.role };
+    req.admin = { id: row.id, email: row.email, name: row.name, role: row.role, mfa: !!row.totp_enabled };
     next();
   };
 }

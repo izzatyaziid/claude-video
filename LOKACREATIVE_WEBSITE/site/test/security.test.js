@@ -5,23 +5,33 @@ const { once } = require('node:events');
 const { openDb } = require('../src/db');
 const { createApp } = require('../src/server');
 const { hashPassword } = require('../src/security');
+const totp = require('../src/totp');
+const { makeBox } = require('../src/secret-box');
 
 const OWNER = { email: 'owner@test.my', password: 'Owner-pass-123!' };
 const EDITOR = { email: 'editor@test.my', password: 'Editor-pass-123!' };
+const DATA_KEY = 'a'.repeat(64);
+const SECRET = totp.newSecret();
+const box = makeBox({ dataKey: DATA_KEY });
+const codeNow = (secret = SECRET, offset = 0) => totp.hotp(totp.base32Decode(secret), totp.stepAt(Date.now()) + offset);
 
+// Seeded admins already have 2FA, so tests exercise the real two-step login.
 async function boot(config = {}) {
   const db = openDb(':memory:');
-  const ins = db.prepare('INSERT INTO admins (email, name, password_hash, role, created_at) VALUES (?, ?, ?, ?, ?)');
-  ins.run(OWNER.email, 'Owner', hashPassword(OWNER.password), 'owner', Date.now());
-  ins.run(EDITOR.email, 'Editor', hashPassword(EDITOR.password), 'editor', Date.now());
-  const app = createApp({ db, config: { loginLimit: 1000, contactLimit: 1000, ...config } });
+  const ins = db.prepare("INSERT INTO admins (email, name, password_hash, role, created_at, totp_enabled, totp_secret_enc) VALUES (?, ?, ?, ?, ?, 1, ?)");
+  ins.run(OWNER.email, 'Owner', hashPassword(OWNER.password), 'owner', Date.now(), box.seal(SECRET));
+  ins.run(EDITOR.email, 'Editor', hashPassword(EDITOR.password), 'editor', Date.now(), box.seal(SECRET));
+  const app = createApp({ db, config: { loginLimit: 1000, contactLimit: 1000, dataKey: DATA_KEY, dbFile: ':memory:', ...config } });
   const server = app.listen(0, '127.0.0.1');
   await once(server, 'listening');
   const base = `http://127.0.0.1:${server.address().port}`;
-  return { db, base, close: () => new Promise((r) => server.close(r)) };
+  const s = { db, base, close: () => new Promise((r) => server.close(r)) };
+  CURRENT_DB = db;
+  return s;
 }
+let CURRENT_DB = null;
 
-function client(base) {
+function client(base, db) {
   const c = { cookie: '', csrf: '' };
   c.req = async (path, { method = 'GET', body, headers = {}, raw } = {}) => {
     const h = { Origin: base, ...headers };
@@ -35,8 +45,15 @@ function client(base) {
     let json = null; try { json = JSON.parse(text); } catch { /* html */ }
     return { status: res.status, headers: res.headers, text, json, setCookie: set };
   };
+  // Password step only.
+  c.password = (who) => c.req('/admin/api/login', { method: 'POST', body: who });
+  // Full login: password, then a fresh TOTP code. Replay guard is reset so tests can log in repeatedly.
   c.login = async (who) => {
-    const r = await c.req('/admin/api/login', { method: 'POST', body: who });
+    let r = await c.password(who);
+    if (r.json?.mfa_required) {
+      (db || CURRENT_DB).prepare('UPDATE admins SET totp_last_step = 0 WHERE email = ?').run(who.email);
+      r = await c.req('/admin/api/login/mfa', { method: 'POST', body: { mfa_token: r.json.mfa_token, code: codeNow() } });
+    }
     if (r.json?.csrf) c.csrf = r.json.csrf;
     return r;
   };
@@ -297,5 +314,121 @@ describe('public pages render', () => {
   test('no invented facts: TBC brands show TBC, not a made-up description', async () => {
     const r = await client(s.base).req('/brands/lokadaily');
     assert.match(r.text, /TBC/);
+  });
+});
+
+describe('two-factor authentication (2FA)', () => {
+  let s; before(async () => { s = await boot(); }); after(() => s.close());
+
+  test('TOTP matches the RFC 6238 test vector', () => {
+    const key = Buffer.from('12345678901234567890');
+    assert.equal(totp.hotp(key, Math.floor(59 / 30), 8), '94287082');
+    assert.equal(totp.hotp(key, Math.floor(1111111109 / 30), 8), '07081804');
+  });
+
+  test('password alone gives no session when 2FA is on', async () => {
+    const c = client(s.base, s.db);
+    const r = await c.password(OWNER);
+    assert.equal(r.status, 200);
+    assert.equal(r.json.mfa_required, true);
+    assert.equal(r.json.csrf, undefined);
+    assert.equal(r.setCookie.length, 0, 'no session cookie before second factor');
+    assert.equal((await c.req('/admin/api/me')).status, 401);
+  });
+
+  test('wrong code is rejected; right code creates a session', async () => {
+    const c = client(s.base, s.db);
+    const p = await c.password(OWNER);
+    const bad = await c.req('/admin/api/login/mfa', { method: 'POST', body: { mfa_token: p.json.mfa_token, code: '000000' === codeNow() ? '111111' : '000000' } });
+    assert.equal(bad.status, 401);
+    s.db.prepare('UPDATE admins SET totp_last_step = 0, failed_attempts = 0 WHERE email = ?').run(OWNER.email);
+    const ok = await c.req('/admin/api/login/mfa', { method: 'POST', body: { mfa_token: p.json.mfa_token, code: codeNow() } });
+    assert.equal(ok.status, 200);
+    assert.ok(ok.json.csrf);
+  });
+
+  test('a used code cannot be replayed', async () => {
+    const c1 = client(s.base, s.db); const c2 = client(s.base, s.db);
+    s.db.prepare('UPDATE admins SET totp_last_step = 0 WHERE email = ?').run(EDITOR.email);
+    const code = codeNow();
+    const a = await c1.password(EDITOR);
+    assert.equal((await c1.req('/admin/api/login/mfa', { method: 'POST', body: { mfa_token: a.json.mfa_token, code } })).status, 200);
+    const b = await c2.password(EDITOR);
+    assert.equal((await c2.req('/admin/api/login/mfa', { method: 'POST', body: { mfa_token: b.json.mfa_token, code } })).status, 401);
+  });
+
+  test('challenge token is single-use and expires', async () => {
+    const c = client(s.base, s.db);
+    const p = await c.password(OWNER);
+    s.db.prepare('UPDATE mfa_challenges SET expires_at = ?').run(Date.now() - 1);
+    s.db.prepare('UPDATE admins SET totp_last_step = 0 WHERE email = ?').run(OWNER.email);
+    assert.equal((await c.req('/admin/api/login/mfa', { method: 'POST', body: { mfa_token: p.json.mfa_token, code: codeNow() } })).status, 401);
+    assert.equal((await c.req('/admin/api/login/mfa', { method: 'POST', body: { mfa_token: 'forged-token', code: codeNow() } })).status, 401);
+  });
+
+  test('repeated wrong codes lock the account', async () => {
+    s.db.prepare("INSERT INTO admins (email, name, password_hash, role, created_at, totp_enabled, totp_secret_enc) VALUES ('brute@test.my', 'B', ?, 'editor', ?, 1, ?)")
+      .run(hashPassword('Brute-pass-1234!'), Date.now(), box.seal(SECRET));
+    const c = client(s.base, s.db);
+    for (let i = 0; i < 5; i++) {
+      const p = await c.password({ email: 'brute@test.my', password: 'Brute-pass-1234!' });
+      if (!p.json?.mfa_token) break;
+      await c.req('/admin/api/login/mfa', { method: 'POST', body: { mfa_token: p.json.mfa_token, code: '999999' === codeNow() ? '888888' : '999999' } });
+    }
+    const row = s.db.prepare("SELECT locked_until FROM admins WHERE email = 'brute@test.my'").get();
+    assert.ok(row.locked_until > Date.now(), 'locked after 5 bad codes');
+    assert.equal((await c.password({ email: 'brute@test.my', password: 'Brute-pass-1234!' })).status, 401);
+  });
+
+  test('admin without 2FA must enrol before using the dashboard', async () => {
+    s.db.prepare("INSERT INTO admins (email, name, password_hash, role, created_at) VALUES ('new@test.my', 'N', ?, 'editor', ?)").run(hashPassword('Newbie-pass-1234!'), Date.now());
+    const c = client(s.base, s.db);
+    const r = await c.login({ email: 'new@test.my', password: 'Newbie-pass-1234!' });
+    assert.equal(r.json.user.mfa, false);
+    const blocked = await c.req('/admin/api/stats');
+    assert.equal(blocked.status, 403);
+    assert.equal(blocked.json.mfa_setup_required, true);
+
+    assert.equal((await c.req('/admin/api/me/2fa/setup', { method: 'POST', body: { password: 'wrong' } })).status, 400, 'setup needs password');
+    const setup = await c.req('/admin/api/me/2fa/setup', { method: 'POST', body: { password: 'Newbie-pass-1234!' } });
+    assert.equal(setup.status, 200);
+    assert.match(setup.json.uri, /^otpauth:\/\/totp\/LokaCreative%20Ventures%3Anew%40test\.my\?secret=/);
+    assert.match(setup.json.qr, /^data:image\/svg\+xml;base64,/);
+
+    const row = s.db.prepare("SELECT totp_pending_enc FROM admins WHERE email = 'new@test.my'").get();
+    assert.ok(!row.totp_pending_enc.includes(setup.json.secret), 'secret encrypted at rest');
+
+    assert.equal((await c.req('/admin/api/me/2fa/enable', { method: 'POST', body: { code: '12345' } })).status, 400);
+    const en = await c.req('/admin/api/me/2fa/enable', { method: 'POST', body: { code: codeNow(setup.json.secret) } });
+    assert.equal(en.status, 200);
+    assert.equal(en.json.recovery_codes.length, 10);
+    assert.equal((await c.req('/admin/api/stats')).status, 200, 'dashboard unlocked after enrolment');
+
+    // Recovery code works exactly once.
+    const rc = en.json.recovery_codes[0];
+    const c2 = client(s.base, s.db);
+    const p = await c2.password({ email: 'new@test.my', password: 'Newbie-pass-1234!' });
+    assert.equal((await c2.req('/admin/api/login/mfa', { method: 'POST', body: { mfa_token: p.json.mfa_token, recovery: rc.toLowerCase() } })).status, 200);
+    const c3 = client(s.base, s.db);
+    const p3 = await c3.password({ email: 'new@test.my', password: 'Newbie-pass-1234!' });
+    assert.equal((await c3.req('/admin/api/login/mfa', { method: 'POST', body: { mfa_token: p3.json.mfa_token, recovery: rc } })).status, 401);
+  });
+
+  test('owner can reset another admin\'s 2FA; editor cannot', async () => {
+    const id = s.db.prepare("SELECT id FROM admins WHERE email = 'new@test.my'").get().id;
+    const ed = client(s.base, s.db); await ed.login(EDITOR);
+    assert.equal((await ed.req(`/admin/api/admins/${id}`, { method: 'PATCH', body: { reset_2fa: true } })).status, 403);
+    const ow = client(s.base, s.db); await ow.login(OWNER);
+    assert.equal((await ow.req(`/admin/api/admins/${id}`, { method: 'PATCH', body: { reset_2fa: true } })).status, 200);
+    assert.equal(s.db.prepare('SELECT totp_enabled FROM admins WHERE id = ?').get(id).totp_enabled, 0);
+  });
+
+  test('production refuses to start without an encryption key or with 2FA off', () => {
+    const { assertProdConfig } = require('../src/config');
+    const saved = process.env.IP_HASH_SALT; process.env.IP_HASH_SALT = 'x'.repeat(32);
+    assert.throws(() => assertProdConfig({ isProd: true, siteOrigin: 'https://a.my', dataKey: '', require2fa: true }), /DATA_ENC_KEY/);
+    assert.throws(() => assertProdConfig({ isProd: true, siteOrigin: 'https://a.my', dataKey: 'b'.repeat(64), require2fa: false }), /REQUIRE_2FA/);
+    assert.doesNotThrow(() => assertProdConfig({ isProd: true, siteOrigin: 'https://a.my', dataKey: 'b'.repeat(64), require2fa: true }));
+    process.env.IP_HASH_SALT = saved;
   });
 });

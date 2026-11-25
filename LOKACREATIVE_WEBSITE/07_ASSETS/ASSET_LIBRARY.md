@@ -4,8 +4,9 @@
 | Aset | Untuk | Status | Lokasi |
 |---|---|---|---|
 | Logo LokaCreative Ventures (SVG + PNG, terang/gelap) | Header, favicon, OG | ❌ TBC | — |
-| Logo LokaDigital (fail rasmi) | Kad jenama | ❌ TBC (wujud wordmark tipografi dalam video EP01 sahaja) | — |
-| Logo LokaFoodie / LokaDaily / LokaTalent / LokaCommerce / Loka Brands | Kad jenama | ❌ TBC | — |
+| Logo LokaDigital | Kad jenama | 🟨 Render Canva 447px (perlu fail resolusi penuh) | [`site/public/assets/brands/lokadigital.png`](../site/public/assets/brands/lokadigital.png) |
+| Logo LokaFoodie | Kad jenama | 🟨 Render Canva 447px (perlu fail resolusi penuh) | [`site/public/assets/brands/lokafoodie.png`](../site/public/assets/brands/lokafoodie.png) |
+| Logo LokaDaily / LokaTalent / LokaCommerce / Loka Brands | Kad jenama | ❌ TBC | — |
 | Foto pasukan / kepimpinan | About | ❌ TBC (perlu izin) | — |
 | Foto pejabat / kerja | Home, About | ❌ TBC | — |
 | Imej Open Graph | Social preview | ❌ Akan dihasilkan selepas design direction | — |

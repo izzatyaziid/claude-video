@@ -7,14 +7,14 @@
 <title>LokaCreative Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Schibsted+Grotesk:wght@700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@800;900&family=Open+Sans:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="/admin/assets/admin.css">
 <script src="/admin/assets/admin.js" defer></script>
 </head>
 <body>
   <section id="login-view" class="login" hidden>
     <form id="login-form" class="login-card" novalidate>
-      <p class="brand"><span class="wm-loka">Loka</span>Creative <span class="muted">Admin</span></p>
+      <p class="brand">LokaCreative Ventures <span class="muted">Admin</span></p>
       <h1>Log masuk</h1>
       <label for="login-email">Emel<input id="login-email" name="email" type="email" autocomplete="username" required maxlength="254"></label>
       <label for="login-password">Kata laluan<input id="login-password" name="password" type="password" autocomplete="current-password" required maxlength="200"></label>
@@ -22,11 +22,22 @@
       <button class="btn" type="submit">Log masuk</button>
       <p class="muted small">Akses dalaman sahaja. Akaun dikunci 15 minit selepas 5 cubaan gagal.</p>
     </form>
+    <form id="mfa-form" class="login-card" novalidate hidden>
+      <p class="brand">LokaCreative Ventures <span class="muted">Admin</span></p>
+      <h1>Pengesahan dua langkah</h1>
+      <p class="muted small" id="mfa-hint">Masukkan kod 6 digit daripada aplikasi authenticator anda.</p>
+      <label for="mfa-code" id="mfa-code-label">Kod 6 digit<input id="mfa-code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required></label>
+      <label for="mfa-recovery" id="mfa-recovery-label" hidden>Kod pemulihan<input id="mfa-recovery" name="recovery" autocomplete="off" maxlength="20" placeholder="XXXXX-XXXXX"></label>
+      <p id="mfa-error" class="form-error" role="alert" hidden></p>
+      <button class="btn" type="submit">Sahkan</button>
+      <button id="mfa-toggle" class="linkish" type="button">Guna kod pemulihan</button>
+      <button id="mfa-back" class="linkish" type="button">Kembali</button>
+    </form>
   </section>
 
   <div id="app-view" class="shell" hidden>
     <aside class="sidebar">
-      <p class="brand"><span class="wm-loka">Loka</span>Creative <span class="muted">Admin</span></p>
+      <p class="brand">LokaCreative Ventures <span class="muted">Admin</span></p>
       <nav aria-label="Admin">
         <ul id="nav" class="side-nav">
           <li><a href="#overview" data-view="overview">Ringkasan</a></li>

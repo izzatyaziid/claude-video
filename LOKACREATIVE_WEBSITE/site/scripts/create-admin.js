@@ -18,6 +18,11 @@ function main() {
   if (existing) {
     db.prepare('UPDATE admins SET password_hash = ?, role = ?, active = 1, failed_attempts = 0, locked_until = NULL WHERE id = ?')
       .run(hashPassword(pw), role, existing.id);
+    if (process.env.ADMIN_RESET_2FA === '1') {
+      // Break-glass: server access is required, so this is the recovery path when the only owner loses their phone.
+      db.prepare("UPDATE admins SET totp_enabled = 0, totp_secret_enc = '', totp_pending_enc = '', recovery_hashes = '[]', totp_last_step = 0 WHERE id = ?").run(existing.id);
+      console.log('2FA direset: admin perlu daftar semula pada log masuk seterusnya.');
+    }
     db.prepare('DELETE FROM sessions WHERE admin_id = ?').run(existing.id);
     console.log(`Admin ${em} dikemas kini (peranan: ${role}). Semua sesi lama ditamatkan.`);
   } else {
