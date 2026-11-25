@@ -1,0 +1,2 @@
+# EP01 · STORYBOARD
+Storyboard EP01 berada dalam [`PRODUCTION_BIBLE_EP01.md`](../CONCEPT/PRODUCTION_BIBLE_EP01.md), bahagian **PHASE 3 — STORYBOARD**.
