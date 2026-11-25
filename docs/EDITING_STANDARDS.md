@@ -41,7 +41,7 @@
 - Timing dipandu **beat grid muzik** (bukan ucapan). Teks utama jatuh pada beat atau separuh beat.
 - Ruang bernafas tanpa teks pada momen visual besar.
 - Transition bermotivasi (Signal Line sweep, push-through, morph). Transition besar ≤ 2 per video.
-- Struktur yang terbukti: hook paradoks → janji struktur (bab) → bab bernombor → payoff/rumusan yang terkumpul → brand → CTA + teaser → cover frame/loop.
+- Struktur yang terbukti: hook paradoks → janji struktur (bab) → bab bernombor → payoff/rumusan yang terkumpul → brand → CTA (DM LOKADIGITAL) + teaser episod seterusnya → cover frame/loop.
 
 ## 6. Muzik & sound design (satu-satunya audio)
 - Muzik diskor ikut arc cerita (tension → build → drop/resolve). EP01–EP02: dark cinematic electronic, D minor.
@@ -49,8 +49,11 @@
 - Senyap sebagai senjata (hook dan hujung).
 - Master −14 LUFS, true peak ≤ −1 dBTP. Simpan stems music/SFX.
 
-## 7. Kandungan
+## 7. Kandungan & claim
 - Tiada angka, hasil atau case study rekaan. Angka hanya jika boleh dibuktikan. Contoh ilustrasi dilabel `CONTOH`.
+- **Tiada claim AI** dalam proses LokaDigital buat masa ini. Gunakan `DATA-LED AUDIENCE RESEARCH`.
+- **CTA utama:** `DM LOKADIGITAL`. FOLLOW / SAVE hanya sebagai CTA sekunder (kecil, tidak bersaing dengan cerita).
+- Setiap scene mesti ada baris **"Faham tanpa suara"** dalam storyboard (ujian lulus/gagal QC).
 - Tema: Content, Creative Strategy, AI, Digital Marketing, Advertising, Business Growth.
 
 ## 8. Format & QC

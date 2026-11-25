@@ -2,16 +2,18 @@
 
 > Menggantikan `VO_SCRIPT_EP02.md` (dibuang 2026-11-25: **tiada voiceover**).
 > Dokumen ini ialah "skrip" video: setiap perkataan di skrin, suara tipografinya, masa hold, gerak, dan cue muzik/SFX.
+> **Versi FINAL v4 (untuk approval):** termasuk keputusan muktamad: `DATA-LED AUDIENCE RESEARCH` (tiada claim AI), contoh F&B, CTA `DM LOKADIGITAL`, NEXT EP03 *Viral is not a strategy*. Durasi 67.0 s.
 > Timing ialah **pra-animatic**. Semasa animatic, setiap cue disnap ±0.15 s ke beat grid **92 BPM** (1 beat = 0.652 s, 1 bar = 2.609 s).
 
 ## 1. Peraturan copy
 | Peraturan | Nilai |
 |---|---|
-| Panjang ayat | ≤ 6 perkataan |
+| Panjang ayat | ≤ 6 perkataan (pengecualian: petikan iklan `CONTOH` ditaip dalam 2 baris, ≤ 5 perkataan setiap baris) |
 | Hold minimum | 0.4 s + 0.3 s × perkataan (min 1.0 s); ayat dengan kuning +0.5 s |
 | Kuning | 1 kata kunci per ayat, sentiasa dengan underline dilukis + signal ping |
 | Satu fokus | 1 ayat NOISE/SIGNAL pada satu masa (label SYSTEM boleh menemani) |
 | Bahasa | Bahasa Melayu Malaysia, perkataan Inggeris marketing dibiarkan natural (content, ads) |
+| Claim | Tiada angka atau hasil rekaan; tiada claim AI. Contoh ilustrasi dilabel `CONTOH` |
 | Ujian | Setiap ayat mesti lulus soalan: *"Kalau ayat ni dibuang, adakah cerita hilang satu langkah?"* Jika tidak, buang. |
 
 **Suara tipografi:** **N** = NOISE (lavender, kasar, crackle) · **S** = SIGNAL (putih/kuning, tepat, ping) · **Y** = SYSTEM (mono caps, type-on, tick).
@@ -42,10 +44,11 @@
 | 10.4–11.6 | Jangan teka. | N | Masuk goyah | Signal Line menyelam | Crackle |
 | 11.6–11.9 | *(strike)* | | Signal Line memotong, teks pecah jadi zarah | | Glitch pendek |
 | 11.9–13.4 | Baca **data.** | S | Rise + underline | Grid imbasan muncul | Sweep imbasan + ping |
+| 11.9–17.6 | `DATA-LED AUDIENCE RESEARCH` | Y (HUD kecil, sudut grid) | Type-on, kekal sepanjang imbasan | Label pada grid imbasan | Tick halus |
 | 13.4–14.8 | `APA MASALAH DIA?` | Y | Type-on, garis penunjuk ke kelompok | Zarah tak padan malap | "Lock" |
 | 14.8–16.2 | `APA DIA RISAU?` | Y | Sama | Tapisan ke-2 | "Lock" |
 | 16.2–17.6 | `BILA DIA BELI?` | Y | Sama | Tapisan ke-3 | "Lock" |
-| 17.6–19.0 | — *(ruang bernafas)* | | | **Buruj kuning** terbentuk, rack focus, orbit | **Chord pertama** |
+| 17.6–19.0 | `CONTOH · PEMILIK F&B · RESTORAN · CAFE` | Y (tag pada buruj) | Type-on dengan garis penunjuk | **Buruj kuning** terbentuk, rack focus, orbit | **Chord pertama** |
 | 19.0–20.2 | Semua orang. | N | Masuk kelabu | | Crackle |
 | 20.2–20.5 | *(strike)* | | Garis kuning memotong | | Glitch |
 | 20.5–22.3 | Orang yang **betul.** | S | Rise + underline, kemudian terbang ke rail | Buruj jadi ikon → nod CARI menyala | Ping + whoosh kecil |
@@ -58,9 +61,10 @@
 | 25.8–27.2 | Cakap dengan semua… | N | Rise kasar | Wide, kad kecil dalam lautan | Crackle |
 | 27.2–28.9 | …tiada siapa dengar. | N | **Huruf hanyut** jadi zarah | Zarah terus membelakangi | Desiran pasir |
 | 28.9–29.3 | *(strike kad)* | | Kad pecah | | Glitch |
-| 29.3–32.8 | "Buat content sendiri sampai 2 pagi?" + `CONTOH` | Y (type-on) → S | Ditaip, cursor kuning | Push-in; gelombang **sempit kuning** ke buruj; zarah kuning **berpaling ke mesej** | Keystroke lembut, shimmer |
-| 32.8–35.0 | Tulis untuk **satu orang.** | S | Rise + underline | **Pull-back reveal** buruj menghadap | Ping + arpeggio masuk |
-| 35.0–36.0 | — | | Kad melipat jadi ikon → nod CAKAP | | Whoosh kecil |
+| 29.3–30.1 | "Post content setiap hari," + `CONTOH` | Y (type-on) | Baris 1 ditaip, cursor kuning | Push-in ke kad; ikon garis cawan/pinggan di sudut kad | Keystroke lembut |
+| 30.1–33.6 | "tapi pelanggan tetap tak datang?" | Y → S | Baris 2 ditaip; kedua-dua baris kekal (≥ 2.6 s penuh) | Gelombang **sempit kuning** ke buruj F&B; zarah kuning **berpaling ke mesej** | Keystroke → shimmer |
+| 33.6–35.7 | Tulis untuk **satu orang.** | S | Rise + underline | **Pull-back reveal** buruj menghadap | Ping + arpeggio masuk |
+| 35.7–36.0 | — | | Kad melipat jadi ikon → nod CAKAP | | Whoosh kecil |
 
 ### S05 — BAB 03 "SAMBUNG" (36.0–49.0)
 | Masa | Teks | Suara | Gerak teks | Visual | Muzik / SFX |
@@ -89,12 +93,14 @@
 | 56.4–58.0 | `CONTENT & ADS STRATEGY` | Y | Type-on | | Bed |
 | 58.0–60.0 | `BERASASKAN INSIGHT DAN DATA` | Y | Type-on | Sweep #2 perlahan | Bed |
 
-### S08 — CTA + COVER / LOOP (60.0–65.0)
+### S08 — CTA + NEXT + COVER / LOOP (60.0–67.0)
 | Masa | Teks | Suara | Gerak teks | Visual | Muzik / SFX |
 |---|---|---|---|---|---|
-| 60.0–61.6 | `FOLLOW` · `SAVE` · `NEXT · EP03` | Y | Chip pop | | Tick ×3 |
-| 61.6–64.3 | Ramai nampak. Kenapa tak ramai **beli?** | S | Cover frame statik | Lautan separuh kelabu / separuh kuning (= thumbnail) | Bed fade |
-| 64.2–65.0 | — | | | Fade ke hitam, tinggal titik kuning berdenyut (= frame pertama) | **Senyap 0.8 s** → loop |
+| 60.0–61.8 | **DM** LOKADIGITAL | S (besar, "DM" kuning) | Signal Line melukis kotak CTA, teks rise | Latar gelap, satu garis kuning | Tick + ping lembut |
+| 60.4–61.8 | `FOLLOW` · `SAVE` | Y (kecil, lavender) | Pop halus di bawah CTA utama | Secondary, tidak bersaing | Tick halus |
+| 61.8–63.8 | `NEXT · EP03` + *Viral is not a* **strategy.** | Y + S | Kad meluncur dari kanan | Tekstur framework `CONTENT → TEST → FIND WINNER → ADS → SCALE` pada 20 % di belakang kad (tidak perlu dibaca) | Swish kad |
+| 63.8–66.5 | Ramai nampak. Kenapa tak ramai **beli?** | S | Cover frame statik | Lautan separuh kelabu / separuh kuning (= thumbnail) | Bed fade |
+| 66.2–67.0 | — | | | Fade ke hitam, tinggal titik kuning berdenyut (= frame pertama) | **Senyap 0.8 s** → loop |
 
 ## 3. Peta muzik (92 BPM · D minor → resolve)
 | Bahagian | Masa | Tenaga | Elemen |
@@ -104,12 +110,12 @@
 | Bab 02 | 22.3–36.0 | Naik | Ritma + arpeggio, tekstur distorted untuk NOISE |
 | Bab 03 | 36.0–49.0 | Puncak | Build, hi-hat, riser, **drop 44.4** |
 | Rumusan → Logo | 49.0–60.0 | Lega | Resolve ke chord terbuka, sting |
-| Outro | 60.0–65.0 | Rendah | Bed, fade, senyap |
+| Outro | 60.0–67.0 | Rendah | Bed, fade, senyap |
 
 **Motif sonik siri:** *signal ping* (2 nota sine bersih) = kuning/kebenaran · *static crackle* = noise. Kedua-duanya dikekalkan untuk episod akan datang.
 
 ## 4. Ujian kefahaman mute (QC wajib selepas render)
-1. Tonton tanpa bunyi. Boleh jawab: *Apa masalahnya? Apa 3 langkahnya? Siapa LOKADIGITAL?*
+1. Tonton tanpa bunyi. Boleh jawab: *Apa masalahnya? Apa 3 langkahnya? Siapa LOKADIGITAL? Apa perlu aku buat (DM)? Apa episod seterusnya?* Setiap scene mesti lulus baris "Faham tanpa suara" dalam `CONCEPT_EP02.md`.
 2. Setiap ayat boleh dibaca penuh pada kelajuan biasa (ikut jadual hold di atas).
 3. Tiada teks di zon UI Instagram (bawah 280 px, kanan 140 px).
 4. Tonton dengan bunyi: setiap kemunculan kuning ada ping, setiap NOISE ada crackle.

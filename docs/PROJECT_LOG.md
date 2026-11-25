@@ -9,4 +9,6 @@
 | 2026-11-25 | EP02 | v1 "BUDGET SAMA" dibentang. **Ditolak:** angka rekaan (D04) | commit `06b483c` |
 | 2026-11-25 | EP02 | v2 "ORANG YANG BETUL": Signal Line sebagai pemandu, versi mute + skrip VO ElevenLabs | commit `c9a1b4e` |
 | 2026-11-25 | Siri | **Keputusan D07: tiada voiceover langsung**, visual-first storytelling. VO_SCRIPT_EP02.md dibuang | `CREATIVE_DECISIONS.md` |
-| 2026-11-25 | EP02 | v3 visual-first: CONCEPT_EP02.md + VISUAL_STORYTELLING.md. Dokumen siri `docs/` dicipta. **Menunggu final approval** | `ep02/docs/` |
+| 2026-11-25 | EP02 | v3 visual-first: CONCEPT_EP02.md + VISUAL_STORYTELLING.md. Dokumen siri `docs/` dicipta | `ep02/docs/` |
+| 2026-11-25 | Siri | Keputusan muktamad D10–D15: tiada claim AI (`DATA-LED AUDIENCE RESEARCH`), contoh F&B, EP03 *Viral is not a strategy*, CTA `DM LOKADIGITAL`, tiada VO, jangan tanya semula | `CREATIVE_DECISIONS.md` |
+| 2026-11-25 | EP02 | **v4 storyboard FINAL** (67.0 s): baris "Faham tanpa suara" untuk setiap scene, CTA DM, NEXT EP03. **Menunggu approval** → kemudian beat map + animatic | `ep02/docs/` |

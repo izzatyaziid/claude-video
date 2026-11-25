@@ -9,6 +9,8 @@ Reference Analysis → Creative Concept → On-screen Text Script → Storyboard
 ```
 **Peraturan tetap:** tiada edit, render atau generate video sebelum concept, text script dan storyboard **diluluskan secara eksplisit**.
 
+**Sebelum bertanya apa-apa:** semak [`CREATIVE_DECISIONS.md`](CREATIVE_DECISIONS.md). Keputusan yang dah direkod **tidak ditanya semula**. Tanya hanya jika maklumat baharu benar-benar diperlukan; jika tidak, guna keputusan sedia ada dan teruskan.
+
 ## 1. Reference Analysis
 - Dapatkan video sebenar. Jika link tak boleh diakses (contoh: Instagram disekat), minta fail di-upload. Jangan sesekali analisa berdasarkan tekaan.
 - Ukur, jangan agak: scene-detect untuk cut, contact sheet 2 fps, hook pada 4 fps, loudness (LUFS) dan imbangan spektrum audio.
@@ -27,7 +29,7 @@ Menggantikan skrip VO. Untuk setiap ayat: masa, teks, suara tipografi (NOISE / S
 Scene demi scene: tujuan cerita, visual, teks, kamera, motion gfx, transition, bunyi. Setiap scene mesti menyambung cerita.
 
 ## ✋ 5. Approval
-Bentangkan 2–4 dokumen di atas. Senaraikan soalan terbuka. Tunggu kelulusan.
+Bentangkan dokumen di atas. Senaraikan hanya soalan yang benar-benar baharu (bukan yang sudah ada dalam CREATIVE_DECISIONS). Tunggu kelulusan.
 
 ## 6. Production (selepas approval sahaja)
 1. **Beat map:** tetapkan tempo, dan snap semua cue ke beat grid.

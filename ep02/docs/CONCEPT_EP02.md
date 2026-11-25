@@ -1,8 +1,8 @@
-# LOKADIGITAL — EP02 "ORANG YANG BETUL" · Creative Concept v3 · VISUAL-FIRST (FOR FINAL APPROVAL)
+# LOKADIGITAL — EP02 "ORANG YANG BETUL" · Creative Concept v4 FINAL · VISUAL-FIRST (FOR APPROVAL)
 
-> Status: **DRAFT v3 — menunggu final approval.** Tiada production dibuat lagi.
+> Status: **STORYBOARD FINAL v4 — menunggu approval.** Tiada production dibuat lagi.
 > Workflow: Reference Analysis ✅ → Concept ✅ → On-screen Text Script ✅ → Storyboard ✅ → **Final approval kau** → Production → Final Review
-> v3 ikut keputusan 2026-11-25: **tiada voiceover langsung** (tiada suara manusia, tiada AI voice, tiada ElevenLabs). Cerita dibawa sepenuhnya oleh visual, typography, kinetic text, motion graphics, Signal Line, muzik dan SFX.
+> v4 menggabungkan semua keputusan muktamad (lihat bahagian akhir). Asas v3: **tiada voiceover langsung** (tiada suara manusia, tiada AI voice, tiada ElevenLabs). Cerita dibawa sepenuhnya oleh visual, typography, kinetic text, motion graphics, Signal Line, muzik dan SFX.
 > Dokumen berkaitan: [`VISUAL_STORYTELLING.md`](VISUAL_STORYTELLING.md) (copy deck + cue sheet) · Standard siri: [`/docs`](../../docs/)
 
 ---
@@ -80,7 +80,7 @@
 ---
 
 
-## STEP 2 & 3 — KONSEP LOKADIGITAL (v3 · VISUAL-FIRST)
+## STEP 2 & 3 — KONSEP LOKADIGITAL (v4 FINAL · VISUAL-FIRST)
 
 ### 3.1 Konsep: **EP02 "ORANG YANG BETUL"**
 **Premis:** situasi yang setiap pemilik bisnes kenal, bukan claim.
@@ -96,13 +96,13 @@
 2. Tunjuk proses LOKADIGITAL dalam 3 kata: **CARI → CAKAP → SAMBUNG** (audience insight → content & creative strategy → test, ads, growth).
 3. Faham 100 % dalam keadaan **mute**. Tiada voiceover langsung.
 
-**Prinsip v3**
+**Prinsip**
 - Tiada VO, tiada angka rekaan, tiada presenter.
 - Cerita dibawa oleh 7 lapisan: visual storytelling · dynamic typography · kinetic text · cinematic motion graphics · Signal Line · muzik · SFX & sound design.
-- Jumlah teks di skrin: **~100 perkataan (termasuk label) dalam 65 s**. Setiap ayat ≤ 6 perkataan dan ada tujuan cerita.
+- Jumlah teks di skrin: **~115 perkataan (termasuk label) dalam 67 s**. Setiap ayat ≤ 6 perkataan dan ada tujuan cerita (pengecualian: petikan iklan `CONTOH` ditaip dalam 2 baris ≤ 5 perkataan setiap satu).
 
 ### 3.2 Bagaimana cerita disampaikan tanpa suara
-| Peranan yang biasanya dipikul VO | Siapa memikulnya dalam v3 |
+| Peranan yang biasanya dipikul VO | Siapa memikulnya dalam EP02 |
 |---|---|
 | Narator / "suara" cerita | **3 suara tipografi** (lihat 3.4): Noise, Signal, System |
 | Nada & emosi | Muzik (arc 5 bahagian) + senyap |
@@ -137,66 +137,73 @@
 5. **Satu fokus:** hanya satu ayat SIGNAL/NOISE di skrin pada satu masa. Label SYSTEM boleh menemaninya.
 6. **Morph & strike:** hanya 3 kali dalam video (Semua orang, PROMOSI HEBAT, NAMPAK → BELI) supaya setiap satu terasa besar.
 
-### 3.5 STORYBOARD VISUAL-FIRST (8 scene · 65.0 s)
+### 3.5 STORYBOARD FINAL VISUAL-FIRST (8 scene · 67.0 s)
 Copy deck penuh dan cue sheet muzik/SFX per detik ada dalam **`VISUAL_STORYTELLING.md`**.
+Setiap scene ada baris **"Faham tanpa suara"**: apa yang penonton mesti faham walaupun video di-mute. Ini ialah ujian lulus/gagal scene tersebut semasa QC.
+
+**Benang cerita (satu ayat):** ramai nampak tapi tak beli → masalahnya *siapa* → **CARI** orang yang betul (contoh: pemilik F&B) → **CAKAP** terus kepada masalah mereka → **SAMBUNG**: uji, pilih, besarkan → ramai yang **beli** → DM LOKADIGITAL.
 
 #### SCENE 01 — HOOK "LAUTAN" (0.0–6.9)
 | | |
 |---|---|
 | **Tujuan cerita** | Henti scroll dan buka soalan **SIAPA?** |
-| **Visual** | 0.0 hitam, satu titik kuning berdenyut. 0.4 **ledakan** ribuan zarah ke arah kamera. Chip SYSTEM `VIEW` `LIKE` `KLIK` `SHARE` meletup di celah zarah; satu chip `BELI` berkelip lalu **mati** (1.8). 1.9 **freeze** dan semuanya jadi kelabu. 2.5 kamera menembus lautan beku menuju titik kuning tadi. |
-| **Teks** | NOISE slam: **RAMAI YANG NAMPAK.** → (freeze, kosong) → SIGNAL: *Tak ramai yang beli.* → *Masalahnya bukan berapa ramai.* → **SIAPA.** (kuning, besar, underline dilukis) |
-| **Kamera** | Shake halus semasa ledakan → freeze → dolly-in panjang (expo-in) |
-| **Sound** | Sub drone → swell + impact → tick ikut chip → klik "mati" pada BELI → **senyap 0.6 s** → nafas udara rendah → nadi sub → **signal ping + sub hit** pada SIAPA |
-| **Transition** | Titik kuning memanjang jadi Signal Line, dan kamera berpusing 90° mengikutnya |
+| **Visual** | 0.0 hitam, satu titik kuning berdenyut. 0.4 **ledakan** ribuan zarah ke arah kamera. Chip `VIEW` `LIKE` `KLIK` `SHARE` meletup di celah zarah; chip `BELI` berkelip lalu **mati**. 1.9 **freeze**, semuanya jadi kelabu. 2.5 kamera menembus lautan beku menuju titik kuning tadi |
+| **Teks** | NOISE slam: **RAMAI YANG NAMPAK.** → (freeze, kosong) → SIGNAL: *Tak ramai yang beli.* → *Masalahnya bukan berapa ramai.* → **SIAPA.** |
+| **Kamera** | Shake halus semasa ledakan → freeze → dolly-in panjang |
+| **Sound** | Sub drone → impact + swell → tick ikut chip → klik "mati" → **senyap 0.6 s** → nadi sub → **signal ping + sub hit** |
+| **Transition** | Titik kuning memanjang jadi Signal Line, kamera berpusing 90° mengikutnya |
+| **Faham tanpa suara** | "Banyak view/like, tapi tiada yang beli. Persoalannya: siapa?" |
 
 #### SCENE 02 — PETA "TIGA LANGKAH" (6.9–9.0)
 | | |
 |---|---|
 | **Tujuan cerita** | Janji struktur supaya penonton kekal |
-| **Visual** | Signal Line melukis diri melintasi frame. Pada setiap nod, perkataan *ditulis oleh garis itu sendiri*: **CARI** · **CAKAP** · **SAMBUNG**. Garis mengecut ke atas jadi **Signal Rail** HUD |
-| **Teks** | SIGNAL ×3 (putih, nod kuning) |
-| **Sound** | Whoosh garis + 3 tick pitch naik, kick pertama muzik pada 9.0 |
+| **Visual** | Signal Line melukis diri melintasi frame. Pada setiap nod, perkataan *ditulis oleh garis*: **CARI** · **CAKAP** · **SAMBUNG**. Garis mengecut ke atas jadi **Signal Rail** HUD yang kekal sepanjang video |
+| **Sound** | Whoosh + 3 tick pitch naik; kick pertama pada 9.0 |
+| **Faham tanpa suara** | "Ada 3 langkah, dan aku boleh nampak di mana aku berada." |
 
 #### SCENE 03 — BAB 01 "CARI" (9.0–22.3) · Audience insight
 | | |
 |---|---|
-| **Tujuan cerita** | Strategi bermula dengan memahami orang, bukan dengan meneka |
-| **Visual** | Tajuk 3D **01 CARI** terapung dan kamera menembusinya. Signal Line menyelam ke lautan dengan grid imbasan halus. Tiga soalan SYSTEM "melekat" pada kelompok zarah satu demi satu, dan setiap soalan **menapis**: yang tak padan malap. Hasilnya, satu **buruj kuning** kecil disambungkan Signal Line |
-| **Teks** | NOISE: *Jangan teka.* → Signal Line memotongnya → SIGNAL: **Baca data.** → SYSTEM: `APA MASALAH DIA?` · `APA DIA RISAU?` · `BILA DIA BELI?` → *(ruang bernafas, tiada teks)* → NOISE: *Semua orang.* → strike → SIGNAL: **Orang yang betul.** |
+| **Tujuan cerita** | Strategi bermula dengan memahami orang, bukan meneka |
+| **Visual** | Tajuk 3D **01 CARI**, kamera menembusinya. Signal Line menyelam ke lautan. Grid imbasan halus muncul dengan label HUD `DATA-LED AUDIENCE RESEARCH`. Tiga soalan "melekat" pada kelompok zarah, setiap satu **menapis** (yang tak padan malap). Hasilnya, satu **buruj kuning** kecil terbentuk dan diberi tag `CONTOH · PEMILIK F&B · RESTORAN · CAFE` |
+| **Teks** | NOISE: *Jangan teka.* → strike → SIGNAL: **Baca data.** + HUD `DATA-LED AUDIENCE RESEARCH` → SYSTEM: `APA MASALAH DIA?` · `APA DIA RISAU?` · `BILA DIA BELI?` → *(tag F&B, tiada ayat besar)* → NOISE: *Semua orang.* → strike → SIGNAL: **Orang yang betul.** |
 | **Kamera** | Push-through tajuk → dolly ikut garis → **rack focus** ke buruj → orbit 15° |
-| **Sound** | Pulse muzik masuk, sweep imbasan, "lock" pada setiap soalan, chord pertama ketika buruj terbentuk, glitch pada strike |
-| **Transition** | Buruj mengecut jadi ikon dan terbang ke nod CARI pada rail. Nod menyala (artefak #1) |
-| **Opsyen** | Label `DATA + AI` pada grid imbasan, **jika disahkan LOKADIGITAL guna AI** |
+| **Sound** | Pulse masuk, sweep imbasan, "lock" setiap soalan, chord pertama pada buruj, glitch pada strike |
+| **Transition** | Buruj mengecut jadi ikon dan terbang ke nod CARI. Nod menyala (artefak #1) |
+| **Faham tanpa suara** | "Mereka tak teka. Mereka guna data untuk cari satu kumpulan yang tepat, contohnya pemilik F&B." |
 
 #### SCENE 04 — BAB 02 "CAKAP" (22.3–36.0) · Content & creative strategy
 | | |
 |---|---|
-| **Tujuan cerita** | Content yang baik bercakap kepada satu orang |
-| **Visual** | Tajuk 3D **02 CAKAP**. Sebuah kad creative minimal terapung dan **menjerit**: gelombang lavender memancar ke semua arah, tetapi zarah **berpaling**. Huruf-huruf ayat "tiada siapa dengar" **hanyut** seperti zarah. Signal Line memotong kad, dan ayat pecah. Ayat baharu ditaip, gelombang menjadi **sempit dan kuning**, dan buruj dari Bab 01 **berpaling ke arah mesej** |
-| **Teks** | NOISE (bergegar): **PROMOSI HEBAT! JOM BELI SEKARANG!** → NOISE: *Cakap dengan semua…* → *…tiada siapa dengar.* (huruf hanyut) → strike → SYSTEM type-on: *"Buat content sendiri sampai 2 pagi?"* + label `CONTOH` → SIGNAL: *Tulis untuk* **satu orang.** |
-| **Kamera** | Wide (kad kecil dalam lautan) → push-in semasa rewrite → **pull-back reveal**: buruj berpaling. Momen paling "aha" |
-| **Sound** | Megaphone distorted + crackle; huruf hanyut = desiran pasir; strike = glitch; keystroke lembut; shimmer ketika zarah berpaling; ritma muzik bertambah |
+| **Tujuan cerita** | Content yang berkesan menyebut masalah sebenar satu kumpulan |
+| **Visual** | Tajuk 3D **02 CAKAP**. Sebuah kad creative minimal **menjerit** "PROMOSI HEBAT!": gelombang lavender ke semua arah, zarah **berpaling**. Huruf "tiada siapa dengar" **hanyut** jadi zarah. Signal Line memotong kad. Ayat F&B **ditaip semula** dalam 2 baris, dengan ikon garis halus (cawan / pinggan) di sudut kad. Gelombang kini **sempit dan kuning** dan menuju buruj F&B, dan zarah kuning **berpaling ke arah mesej** |
+| **Teks** | NOISE: **PROMOSI HEBAT! JOM BELI SEKARANG!** → *Cakap dengan semua…* → *…tiada siapa dengar.* → strike → SYSTEM type-on + `CONTOH`: *"Post content setiap hari, / tapi pelanggan tetap tak datang?"* → SIGNAL: *Tulis untuk* **satu orang.** |
+| **Kamera** | Wide → push-in semasa rewrite → **pull-back reveal** buruj berpaling (momen "aha") |
+| **Sound** | Megaphone distorted + crackle → desiran pasir → glitch → keystroke lembut → shimmer → arpeggio masuk |
 | **Transition** | Kad melipat jadi ikon → nod CAKAP menyala (artefak #2) |
+| **Faham tanpa suara** | "Iklan umum diabaikan. Ayat yang sebut masalah sebenar pemilik F&B buat mereka berhenti dan pandang." |
 
 #### SCENE 05 — BAB 03 "SAMBUNG" (36.0–49.0) · Test → Ads → Growth
 | | |
 |---|---|
-| **Tujuan cerita** | Uji, pilih, besarkan, dan pertumbuhan yang kekal tepat. Payoff visual kepada "SIAPA" |
-| **Visual** | Tajuk 3D **03 SAMBUNG**. Signal Line bercabang 3 (tiga kad creative kecil). Dua cabang malap dan putus, satu menyala. Laluan pemenang menebal dan arus cahaya menjalar. Kemudian **bookend**: zarah kuning merebak dari buruj, menyalakan zarah demi zarah, sehingga **seluruh frame penuh, kali ini kuning**. Crane-out besar: lautan kuning seperti peta bandar waktu malam |
-| **Teks** | SYSTEM: `UJI` ×3 → `YANG MENJADI` → **BESARKAN** → NOISE: *Bukan lebih ramai.* → *(tiada teks, visual payoff 2.2 s)* → SIGNAL: *Lebih ramai* **yang betul.** |
+| **Tujuan cerita** | Uji, pilih yang menjadi, besarkan dengan ads, dan pertumbuhan yang kekal tepat |
+| **Visual** | Tajuk 3D **03 SAMBUNG**. Signal Line bercabang 3 (tiga kad creative). Dua malap dan putus, satu menyala. Laluan pemenang menebal, arus cahaya menjalar (ads). **Bookend:** zarah kuning merebak dari buruj sehingga **seluruh frame penuh, kali ini kuning**. Crane-out: lautan kuning seperti peta bandar waktu malam |
+| **Teks** | SYSTEM: `UJI` ×3 → `YANG MENJADI` → SIGNAL: **BESARKAN.** → NOISE: *Bukan lebih ramai.* → *(visual payoff, tiada teks)* → SIGNAL: *Lebih ramai* **yang betul.** |
 | **Kamera** | Ikut cabang → tracking laju di laluan pemenang (satu-satunya momen laju) → **crane-out** (shot hero) |
-| **Sound** | Build penuh: hi-hat pada BESARKAN, riser, **drop** tepat ketika lautan bertukar kuning, kemudian whoosh besar |
+| **Sound** | Build, hi-hat pada BESARKAN, riser, **drop** tepat ketika lautan bertukar kuning |
 | **Transition** | **Signal Line sweep penuh skrin** (transition besar #1) |
+| **Faham tanpa suara** | "Uji beberapa content, pilih yang menang, besarkan. Hasilnya ramai, dan semuanya orang yang betul." |
 
 #### SCENE 06 — RUMUSAN & PAYOFF (49.0–55.0)
 | | |
 |---|---|
 | **Tujuan cerita** | Ringkasan yang boleh di-save, dan tutup gelung hook |
-| **Visual** | Signal Rail turun dan terbuka jadi 3 baris, setiap satu dengan artefaknya. Kemudian ayat hook kembali: *Ramai yang* **NAMPAK.** (kelabu). Huruf NAMPAK **berpusing / scramble** dan menjadi **BELI** (kuning) |
+| **Visual** | Signal Rail turun dan terbuka jadi 3 baris berserta artefak masing-masing. Kemudian ayat hook kembali: *Ramai yang* **NAMPAK.** Huruf NAMPAK **scramble/morph** menjadi **BELI** (kuning) |
 | **Teks** | SIGNAL: **CARI. CAKAP. SAMBUNG.** → NOISE: *Ramai yang nampak.* → morph → SIGNAL: *Ramai yang* **beli.** |
-| **Kamera** | Tenang, breathing push 1 % (kontras selepas puncak) |
-| **Sound** | Muzik resolve ke chord terbuka; tick setiap baris; scramble digital pendek + **signal ping paling jelas dalam video** pada BELI |
+| **Kamera** | Tenang, breathing push 1 % |
+| **Sound** | Resolve ke chord terbuka; tick ×3; scramble digital + **ping paling jelas dalam video** |
+| **Faham tanpa suara** | "Tiga langkah ini menukar orang yang sekadar nampak kepada orang yang beli." |
 
 #### SCENE 07 — BRAND (55.0–60.0)
 | | |
@@ -204,16 +211,17 @@ Copy deck penuh dan cue sheet muzik/SFX per detik ada dalam **`VISUAL_STORYTELLI
 | **Tujuan cerita** | Positioning tanpa menjual kasar |
 | **Visual** | Tiga baris runtuh jadi satu Signal Line, kemudian jadi underline wordmark **LOKA**DIGITAL (konsisten EP01) |
 | **Teks** | SYSTEM: `CONTENT & ADS STRATEGY` → `BERASASKAN INSIGHT DAN DATA` |
-| **Sound** | Logo sting (sub + shimmer + motif ping), muzik turun ke bed |
-| **Transition** | Sweep #2 perlahan |
+| **Sound** | Logo sting (sub + shimmer + motif ping), muzik ke bed |
+| **Faham tanpa suara** | "LOKADIGITAL ialah agency yang buat semua ini." |
 
-#### SCENE 08 — CTA + COVER / LOOP (60.0–65.0)
+#### SCENE 08 — CTA + NEXT + COVER / LOOP (60.0–67.0)
 | | |
 |---|---|
-| **Tujuan cerita** | Follow siri, thumbnail, dan loop |
-| **Visual** | Chip `FOLLOW` `SAVE` + kad `NEXT · EP03`. Kemudian **cover frame**: lautan separuh kelabu, separuh kuning, dengan headline. Fade ke hitam hingga tinggal satu titik kuning berdenyut, sama seperti frame pertama |
-| **Teks** | SYSTEM: `FOLLOW` · `SAVE` · `NEXT · EP03` → SIGNAL cover: *Ramai nampak. Kenapa tak ramai* **beli?** |
-| **Sound** | Bed fade; 0.8 s terakhir senyap supaya loop bersih |
+| **Tujuan cerita** | Tindakan utama (DM), teaser siri, thumbnail, dan loop |
+| **Visual** | **60.0** Signal Line melukis kotak CTA: **DM LOKADIGITAL** (besar, "DM" kuning) dengan chip kecil `FOLLOW` · `SAVE` di bawahnya (secondary, lavender, tidak bersaing). **61.8** kad `NEXT · EP03` meluncur dari kanan: *Viral is not a* **strategy.** Di belakangnya, sekilas garis framework `CONTENT → TEST → FIND WINNER → ADS → SCALE` (tekstur sahaja, tidak perlu dibaca; menjentik rasa ingin tahu). **63.8** **cover frame**: lautan separuh kelabu / separuh kuning + headline. **66.5** fade hingga tinggal titik kuning berdenyut = frame pertama |
+| **Teks** | SIGNAL: **DM** LOKADIGITAL + SYSTEM `FOLLOW · SAVE` → SYSTEM `NEXT · EP03` + SIGNAL: *Viral is not a* **strategy.** → SIGNAL cover: *Ramai nampak. Kenapa tak ramai* **beli?** |
+| **Sound** | Tick pada CTA, swish kad NEXT, bed fade; 0.8 s terakhir senyap supaya loop bersih |
+| **Faham tanpa suara** | "Kalau nak bantuan, DM LOKADIGITAL. Episod seterusnya: viral bukan strategi." |
 
 ### 3.6 Muzik & sound design (satu-satunya audio)
 - **Muzik:** dark cinematic electronic, **92 BPM, D minor** (kesinambungan EP01), skor *ikut picture*:
@@ -231,12 +239,18 @@ Copy deck penuh dan cue sheet muzik/SFX per detik ada dalam **`VISUAL_STORYTELLI
 2. **Satu metafora sepanjang video** dan **bookend** kelabu → kuning.
 3. **Tiga suara tipografi** menggantikan narator, dengan bunyi masing-masing.
 4. **Ruang bernafas tanpa teks** (Bab 01 buruj, Bab 03 lautan kuning). Visual dibiarkan bercerita sendiri.
-5. **Disiplin:** 2 sweep, 3 strike/morph, 1 momen laju, 1 drop.
+5. **Ujian "Faham tanpa suara"** untuk setiap scene.
+6. **Disiplin:** 2 sweep, 3 strike/morph, 1 momen laju, 1 drop.
 
 ---
 
-## SOALAN TERBUKA (perlu jawapan sebelum production)
-1. **AI:** LOKADIGITAL memang guna AI dalam audience research? Ya → label `DATA + AI` di Bab 01. Tidak → dibuang.
-2. **Ayat contoh Bab 02:** *"Buat content sendiri sampai 2 pagi?"* OK, atau niche lain?
-3. **EP03:** topik untuk kad NEXT, atau biarkan `NEXT · EP03` sahaja?
-4. **CTA:** `FOLLOW` + `SAVE` sahaja, atau tambah `DM`?
+## KEPUTUSAN MUKTAMAD EP02 (direkod 2026-11-25, tidak perlu ditanya semula)
+| # | Perkara | Keputusan |
+|---|---|---|
+| 1 | AI | **Tiada claim AI.** Label `DATA + AI` dibuang; guna `DATA-LED AUDIENCE RESEARCH` |
+| 2 | Ayat contoh Bab 02 | *"Post content setiap hari, tapi pelanggan tetap tak datang?"* Niche contoh: **pemilik F&B, restoran, cafe** |
+| 3 | Kad NEXT | **EP03 · VIRAL IS NOT A STRATEGY** (framework `CONTENT → TEST → FIND WINNER → ADS → SCALE`) |
+| 4 | CTA | Utama: **DM LOKADIGITAL**. Sekunder: FOLLOW · SAVE (kecil, tidak mengganggu cerita) |
+| 5 | Voiceover | **Tiada langsung**. Visual-first storytelling untuk semua video LokaDigital |
+
+**Status:** storyboard final menunggu approval. Selepas approval → beat map → animatic.
