@@ -26,6 +26,7 @@
 | D19 | 2026-11-25 | Style frames v1: **approve dengan pembetulan** (SF1 orang ramai jarang berlapis + Signal Line pendek/rendah; SF2 buang serpihan "KAMI TER…"; SF3 lebih kuning di tengah/bawah tanpa hilang kontras). Tiada redesign; versi lama disimpan dalam `v1/` | Aktif. v2 menunggu final approval |
 | D20 | 2026-11-25 | **Style frames v2 EP02 diluluskan (FINAL)** dan menjadi **visual benchmark rasmi**: identiti visual, typography, palet, lighting dan design language dikekalkan sepanjang production. Fasa seterusnya: beat map → animatic → approval animatic → baru full production | Aktif |
 | D21 | 2026-11-25 | Beat map: semua cue disnap ke grid 92 BPM (origin 0.15 s). Timing beberapa ayat dianjak untuk lulus peraturan masa bacaan; paling besar, hook dipanjangkan ke 7.65 s dan S02 dipendekkan ke 1.3 s. Urutan dan kandungan storyboard tidak berubah; durasi kekal 67.5 s. Butiran: `PRODUCTION/BEAT_MAP_EP02.md` | Aktif, sebahagian daripada semakan animatic |
+| D22 | 2026-11-25 | **Creative Direction v2 EP02 diluluskan:** C1–C3, C5–C10. C4 diluluskan dengan copy dossier kau: "POST HARI-HARI. KEDAI MASIH LENGANG." · "RAMAI TENGOK. TAPI TAK MEMBELI." · "BAJET IKLAN HABIS. PELANGGAN TAK BERTAMBAH.", setiap satu dengan visual tersendiri, muncul berperingkat. Urutan: SF4 + SF5 → storyboard v6 → beat map v2 → animatic v2 (approval setiap langkah). Animatic v1 ditangguhkan | Aktif |
 
 ## Soalan terbuka
 Tiada. Semua soalan EP02 dijawab (D10–D14).

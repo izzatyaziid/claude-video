@@ -1,6 +1,6 @@
 # EP02 "ORANG YANG BETUL" — Creative Direction v2 (CADANGAN, untuk approval)
 
-> **Status:** 🟡 Cadangan. Tiada production, beat map v2 atau animatic v2 dimulakan sebelum kau approve.
+> **Status:** ✅ **Diluluskan 2026-11-25 (D22):** C1, C2, C3, C5, C6, C7, C8, C9, C10. **C4 diluluskan dengan copy baharu** (lihat §5). Langkah semasa: SF4 + SF5 untuk review. Seterusnya: storyboard v6 → beat map v2 → animatic v2, setiap satu dengan approval.
 > **Kekal tanpa perubahan:** konsep "ORANG YANG BETUL", 8 scene, CARI → CAKAP → SAMBUNG, semua ayat yang diluluskan dalam storyboard v5, rupa style frames v2 (benchmark), palet, typography, Signal Line, tiada VO, CTA DM LOKADIGITAL, 67.5 s.
 > **Yang berubah:** cara setiap scene *menerangkan*. Lebih banyak objek, diagram, watak dan transformasi; kurang bergantung pada headline dan zarah latar.
 > Reference: [REF-001](../../../03_REFERENCE_LIBRARY/REFERENCE_LIBRARY.md#ref-001) · Storyboard diluluskan: [v5](../STORYBOARD/STORYBOARD_EP02.md) · Animatic yang dinilai: [v1](../PRODUCTION/animatic/README.md)
@@ -211,7 +211,7 @@ Masa ikut beat map v1 (hook 7.65 s; jumlah 67.5 s). **Tanda ✚ = elemen baharu*
 | C1 | Siluet SF1 menjadi **watak utama** (pemilik F&B, `CONTOH`) yang muncul semula di S03, S04, S08 | Tiada ayat berubah. Selari dengan D11 |
 | C2 | **Panel metrik HUD** di hook (bar tanpa angka) | Tiada angka, jadi selari dengan D04 |
 | C3 | Tiga **ikon alat** (lensa, kad, amplifier) di S02 | Menggantikan perkataan kosong. Perkataan kekal |
-| C4 | **Dossier** di S03 dengan 3 jawapan `CONTOH`: *"Kedai lengang walau post hari-hari"* · *"Bajet habis, pelanggan tak bertambah"* · *"Bila jualan mula jatuh"* | **Teks baharu** (3 baris). Semua dilabel CONTOH, tiada claim |
+| C4 | **Dossier** di S03 dengan 3 masalah `CONTOH`. ~~Copy asal~~ diganti oleh copy kau (2026-11-25): **"POST HARI-HARI. KEDAI MASIH LENGANG."** · **"RAMAI TENGOK. TAPI TAK MEMBELI."** · **"BAJET IKLAN HABIS. PELANGGAN TAK BERTAMBAH."** Setiap masalah ada **visual tersendiri** dan muncul berperingkat, bukan tiga baris teks | ✅ Diluluskan dengan copy baharu. Pemetaan kepada soalan lensa v5: lihat nota di bawah |
 | C5 | Dossier → kad iklan (transformasi) dan perkataan iklan dipinjam dari dossier | Ayat iklan F&B kekal tepat (D11) |
 | C6 | Watak **mendongak dari telefon** dalam S04 (satu cut-in close-up) | Tiada |
 | C7 | S05: 3 kad variasi dengan meter + **objek amplifier** untuk ads | Label v5 kekal |
@@ -222,6 +222,10 @@ Masa ikut beat map v1 (hook 7.65 s; jumlah 67.5 s). **Tanda ✚ = elemen baharu*
 **Style frames v2 kekal sah sebagai benchmark rupa.** Elemen baharu (dossier, ikon garis, amplifier, panel metrik) mengikut bahasa kad SF2. Untuk memastikan ia setaraf, aku cadangkan **2 style frame tambahan** sebelum animatic v2:
 - **SF4 · S03 "Dossier":** close-up watak utama + dossier separuh terisi + lensa.
 - **SF5 · S05 "Amplifier":** 3 kad variasi dengan meter, pemenang masuk amplifier, pancaran ke bandar.
+
+**Nota pemetaan C4 (perlu keputusan):** soalan lensa v5 ialah *APA MASALAH DIA? · APA DIA RISAU? · BILA DIA BELI?*. Ketiga-tiga copy baharu ialah masalah, jadi soalan ke-3 tidak terjawab. Pilihan dibentangkan bersama SF4.
+
+**Syarat tambahan dari kau (2026-11-25):** watak utama mesti mempunyai continuity yang jelas dan dikenali (bukan siluet generik berulang); Fail Orang Yang Betul mesti berubah bentuk secara natural dan bersebab; setiap scene ada visual progression; jangan terlalu padat dengan infographic; kekal sinematik dan premium; mesej, konsep, durasi dan CTA kekal.
 
 ## 6. Langkah seterusnya (selepas approval)
 1. SF4 + SF5 untuk approval rupa elemen baharu.

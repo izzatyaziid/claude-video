@@ -320,11 +320,227 @@ function SF3(annot){
   }
 }
 
+
+// ======================================================================
+// v2 DIRECTION — PROTAGONIST ("pemilik F&B", CONTOH): recognisable silhouette
+// bun hair + apron bib & straps + phone held at chest (lavender screen glow). Pose: 'down' (scrolling) or 'up' (looking up)
+function insidePersona(x,y,pose){
+  const up=pose==='up'; const hx=up?0:0.04, hy=up?-0.55:-0.47;
+  const ex=(x-hx)/0.16, ey=(y-hy)/0.19; if(ex*ex+ey*ey<=1) return true;                       // head
+  const bx=(x-(up?-0.025:-0.015))/0.105, by=(y-(up?-0.725:-0.655))/0.095; if(bx*bx+by*by<=1) return true;  // bun: one smooth top knot
+  if(y>-0.38&&y<-0.26&&Math.abs(x)<0.075) return true;                                      // neck
+  if(y>=-0.3&&y<=0.6){let hw; if(y<-0.05){const t=(y+0.3)/0.25;hw=0.08+0.38*Math.sqrt(Math.max(0,1-(1-t)*(1-t)));} else hw=0.46-0.07*((y+0.05)/0.65); return Math.abs(x)<=hw;}
+  return false;
+}
+function personaFeatures(pose){        // explicit contour lines -> brighter "feature" dots (apron, straps, arm, phone)
+  const up=pose==='up'; const L=[];
+  L.push([[-0.07,-0.27],[-0.2,-0.02]],[[0.07,-0.27],[0.2,-0.02]]);                    // apron straps (neck -> bib corners)
+  L.push([[-0.2,-0.02],[-0.22,0.6]],[[0.2,-0.02],[0.22,0.6]],[[-0.2,-0.02],[0.2,-0.02]]); // bib outline
+  L.push([[-0.22,0.2],[-0.42,0.22]],[[0.22,0.2],[0.42,0.22]]);                          // apron tie
+  if(!up){ L.push([[0.38,0.1],[0.13,0.0]],[[-0.36,0.12],[-0.05,0.04]]); }           // forearms reaching the phone
+  return L;
+}
+function samplePersona(r,n,pose){
+  const pts=[]; let g=0;
+  while(pts.length<n*0.72&&g++<n*80){const x=(r()*2-1)*0.52,y=-0.8+r()*1.4; if(!insidePersona(x,y,pose))continue;
+    const e=0.028; const edge=!insidePersona(x+e,y,pose)||!insidePersona(x-e,y,pose)||!insidePersona(x,y+e,pose)||!insidePersona(x,y-e,pose);
+    const fb=y>0.3?(0.6-y)/0.3:1; if(r()>(edge?1:0.3)*fb)continue; pts.push([x,y,edge?1:0]);}
+  for(const [a,b] of personaFeatures(pose)){const len=Math.hypot(b[0]-a[0],b[1]-a[1]); const k=Math.round(len*n*0.05);
+    for(let i=0;i<k;i++){const u=r(); if(a[1]+(b[1]-a[1])*u>0.55) continue; pts.push([a[0]+(b[0]-a[0])*u+(r()-0.5)*0.018,a[1]+(b[1]-a[1])*u+(r()-0.5)*0.018,2]);}}
+  return pts;
+}
+function drawPersona(x2,cx,gy,s,pose,o){
+  const pts=o.pts; const lit=o.col||C.mist;
+  drawPerson(x2,cx,gy,s,{pts,density:o.density||9,r:o.r||1.5,alpha:o.alpha||1,blur:o.blur||0,
+    colFn:p=>p[2]===2?(o.feat||C.white):lit, scatter:(p,i)=>[0,0,p[2]===2?0.9:1]});
+  if(pose!=='up'){ // the phone: a small glowing screen held at the chest + its light on the face
+    const sx=cx+0.0*s, sy=gy+(-0.1-0.6)*s, sw=0.1*s, sh=0.16*s;
+    x2.save(); x2.globalCompositeOperation='lighter'; x2.translate(sx+sw/2,sy+sh/2); x2.rotate(-0.25); x2.scale(1,0.55);
+    const sg=x2.createLinearGradient(0,-sh/2,0,sh/2); sg.addColorStop(0,hexA('#F2EEFF',0.55)); sg.addColorStop(1,hexA('#B9A8FF',0.25)); x2.fillStyle=sg; x2.fillRect(-sw/2,-sh/2,sw,sh); x2.restore();
+    const px=cx+0.03*s, py=gy+(-0.25-0.6)*s; const gr=x2.createRadialGradient(px,py,0,px,py,s*0.42); gr.addColorStop(0,hexA(o.glow||C.lav,0.34)); gr.addColorStop(1,hexA(o.glow||C.lav,0));
+    x2.save(); x2.globalCompositeOperation='lighter'; x2.fillStyle=gr; x2.beginPath(); x2.arc(px,py,s*0.42,0,7); x2.fill(); x2.restore(); }
+}
+
+// ---------- custom line icons (stroke-only, lavender/mist; yellow only when "active")
+function ico(x2,col,w){x2.strokeStyle=col;x2.lineWidth=w||2;x2.lineCap='round';x2.lineJoin='round';}
+function iconStorefront(x2,x,y,s,col){ico(x2,col,2);
+  x2.beginPath();x2.moveTo(x,y+s*0.28);x2.lineTo(x+s,y+s*0.28);x2.stroke();                       // awning base
+  for(let i=0;i<6;i++){x2.beginPath();x2.moveTo(x+i*s/6,y);x2.lineTo(x+(i+0.5)*s/6,y+s*0.28);x2.lineTo(x+(i+1)*s/6,y);x2.stroke();}
+  x2.beginPath();x2.moveTo(x,y);x2.lineTo(x+s,y);x2.stroke();
+  x2.strokeRect(x+s*0.06,y+s*0.28,s*0.88,s*0.62);                                                  // shopfront
+  x2.strokeRect(x+s*0.62,y+s*0.44,s*0.22,s*0.46);                                                  // door
+  x2.strokeRect(x+s*0.14,y+s*0.4,s*0.38,s*0.24);                                                   // window
+}
+function iconTable(x2,x,y,s,col){ico(x2,col,1.8);   // empty bistro table + 2 chairs
+  x2.beginPath();x2.moveTo(x-s*0.3,y);x2.lineTo(x+s*0.3,y);x2.moveTo(x,y);x2.lineTo(x,y+s*0.55);x2.moveTo(x-s*0.18,y+s*0.55);x2.lineTo(x+s*0.18,y+s*0.55);x2.stroke();
+  for(const d of [-1,1]){const cx=x+d*s*0.58;x2.beginPath();x2.moveTo(cx-d*s*0.12,y-s*0.35);x2.lineTo(cx-d*s*0.12,y+s*0.55);x2.moveTo(cx-d*s*0.12,y+s*0.15);x2.lineTo(cx+d*s*0.16,y+s*0.15);x2.lineTo(cx+d*s*0.16,y+s*0.55);x2.stroke();}
+}
+function iconPost(x2,x,y,s,col,tick){ico(x2,col,1.6);const r=s*0.18;x2.beginPath();x2.moveTo(x+r,y);x2.arcTo(x+s,y,x+s,y+s,r);x2.arcTo(x+s,y+s,x,y+s,r);x2.arcTo(x,y+s,x,y,r);x2.arcTo(x,y,x+s,y,r);x2.stroke();
+  if(tick){x2.beginPath();x2.moveTo(x+s*0.25,y+s*0.52);x2.lineTo(x+s*0.43,y+s*0.7);x2.lineTo(x+s*0.76,y+s*0.32);x2.stroke();}}
+function iconEye(x2,x,y,s,col){ico(x2,col,2);x2.beginPath();x2.moveTo(x-s,y);x2.quadraticCurveTo(x,y-s*0.85,x+s,y);x2.quadraticCurveTo(x,y+s*0.85,x-s,y);x2.stroke();x2.beginPath();x2.arc(x,y,s*0.3,0,7);x2.stroke();x2.fillStyle=col;x2.beginPath();x2.arc(x,y,s*0.11,0,7);x2.fill();}
+function iconBag(x2,x,y,s,col){ico(x2,col,2);x2.beginPath();x2.moveTo(x-s*0.5,y);x2.lineTo(x+s*0.5,y);x2.lineTo(x+s*0.42,y+s*0.95);x2.lineTo(x-s*0.42,y+s*0.95);x2.closePath();x2.stroke();x2.beginPath();x2.arc(x,y,s*0.22,Math.PI,0);x2.stroke();}
+function iconPersonOutline(x2,x,y,s,col,fill){ico(x2,col,1.6);x2.beginPath();x2.arc(x,y,s*0.22,0,7);x2.stroke();x2.beginPath();x2.moveTo(x-s*0.42,y+s*0.95);x2.quadraticCurveTo(x-s*0.42,y+s*0.36,x,y+s*0.36);x2.quadraticCurveTo(x+s*0.42,y+s*0.36,x+s*0.42,y+s*0.95);x2.stroke();if(fill){x2.fillStyle=hexA(col,0.25);x2.fill();}}
+function panel(x2,x,y,w,h,a){x2.save();x2.globalAlpha=a==null?1:a;x2.fillStyle='rgba(18,10,38,0.62)';x2.fillRect(x,y,w,h);const gr=x2.createLinearGradient(x,y,x+w,y+h);gr.addColorStop(0,'rgba(171,148,255,0.08)');gr.addColorStop(1,'rgba(171,148,255,0)');x2.fillStyle=gr;x2.fillRect(x,y,w,h);x2.strokeStyle=hexA(C.lav,0.4);x2.lineWidth=1.5;x2.strokeRect(x,y,w,h);x2.restore();}
+
+// ======================================================================
+// SF4 — S03 "FAIL ORANG YANG BETUL" (≈ 17 s): lens on the protagonist; the file is being built, problem by problem
+function SF4(annot){
+  ctx.setTransform(S,0,0,S,0,0);
+  atmosphere(ctx,{seed:41, fog:0.3, lights:[[W*0.3,H*0.72,760,C.p1,0.3],[W*0.8,H*0.35,700,C.p2,0.5],[W*0.5,H*1.0,700,C.p2,0.5]]});
+  const [gl,g]=layer(); const [pl,p]=layer();
+  const r=rng(404); const lib=[0,1,2,3,4,5].map(i=>samplePerson(rng(600+i),900));
+  // crowd behind: heavily defocused (the lens isolates one person)
+  for(let i=0;i<46;i++){const z=r(); const s=120+z*260; const cx=r()*W, gy=1300+z*720; if(cx>120&&cx<560&&gy>1500)continue;
+    drawPerson(p,cx,gy,s,{pts:lib[i%6],density:2.2,r:1.2,col:mix(C.grey,C.lav,0.4),alpha:0.22,blur:10+z*16});}
+  // protagonist: head down, scrolling; in sharp focus inside the lens
+  const PR=samplePersona(rng(808),2600,'down'); const pcx=318, pgy=1985, ps=640;
+  drawPersona(p,pcx,pgy,ps,'down',{pts:PR,density:10,r:1.45,col:'#DCD4FF',feat:'#F6F3FF',alpha:1});
+  ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalCompositeOperation='lighter';ctx.drawImage(pl,0,0);ctx.restore();
+  // lens (the CARI tool from S02): thin ring + focus ticks around the head
+  const lx=pcx+12, ly=pgy-(1.1)*ps+26, lr=188;
+  ctx.save();ctx.strokeStyle=hexA(C.mist,0.55);ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(lx,ly,lr,0,7);ctx.stroke();
+  ctx.strokeStyle=hexA(C.mist,0.25);ctx.beginPath();ctx.arc(lx,ly,lr+14,0,7);ctx.stroke();
+  for(let i=0;i<72;i++){const a=i/72*Math.PI*2, k=i%6===0?16:7; ctx.strokeStyle=hexA(C.mist,i%6===0?0.6:0.3); ctx.beginPath(); ctx.moveTo(lx+Math.cos(a)*(lr+14),ly+Math.sin(a)*(lr+14)); ctx.lineTo(lx+Math.cos(a)*(lr+14+k),ly+Math.sin(a)*(lr+14+k)); ctx.stroke();}
+  ctx.restore();
+  // focus brackets (yellow = locked)
+  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([dx,dy])=>{const x=lx+dx*lr*0.62,y=ly+dy*lr*0.62;g.strokeStyle=C.y;g.lineWidth=3;g.beginPath();g.moveTo(x,y-dy*30);g.lineTo(x,y);g.lineTo(x-dx*30,y);g.stroke();});
+
+  // ---- the FILE (persistent object): header + 3 problem modules, built progressively
+  const fx=96, fy=440, fw=844, fh=640;
+  panel(ctx,fx,fy,fw,fh);
+  // file tab
+  ctx.save();ctx.font='600 19px JBM';ctx.letterSpacing='4px';const tabW=ctx.measureText('FAIL · ORANG YANG BETUL').width+40;ctx.restore();
+  ctx.fillStyle='rgba(18,10,38,0.9)';ctx.fillRect(fx,fy-44,tabW,44);ctx.strokeStyle=hexA(C.lav,0.4);ctx.strokeRect(fx,fy-44,tabW,44);
+  txt(ctx,'FAIL · ORANG YANG BETUL',fx+20,fy-14,{font:'600 19px JBM',ls:'4px',col:C.y});
+  txt(g,'FAIL · ORANG YANG BETUL',fx+20,fy-14,{font:'600 19px JBM',ls:'4px',col:C.y});
+  txt(ctx,'CONTOH · PEMILIK F&B · RESTORAN · CAFE',fx+40,fy+152,{font:'400 15px JBM',ls:'3px',col:hexA(C.lav,0.7)});
+  const hw=txt(ctx,'Baca ',fx+40,fy+86,{font:'700 60px "Inter Display"',ls:'-2px',col:C.white});
+  const dw=txt(ctx,'data',fx+40+hw,fy+86,{font:'800 60px "Inter Display"',ls:'-2px',col:C.y});
+  txt(g,'data',fx+40+hw,fy+86,{font:'800 60px "Inter Display"',ls:'-2px',col:C.y});
+  txt(ctx,' dulu.',fx+40+hw+dw,fy+86,{font:'700 60px "Inter Display"',ls:'-2px',col:C.white});
+  txt(ctx,'DATA-LED AUDIENCE RESEARCH',fx+fw-40,fy+82,{font:'400 15px JBM',ls:'3px',col:hexA(C.lav,0.6),align:'right'});
+  ctx.strokeStyle=hexA(C.lav,0.25);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(fx+40,fy+118);ctx.lineTo(fx+fw-40,fy+118);ctx.stroke();
+
+  const rowH=152, r0=fy+176;
+  const MOD=[['01','POST HARI-HARI.','KEDAI MASIH LENGANG.'],['02','RAMAI TENGOK.','TAPI TAK MEMBELI.'],['03','BAJET IKLAN HABIS.','PELANGGAN TAK BERTAMBAH.']];
+  MOD.forEach(([n,a,b],i)=>{const y=r0+i*rowH; const active=i===2;
+    if(i>0){ctx.strokeStyle=hexA(C.lav,0.16);ctx.beginPath();ctx.moveTo(fx+40,y-8);ctx.lineTo(fx+fw-40,y-8);ctx.stroke();}
+    txt(active?g:ctx,n,fx+40,y+38,{font:'600 18px JBM',ls:'3px',col:active?C.y:hexA(C.lav,0.75)}); if(active) txt(ctx,n,fx+40,y+38,{font:'600 18px JBM',ls:'3px',col:C.y});
+    // visual zone x: fx+90 .. fx+400
+    const vx=fx+96, vy=y+14;
+    if(i===0){ // seven daily posts (ticked) -> storefront, empty tables
+      for(let k=0;k<7;k++) iconPost(ctx,vx+k*34,vy,24,hexA(C.mist,0.8),true);
+      ctx.save();ctx.setLineDash([3,6]);ctx.strokeStyle=hexA(C.mist,0.4);ctx.beginPath();ctx.moveTo(vx+60,vy+34);ctx.lineTo(vx+60,vy+52);ctx.stroke();ctx.restore();
+      iconStorefront(ctx,vx,vy+56,120,hexA(C.mist,0.85)); iconTable(ctx,vx+196,vy+96,44,hexA(C.mist,0.7));
+    }
+    if(i===1){ // many views flow toward an empty bag; they fade and fall before reaching it
+      iconEye(ctx,vx+34,vy+66,32,hexA(C.mist,0.85));
+      const rr=rng(77); for(let k=0;k<70;k++){const u=rr(); const x=vx+82+u*190; const y=vy+66+(rr()-0.5)*40*(1-u)+Math.pow(Math.max(0,u-0.55),2)*240; const a=(1-u)*0.9;
+        if(y>vy+140)continue; ctx.fillStyle=hexA(C.mist,a); ctx.fillRect(x,y,2.4,2.4);}
+      iconBag(ctx,vx+290,vy+40,58,hexA(C.mist,0.85));
+    }
+    if(i===2){ // budget meter draining (ghost trail = motion) + customers flat
+      const mx=vx, my=vy+30, mw=250, mh=16;
+      txt(ctx,'BAJET',mx,my-12,{font:'400 14px JBM',ls:'3px',col:hexA(C.lav,0.7)});
+      ctx.strokeStyle=hexA(C.mist,0.6);ctx.lineWidth=1.5;ctx.strokeRect(mx,my,mw,mh);
+      for(let k=0;k<6;k++){ctx.fillStyle=hexA(C.lav,0.06+k*0.03);ctx.fillRect(mx+2,my+2,(mw-4)*(0.9-k*0.12),mh-4);}
+      const fe=mx+2+(mw-4)*0.2; g.fillStyle=C.y; g.fillRect(mx+2,my+2,fe-mx-2,mh-4); flare(g,fe,my+mh/2,0.45);
+      txt(ctx,'PELANGGAN',mx,my+58,{font:'400 14px JBM',ls:'3px',col:hexA(C.lav,0.7)});
+      iconPersonOutline(ctx,mx+16,my+74,30,hexA(C.mist,0.85),true);
+      for(let k=1;k<5;k++) iconPersonOutline(ctx,mx+16+k*44,my+74,30,hexA(C.lav,0.22),false);
+      ctx.save();ctx.setLineDash([2,6]);ctx.strokeStyle=hexA(C.mist,0.45);ctx.beginPath();ctx.moveTo(mx+40,my+110);ctx.lineTo(mx+250,my+110);ctx.stroke();ctx.restore();
+    }
+    // copy (the approved C4 lines): two-line typographic block, not a list
+    const tx=fx+430;
+    txt(ctx,a,tx,y+62,{font:'800 34px "Inter Display"',ls:'-0.8px',col:C.white});
+    if(!active) txt(ctx,b,tx,y+104,{font:'800 34px "Inter Display"',ls:'-0.8px',col:hexA(C.mist,0.75)});
+    else { const part='PELANGGAN TAK BERT'; const w=txt(ctx,part,tx,y+104,{font:'800 34px "Inter Display"',ls:'-0.8px',col:hexA(C.mist,0.75)}); g.fillStyle=C.y; g.fillRect(tx+w+6,y+76,4,34); ctx.fillStyle=C.y; ctx.fillRect(tx+w+6,y+76,4,34); }
+  });
+  // Signal Line: from the protagonist's phone into the active module (data being read)
+  const phx=pcx+0.04*ps, phy=pgy+(-0.04-0.6)*ps;
+  signalLine(g,[[phx+20,phy-30],[phx+200,phy-140],[fx+640,r0+2*rowH+170],[fx+560,r0+2*rowH+122]],{w:2.0,flare:0.5,sparks:3});
+  rail(ctx,g,0);
+  bloom(ctx,gl,0.45,0.6);
+  finish(ctx,9004);
+  if(annot){
+    note(ctx,600,1460,['WATAK UTAMA · CONTINUITY','sanggul + apron + telefon = sama','dari S01 hingga S08. Muka diterangi','cahaya telefon (sedang scroll)'],pcx+40,pgy-1.0*ps);
+    note(ctx,600,1120,['LENSA (alat CARI dari S02)','kamera masuk melalui lensa; hanya','dia tajam, orang lain kabur'],lx+lr,ly-40);
+    note(ctx,560,300,['FAIL ORANG YANG BETUL','objek kekal: dibina di sini, jadi','kad iklan di S04, 3 variasi di S05'],fx+300,fy-22);
+    note(ctx,40,1700,['MASALAH MUNCUL BERPERINGKAT','01 kedai + post · 02 mata → beg kosong','03 bajet susut, pelanggan rata.','Setiap satu: ikon dilukis → teks naik'],null,null);
+    note(ctx,600,1290,['SIGNAL LINE','data mengalir dari telefonnya ke','modul aktif; meter susut + cursor'],fx+640,r0+2*rowH+170);
+  }
+}
+
+// ======================================================================
+// SF5 — S05 "BESARKAN DENGAN ADS" (≈ 42 s): 3 variants tested, winner fed into the amplifier, beam reaches people like her
+function miniCard(x2,cx,cy,w,h,o){x2.save();x2.translate(cx,cy);x2.transform(1,o.skew||0,0,1,0,0);x2.globalAlpha=o.alpha;
+  x2.fillStyle='rgba(22,12,46,0.78)';x2.fillRect(-w/2,-h/2,w,h);x2.strokeStyle=o.win?hexA(C.y,0.9):hexA(C.lav,0.45);x2.lineWidth=o.win?2:1.5;x2.strokeRect(-w/2,-h/2,w,h);
+  txt(x2,o.tag,-w/2+16,-h/2+28,{font:'600 14px JBM',ls:'3px',col:o.win?C.y:C.grey});
+  ico(x2,hexA(C.lav,0.7),1.5);x2.beginPath();x2.moveTo(w/2-40,-h/2+14);x2.lineTo(w/2-36,-h/2+36);x2.lineTo(w/2-18,-h/2+36);x2.lineTo(w/2-14,-h/2+14);x2.closePath();x2.stroke();
+  if(o.win){txt(x2,'Post content setiap hari,',-w/2+16,-h/2+68,{font:'600 19px "Inter Display"',col:C.white});txt(x2,'tapi pelanggan tetap',-w/2+16,-h/2+94,{font:'600 19px "Inter Display"',col:C.white});}
+  else{x2.fillStyle=hexA(C.mist,0.35);x2.fillRect(-w/2+16,-h/2+54,w*0.7,10);x2.fillRect(-w/2+16,-h/2+76,w*0.52,10);}
+  x2.restore();}
+function SF5(annot){
+  ctx.setTransform(S,0,0,S,0,0);
+  atmosphere(ctx,{seed:53, fog:0.34, lights:[[W*0.5,H*0.6,760,C.p1,0.32],[W*0.5,H*1.0,900,C.p2,0.6],[W*0.15,H*0.25,600,C.p2,0.4]]});
+  const [gl,g]=layer(); const [pl,p]=layer();
+  const r=rng(505); const lib=[0,1,2,3,4,5].map(i=>samplePerson(rng(700+i),900));
+  // city of people below; only those inside the beam AND matching the profile light up
+  const hor=1330, F=900, camH=6.5, ppl=[];
+  for(let i=0;i<4200;i++){let X=(r()*2-1)*50,Z=3+Math.pow(r(),1.3)*110; if(r()<0.7){if(r()<0.5)X=Math.round(X/5)*5+(r()-0.5);else Z=Math.round(Z/6)*6+(r()-0.5);} ppl.push([X,Z,Math.floor(r()*6),r()]);}
+  ppl.sort((a,b)=>b[1]-a[1]);
+  const ax=W/2, ay=1150;
+  for(const q of ppl){const z=q[1], s=F/z*0.9, cx=W/2+q[0]*F/z, gy=hor+camH*F/z; if(cx<-60||cx>W+60||gy>H+200)continue;
+    const spread=(gy-ay)*0.62+30; const inBeam=Math.abs(cx-ax)<spread; const match=q[3]<0.78; const lit=inBeam&&match;
+    const col=lit?C.y:C.lav; const tl=lit?g:p; const blur=z<6?Math.min(20,(6-z)*7):0;
+    if(s>26) drawPerson(tl,cx,gy,s,{pts:lib[q[2]],density:lit?5:2.6,r:Math.max(0.9,s*0.0058),col,alpha:lit?0.8:0.22,blur:blur*0.6});
+    else {tl.globalAlpha=lit?Math.min(1,0.45+s*0.03):0.22;tl.fillStyle=col;const rr=Math.max(0.7,s*0.065);tl.fillRect(cx-rr,gy-s*0.7-rr,rr*2,rr*2);tl.globalAlpha=1;}
+  }
+  ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalCompositeOperation='lighter';ctx.drawImage(pl,0,0);ctx.restore();
+  // beam cone from the amplifier down into the city
+  g.save();g.filter='blur(26px)';const bg_=g.createLinearGradient(0,ay,0,H);bg_.addColorStop(0,hexA(C.y,0.30));bg_.addColorStop(0.5,hexA(C.y,0.08));bg_.addColorStop(1,hexA(C.y,0));
+  g.fillStyle=bg_;g.beginPath();g.moveTo(ax-70,ay);g.lineTo(ax+70,ay);g.lineTo(ax+(H-ay)*0.62+60,H);g.lineTo(ax-(H-ay)*0.62-60,H);g.closePath();g.fill();g.restore();
+  // the protagonist, recognisable (bun + apron), now head UP and lit: she is among the people the ads reach
+  const PRu=samplePersona(rng(809),2200,'up');
+  drawPersona(g,250,H+150,430,'up',{pts:PRu,density:8,r:1.5,col:C.y,feat:'#F4FF9A',alpha:0.85});
+  // amplifier: stacked rings in perspective (the S02 "SAMBUNG" icon, now a 3D object)
+  for(let k=0;k<6;k++){const ry=ay-k*16, rx=150-k*16; ctx.strokeStyle=hexA(C.lav,0.35+k*0.06);ctx.lineWidth=1.6;ctx.beginPath();ctx.ellipse(ax,ry,rx,rx*0.22,0,0,7);ctx.stroke();}
+  g.strokeStyle=C.y;g.lineWidth=3;g.beginPath();g.ellipse(ax,ay,150,33,0,0,7);g.stroke();
+  for(let k=1;k<=4;k++){g.globalAlpha=0.5/k;g.lineWidth=2;g.beginPath();g.ellipse(ax,ay+18*k,150+k*60,33+k*14,0,0.15*Math.PI,0.85*Math.PI);g.stroke();} g.globalAlpha=1;   // pulses travelling down
+  txt(ctx,'ADS',ax,ay-120,{font:'600 18px JBM',ls:'6px',col:hexA(C.mist,0.8),align:'center'});
+  // three tested variants (descendants of the file -> ad card)
+  const cy=820, xs=[205,540,875];
+  const meters=[0.28,0.88,0.34];
+  xs.forEach((x,i)=>{const win=i===1; miniCard(ctx,x,cy+(win?-26:0),win?300:250,win?170:150,{tag:['VARIASI A','VARIASI B','VARIASI C'][i],win,alpha:win?1:0.45,skew:[0.05,0,-0.05][i]});
+    const my=cy+(win?84:98), mw=win?260:210; txt(ctx,'BERHENTI SCROLL',x-mw/2,my-8,{font:'400 12px JBM',ls:'2px',col:hexA(C.lav,win?0.8:0.45)});
+    ctx.strokeStyle=hexA(C.lav,win?0.7:0.35);ctx.lineWidth=1.2;ctx.strokeRect(x-mw/2,my,mw,10);
+    if(win){g.fillStyle=C.y;g.fillRect(x-mw/2+2,my+2,(mw-4)*meters[i],6);flare(g,x-mw/2+2+(mw-4)*meters[i],my+5,0.4);}
+    else{ctx.fillStyle=hexA(C.lav,0.4);ctx.fillRect(x-mw/2+2,my+2,(mw-4)*meters[i],6);
+      ctx.strokeStyle=hexA(C.lav,0.6);ctx.lineWidth=2;const ex=x+mw/2-12,ey=cy-60;ctx.beginPath();ctx.moveTo(ex-9,ey-9);ctx.lineTo(ex+9,ey+9);ctx.moveTo(ex+9,ey-9);ctx.lineTo(ex-9,ey+9);ctx.stroke();}
+  });
+  txt(g,'YANG MENJADI',540,cy-140,{font:'600 18px JBM',ls:'5px',col:C.y,align:'center'}); txt(ctx,'YANG MENJADI',540,cy-140,{font:'600 18px JBM',ls:'5px',col:C.y,align:'center'});
+  // winning card -> amplifier (Signal Line), with an energy pulse
+  signalLine(g,[[540,cy+100],[548,cy+180],[536,ay-110],[540,ay-30]],{w:2.6,flare:0.7,sparks:7});
+  // headline (approved v5 copy)
+  txt(ctx,'BESARKAN',96,440,{font:'800 104px "Inter Display"',ls:'-3.5px',col:C.y}); txt(g,'BESARKAN',96,440,{font:'800 104px "Inter Display"',ls:'-3.5px',col:C.y});
+  txt(ctx,'DENGAN ADS.',96,554,{font:'800 104px "Inter Display"',ls:'-3.5px',col:C.white});
+  rail(ctx,g,2);
+  bloom(ctx,gl,0.5,0.62);
+  finish(ctx,9005);
+  if(annot){
+    note(ctx,560,575,['3 VARIASI (dari kad S04)','meter "berhenti scroll" naik serentak;','A & C terhenti → malap + ✕'],205,cy-40);
+    note(ctx,40,1000,['AMPLIFIER = ADS','ikon SAMBUNG dari S02 kini objek 3D;','gelang berdenyut ikut beat'],ax-150,ay);
+    note(ctx,600,1060,['PANCARAN','hanya orang dalam pancaran YANG','sepadan profil menyala (bukan semua)'],ax+180,ay+260);
+    note(ctx,560,1560,['WATAK UTAMA (continuity)','sanggul + apron, kini mendongak','dan kuning: dia antara yang dicapai'],250,H-160);
+    note(ctx,40,1740,['KAMERA','ikut pemenang ke amplifier → tracking','laju sepanjang pancaran → crane-out'],null,null);
+  }
+}
+
 window.render = async (id, annot) => {
   await document.fonts.load('800 100px "Inter Display"'); await document.fonts.load('700 100px "Inter Display"'); await document.fonts.load('600 50px "Inter Display"');
   await document.fonts.load('600 20px JBM'); await document.fonts.load('400 20px JBM');
   ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,cv.width,cv.height);
-  ({SF1,SF2,SF3})[id](annot);
+  ({SF1,SF2,SF3,SF4,SF5})[id](annot);
   return cv.toDataURL('image/png');
 };
 window.READY = true;

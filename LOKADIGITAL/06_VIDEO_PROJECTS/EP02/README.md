@@ -4,7 +4,7 @@
 | **Premis** | Ramai yang nampak. Tak ramai yang beli. Masalahnya bukan berapa ramai, tapi **siapa**. |
 | **Struktur** | CARI → CAKAP → SAMBUNG · 8 scene · 42 beat · 67.5 s · 92 BPM · 9:16 |
 | **Gaya** | Visual-first, **tiada voiceover**. Signal Line sebagai pemandu. Lautan zarah kelabu → kuning |
-| **Status** | ✅ Storyboard v5 · ✅ Style frames v2 (benchmark) · 🟡 **[Creative Direction v2](CONCEPT/CREATIVE_DIRECTION_v2_PROPOSAL.md) (cadangan) menunggu approval** · animatic v1 ditangguhkan |
+| **Status** | ✅ Storyboard v5 · ✅ Style frames v2 (benchmark) · ✅ [Creative Direction v2](CONCEPT/CREATIVE_DIRECTION_v2_PROPOSAL.md) · 🟡 **[SF4 + SF5](ASSETS/STYLE_FRAMES/README.md) menunggu review** · animatic v1 ditangguhkan |
 | **Selepas approval animatic** | Full production: render akhir → sound design & mix akhir → QC → final review |
 | **Reference** | [REF-001](../../03_REFERENCE_LIBRARY/REFERENCE_LIBRARY.md#ref-001) |
 
