@@ -1,0 +1,169 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:"Anton";src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/anton-latin-400-normal.woff2)}
+@font-face{font-family:"ArchivoBlack";src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/archivo-black-latin-400-normal.woff2)}
+@font-face{font-family:"Caveat";font-weight:500;src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/caveat-latin-500-normal.woff2)}
+@font-face{font-family:"Caveat";font-weight:700;src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/caveat-latin-700-normal.woff2)}
+@font-face{font-family:"Fraunces";font-weight:400;src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/fraunces-latin-400-normal.woff2)}
+@font-face{font-family:"Fraunces";font-weight:700;src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/fraunces-latin-700-normal.woff2)}
+@font-face{font-family:"Fraunces";font-weight:400;font-style:italic;src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/fraunces-latin-400-italic.woff2)}
+@font-face{font-family:"Fraunces";font-weight:700;font-style:italic;src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/fraunces-latin-700-italic.woff2)}
+@font-face{font-family:"DMMono";font-weight:500;src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/dm-mono-latin-500-normal.woff2)}
+html,body{margin:0;background:#EFE9DF}canvas{display:block}</style></head><body>
+<canvas id="out" width="1080" height="1920"></canvas>
+<script type="module">
+// LOKADIGITAL · V1 "YANG PALING BISING" · editorial paper / stop-motion collage · 25 s · no voiceover
+// Idea: a wall of shouting ads drowns itself; one small handwritten note, written for ONE person, is what gets read.
+const W = 1080, H = 1920;
+const INK = '#141016', PURPLE = '#4A2A9C', YEL = '#E8FF2B', PAPER = '#EFE9DF';
+const cl = x => Math.max(0, Math.min(1, x)), P = (t, a, b) => cl((t - a) / (b - a)), lerp = (a, b, u) => a + (b - a) * u;
+const eo = x => 1 - Math.pow(1 - cl(x), 3), eio = x => { x = cl(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const back = (x, s = 2.2) => { x = cl(x); return 1 + (s + 1) * Math.pow(x - 1, 3) + s * Math.pow(x - 1, 2); };
+function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d')]; };
+const SM = t => Math.floor(t * 12) / 12;           // stop-motion time (12 fps) for paper objects
+
+const T = { slam0: .15, gap: .19, loud: 3.0, note: 5.6, write: 6.3, rack: 8.4, head1: 9.0, head2: 10.0, peel: 12.4, insight1: 13.2, insight2: 14.3,
+  cards: 17.2, cta: 21.2, stamp: 22.6, end: 25 };
+
+// ---------------- posters (the loud wall)
+const ADS = [
+  ['SALE 50%!!', 'ArchivoBlack', '#C9C3BA', INK, 0], ['PROMO\nHEBAT', 'Anton', '#F7F3EC', PURPLE, 1], ['TERBAIK\nDI MALAYSIA', 'Anton', '#D9CDB7', INK, 0],
+  ['JOM BELI\nSEKARANG', 'ArchivoBlack', '#F4EFE6', '#B0302E', 1], ['DISKAUN\nMEGA', 'Anton', '#BFB8C9', INK, 0], ['MURAH\nGILA!', 'ArchivoBlack', '#E9E2D3', PURPLE, 1],
+  ['FREE\nDELIVERY', 'Anton', '#F7F3EC', INK, 1], ['HARGA\nTERENDAH', 'ArchivoBlack', '#D3C7AE', INK, 0], ['BUY 1\nFREE 1', 'Anton', '#ECE6F2', PURPLE, 1],
+  ['TERHAD!!!', 'ArchivoBlack', '#F4EFE6', '#B0302E', 0], ['LIMITED\nOFFER', 'Anton', '#CFC7BB', INK, 1], ['FLASH\nSALE', 'ArchivoBlack', '#F7F3EC', INK, 0],
+  ['DAPATKAN\nSEGERA', 'Anton', '#DCD2C0', PURPLE, 0], ['100%\nORIGINAL', 'ArchivoBlack', '#EDE7DC', INK, 1]];
+const POS = []; { const r = rng(17); const grid = [[150, 360], [520, 300], [880, 380], [260, 760], [700, 720], [980, 820], [120, 1180], [500, 1140], [880, 1220],
+  [300, 1560], [720, 1580], [1000, 1580], [560, 1880], [180, 1900]];
+  ADS.forEach((a, i) => { const [x, y] = grid[i]; POS.push({ x: x + (r() - .5) * 60, y: y + (r() - .5) * 60, w: 360 + r() * 160, h: 440 + r() * 180, rot: (r() - .5) * .38, t: T.slam0 + i * T.gap * (1 - i * .025), peel: T.peel + (i % 7) * .22 + r() * .3, side: r() < .5 ? -1 : 1, seed: 100 + i }); }); }
+const POSTER = [];
+function paperTex(x, w, h, base, seed, rough = true) {
+  const r = rng(seed); x.save(); x.beginPath(); const j = () => rough ? (r() - .5) * 5 : 0;
+  x.moveTo(j(), j()); for (let k = 1; k <= 20; k++) x.lineTo(w * k / 20 + j(), j()); for (let k = 1; k <= 20; k++) x.lineTo(w + j(), h * k / 20 + j());
+  for (let k = 19; k >= 0; k--) x.lineTo(w * k / 20 + j(), h + j()); for (let k = 19; k > 0; k--) x.lineTo(j(), h * k / 20 + j()); x.closePath(); x.clip();
+  x.fillStyle = base; x.fillRect(-10, -10, w + 20, h + 20);
+  const id = x.getImageData(0, 0, w, h); const d = id.data; for (let i = 0; i < d.length; i += 4) { const n = (r() - .5) * 16; d[i] += n; d[i + 1] += n; d[i + 2] += n; } x.putImageData(id, 0, 0);
+  x.globalAlpha = .06; x.strokeStyle = '#000'; for (let k = 0; k < 60; k++) { x.lineWidth = .5 + r(); x.beginPath(); const a = r() * w, b = r() * h; x.moveTo(a, b); x.lineTo(a + (r() - .5) * 60, b + (r() - .5) * 8); x.stroke(); }
+  x.globalAlpha = 1; x.restore();
+}
+function buildPosters() {
+  ADS.forEach(([txt, font, bg, ink, half], i) => { const p = POS[i]; const [c, x] = mk(Math.round(p.w), Math.round(p.h)); paperTex(x, p.w, p.h, bg, p.seed);
+    const lines = txt.split('\n'); const size = Math.min(p.w * (font === 'Anton' ? .34 : .22), p.h / (lines.length * 1.15)) * (lines.length === 1 ? 1 : .95);
+    x.save(); x.fillStyle = ink; x.textAlign = 'center'; x.font = `${size}px ${font}`; x.letterSpacing = '-1px';
+    lines.forEach((l, k) => x.fillText(l, p.w / 2, p.h / 2 + (k - (lines.length - 1) / 2) * size * 1.02 + size * .35));
+    // misregistered second ink pass (cheap print feel)
+    x.globalAlpha = .18; x.fillStyle = half ? PURPLE : '#B0302E'; lines.forEach((l, k) => x.fillText(l, p.w / 2 + 4, p.h / 2 + (k - (lines.length - 1) / 2) * size * 1.02 + size * .35 + 3)); x.restore();
+    if (half) { x.save(); x.globalAlpha = .22; x.fillStyle = ink; for (let yy = 12; yy < p.h * .22; yy += 9) for (let xx = 10; xx < p.w; xx += 9) { x.beginPath(); x.arc(xx, yy, 2.4 * (1 - yy / (p.h * .22)), 0, 7); x.fill(); } x.restore(); }
+    x.font = '500 15px DMMono'; x.fillStyle = ink; x.globalAlpha = .55; x.fillText('*TERTAKLUK KEPADA TERMA & SYARAT', 18, p.h - 18); x.globalAlpha = 1;
+    POSTER.push(c); });
+}
+let NOTE, BG, CARDS = [];
+function buildNote() { const [c, x] = mk(420, 420); const r = rng(5); x.fillStyle = '#E6F52E'; x.fillRect(0, 0, 420, 420);
+  const g = x.createLinearGradient(0, 0, 0, 420); g.addColorStop(0, 'rgba(255,255,255,0.18)'); g.addColorStop(1, 'rgba(0,0,0,0.08)'); x.fillStyle = g; x.fillRect(0, 0, 420, 420);
+  x.fillStyle = 'rgba(0,0,0,0.05)'; x.fillRect(0, 0, 420, 46);   // glue strip
+  const id = x.getImageData(0, 0, 420, 420); for (let i = 0; i < id.data.length; i += 4) { const n = (r() - .5) * 10; id.data[i] += n; id.data[i + 1] += n; id.data[i + 2] += n; } x.putImageData(id, 0, 0); NOTE = c; }
+function buildBG() { const [c, x] = mk(W + 400, H + 400); x.fillStyle = PAPER; x.fillRect(0, 0, W + 400, H + 400); const r = rng(2);
+  const id = x.getImageData(0, 0, W + 400, H + 400); for (let i = 0; i < id.data.length; i += 4) { const n = (r() - .5) * 14; id.data[i] += n; id.data[i + 1] += n; id.data[i + 2] += n - 1; } x.putImageData(id, 0, 0);
+  x.globalAlpha = .05; for (let k = 0; k < 220; k++) { x.strokeStyle = '#000'; x.lineWidth = r() * 1.2; x.beginPath(); const a = r() * (W + 400), b = r() * (H + 400); x.moveTo(a, b); x.lineTo(a + (r() - .5) * 120, b + (r() - .5) * 10); x.stroke(); } x.globalAlpha = 1; BG = c; }
+function buildCards() { [['01', 'Siapa dia?'], ['02', 'Apa masalah dia?'], ['03', 'Cakap macam kawan.']].forEach(([n, s], i) => { const [c, x] = mk(560, 200); paperTex(x, 560, 200, '#FBF8F2', 300 + i);
+    x.strokeStyle = 'rgba(74,42,156,0.25)'; x.lineWidth = 1.5; for (let yy = 70; yy < 200; yy += 42) { x.beginPath(); x.moveTo(20, yy); x.lineTo(540, yy); x.stroke(); }
+    x.strokeStyle = 'rgba(176,48,46,0.35)'; x.beginPath(); x.moveTo(70, 0); x.lineTo(70, 200); x.stroke();
+    x.font = '500 22px DMMono'; x.fillStyle = PURPLE; x.fillText(n, 20, 44); x.font = '700 64px Caveat'; x.fillStyle = INK; x.fillText(s, 92, 128); CARDS.push(c); }); }
+
+let out, x, PL, pl, grainC = [];
+window.init = async () => {
+  for (const f of ['64px Anton', '64px ArchivoBlack', '700 64px Caveat', '500 64px Caveat', '700 64px Fraunces', 'italic 700 64px Fraunces', 'italic 400 64px Fraunces', '500 20px DMMono']) await document.fonts.load(f);
+  out = document.getElementById('out'); x = out.getContext('2d'); [PL, pl] = mk(W, H);
+  buildBG(); buildPosters(); buildNote(); buildCards();
+  for (let k = 0; k < 4; k++) { const [c, g] = mk(540, 960); const d = g.createImageData(540, 960); const r = rng(50 + k); for (let i = 0; i < d.data.length; i += 4) { const q = 128 + (r() + r() - 1) * 70; d.data[i] = d.data[i + 1] = d.data[i + 2] = q; d.data[i + 3] = 255; } g.putImageData(d, 0, 0); grainC.push(c); }
+};
+
+// a sheet: lands from above (scale 1.18 -> 1, shadow tightens), tiny bounce, then rests; can peel and fall
+function drawSheet(L, img, p, t, o = {}) {
+  const ts = SM(t); const land = P(ts, p.t, p.t + .25); if (ts < p.t) return;
+  let z = 1 - back(land, 1.6) * 1; z = Math.max(-.04, z);                   // height above the wall
+  let X = p.x, Y = p.y, rot = p.rot + (1 - eo(land)) * p.side * .25, sc = 1 + z * .18, alpha = Math.min(1, land * 3);
+  if (o.peel && ts > p.peel) { const u = ts - p.peel; z = Math.min(1.4, u * 2.2); X += p.side * (u * 120 + Math.sin(u * 5) * 60); Y += u * u * 900 + u * 80; rot += p.side * (u * 1.4 + Math.sin(u * 6) * .25); sc = 1 + z * .08; alpha = 1 - P(u, .9, 1.4); }
+  if (alpha <= 0) return;
+  L.save(); L.globalAlpha = alpha; L.translate(X, Y); L.rotate(rot); L.scale(sc, sc);
+  L.shadowColor = `rgba(20,14,10,${.28 + z * .12})`; L.shadowBlur = 6 + z * 36; L.shadowOffsetX = 3 + z * 14; L.shadowOffsetY = 6 + z * 34;
+  L.drawImage(img, -p.w / 2, -p.h / 2); L.shadowColor = 'transparent';
+  // tape strips (appear once landed)
+  if (land >= 1 && !(o.peel && ts > p.peel)) { L.globalAlpha = .55 * alpha; L.fillStyle = '#E8DFC8'; L.save(); L.translate(0, -p.h / 2); L.rotate(-.05 * p.side); L.fillRect(-60, -16, 120, 32); L.restore(); }
+  L.restore();
+}
+function marker(L, s, X, Y, size, t0, t, col = INK, w = 700) { // handwriting write-on (clip by width)
+  if (t < t0) return; L.save(); L.font = `${w} ${size}px Caveat`; const tw = L.measureText(s).width; const u = P(t, t0, t0 + s.length * .045);
+  L.beginPath(); L.rect(X - 10, Y - size, tw * u + 10, size * 1.5); L.clip(); L.fillStyle = col; L.fillText(s, X, Y); L.restore(); }
+function highlight(L, X, Y, w, h, u, seed) { if (u <= 0) return; const r = rng(seed); L.save(); L.globalCompositeOperation = 'multiply'; L.fillStyle = 'rgba(232,255,43,0.95)';
+  L.beginPath(); L.moveTo(X, Y + (r() - .5) * 6); const e = X + w * eo(u); for (let k = 0; k <= 12; k++) L.lineTo(X + (e - X) * k / 12, Y + (r() - .5) * 6); for (let k = 12; k >= 0; k--) L.lineTo(X + (e - X) * k / 12, Y + h + (r() - .5) * 6); L.closePath(); L.fill(); L.restore(); }
+function serif(L, s, X, Y, size, o = {}) { L.save(); L.font = `${o.italic ? 'italic ' : ''}${o.w || 700} ${size}px Fraunces`; L.letterSpacing = `${-size * .02}px`; L.fillStyle = o.col || INK; L.globalAlpha = o.a == null ? 1 : o.a;
+  const p = o.p == null ? 1 : o.p; if (p < 1) { L.beginPath(); L.rect(X - 20, Y - size * 1.05, 4000, size * 1.35); L.clip(); } L.fillText(s, X, Y + (1 - eo(p)) * size); const m = L.measureText(s).width; L.restore(); return m; }
+
+window.renderFrame = (t, f) => {
+  // ---- camera: handheld (subtle), slam shakes, rack-focus push to the note
+  const shakeAmt = t < T.loud + .4 ? POS.reduce((a, p) => { const d = t - p.t; return d > 0 && d < .18 ? Math.max(a, (1 - d / .18) * 7) : a; }, 0) : 0;
+  const hx = Math.sin(t * 1.3) * 3 + Math.sin(t * 3.1) * 1.5 + Math.sin(t * 47) * shakeAmt, hy = Math.cos(t * 1.1) * 3 + Math.cos(t * 2.7) * 1.2 + Math.cos(t * 41) * shakeAmt;
+  let zoom = lerp(1.0, .86, eio(P(t, T.loud, T.note))); zoom = lerp(zoom, 1.32, eio(P(t, T.rack - .4, T.rack + 1.4))); zoom = lerp(zoom, 1.0, eio(P(t, T.peel + 1.6, T.peel + 3.2)));
+  if (t > T.cards) zoom = lerp(1.0, .94, eio(P(t, T.cards, T.cards + 1)));
+  const fx = 540, fy = lerp(960, 1010, eio(P(t, T.rack - .4, T.rack + 1.4)));
+  const camM = [zoom, 0, 0, zoom, W / 2 - fx * zoom + hx, H / 2 - fy * zoom + hy];
+  x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.filter = 'none';
+  x.setTransform(zoom, 0, 0, zoom, W / 2 - fx * zoom + hx * .6 - 200 * zoom, H / 2 - fy * zoom + hy * .6 - 200 * zoom); x.drawImage(BG, 0, 0);
+  // ---- poster layer (rendered separately so it can be rack-focused & desaturated)
+  pl.setTransform(1, 0, 0, 1, 0, 0); pl.clearRect(0, 0, W, H); pl.setTransform(...camM);
+  POS.forEach((p, i) => drawSheet(pl, POSTER[i], p, t, { peel: true }));
+  const rack = eio(P(t, T.rack, T.rack + 1.2)) * (1 - eio(P(t, T.peel + 1.2, T.peel + 2.2)));
+  x.setTransform(1, 0, 0, 1, 0, 0); x.filter = rack > 0.01 ? `blur(${rack * 7}px) saturate(${1 - rack * .75}) brightness(${1 + rack * .06})` : 'none'; x.drawImage(PL, 0, 0); x.filter = 'none';
+  // ---- handwritten scrawl on the wall during the noise
+  x.setTransform(...camM);
+  if (t > 3.0 && t < T.note + .4) { x.save(); x.globalAlpha = 1 - P(t, T.note, T.note + .4); x.translate(300, 1000); x.rotate(-.06); marker(x, 'Semua menjerit.', 0, 0, 120, 3.2, t, INK, 700); x.restore();
+    if (t > 4.1) { x.save(); x.globalAlpha = 1 - P(t, T.note, T.note + .4); x.strokeStyle = INK; x.lineWidth = 7; x.lineCap = 'round'; const u = P(t, 4.1, 4.5); x.beginPath(); for (let k = 0; k <= 30 * u; k++) { const a = k / 30 * Math.PI * 2.1; x.lineTo(560 + Math.cos(a) * 470, 960 + Math.sin(a) * 120 + k * .6); } x.stroke(); x.restore(); } }
+  // ---- the NOTE: slides in, sticks; handwriting
+  const nt = SM(t); if (nt > T.note) { const u = P(nt, T.note, T.note + .5); const nx = 540, ny = lerp(2300, 1010, back(u, 1.2)), rot = lerp(.4, -.035, eo(u));
+    x.save(); x.translate(nx, ny); x.rotate(rot); x.shadowColor = 'rgba(20,14,10,0.32)'; x.shadowBlur = 18; x.shadowOffsetX = 6; x.shadowOffsetY = 14; x.drawImage(NOTE, -210, -210); x.shadowColor = 'transparent';
+    // curled corner
+    x.fillStyle = 'rgba(0,0,0,0.10)'; x.beginPath(); x.moveTo(210, 150); x.quadraticCurveTo(170, 200, 150, 210); x.lineTo(210, 210); x.fill();
+    marker(x, 'Kak Ros,', -170, -110, 62, T.write, t, INK, 700);
+    marker(x, 'nasi lemak sotong', -170, -40, 50, T.write + .55, t, INK, 500);
+    marker(x, 'tinggal sikit.', -170, 12, 50, T.write + 1.4, t, INK, 500);
+    marker(x, 'Saya simpan satu', -170, 80, 50, T.write + 2.0, t, INK, 500);
+    marker(x, 'untuk akak? :)', -170, 132, 50, T.write + 2.8, t, INK, 500);
+    x.restore(); }
+  // ---- index cards (the method) pinned around the note
+  if (t > T.cards) { const pos = [[300, 520, -.06], [700, 1500, .05], [330, 1640, -.03]];
+    CARDS.forEach((c, i) => { const u = P(SM(t), T.cards + i * .55, T.cards + i * .55 + .35); if (u <= 0) return; const [cx, cy, r] = pos[i];
+      x.save(); x.translate(cx, cy + (1 - back(u, 1.4)) * -60); x.rotate(r + (1 - eo(u)) * .2); x.globalAlpha = Math.min(1, u * 3); x.shadowColor = 'rgba(20,14,10,0.25)'; x.shadowBlur = 14; x.shadowOffsetY = 10; x.drawImage(c, -280, -100); x.shadowColor = 'transparent';
+      x.fillStyle = '#B0302E'; x.beginPath(); x.arc(0, -82, 13, 0, 7); x.fill(); x.fillStyle = 'rgba(255,255,255,0.5)'; x.beginPath(); x.arc(-4, -86, 4, 0, 7); x.fill(); x.restore();
+      const tk = P(t, T.cards + i * .55 + .5, T.cards + i * .55 + .8); if (tk > 0) { x.save(); x.translate(cx + 230, cy - 30); x.rotate(r); x.strokeStyle = PURPLE; x.lineWidth = 8; x.lineCap = 'round'; x.beginPath(); x.moveTo(-22, 0); x.lineTo(-22 + 14 * Math.min(1, tk * 2), 16 * Math.min(1, tk * 2)); if (tk > .5) x.lineTo(-8 + 34 * (tk - .5) * 2, 16 - 44 * (tk - .5) * 2); x.stroke(); x.restore(); } }); }
+  // ---- headlines (screen space, editorial serif on a soft paper plate)
+  x.setTransform(1, 0, 0, 1, 0, 0);
+  const plate = a => { if (a <= 0) return; const g = x.createLinearGradient(0, 120, 0, 640); g.addColorStop(0, `rgba(239,233,223,${.94 * a})`); g.addColorStop(.75, `rgba(239,233,223,${.88 * a})`); g.addColorStop(1, 'rgba(239,233,223,0)'); x.fillStyle = g; x.fillRect(0, 120, W, 520); };
+  const hA = P(t, T.head1 - .2, T.head1 + .2) * (1 - P(t, T.peel - .2, T.peel + .2)); plate(hA);
+  if (hA > 0) { serif(x, 'Yang paling bising,', 96, 330, 92, { p: P(t, T.head1, T.head1 + .35), a: hA, w: 400, italic: true });
+    const w2 = serif(x, 'jarang didengar.', 96, 440, 96, { p: P(t, T.head2, T.head2 + .35), a: hA }); }
+  const iA = P(t, T.insight1 - .2, T.insight1 + .2) * (1 - P(t, T.cards - .3, T.cards)); plate(iA);
+  if (iA > 0) { serif(x, 'Orang tak baca iklan.', 96, 320, 80, { p: P(t, T.insight1, T.insight1 + .35), a: iA, w: 400, italic: true });
+    x.save(); x.globalAlpha = iA; x.font = '700 84px Fraunces'; const pre = 'Orang baca '; const pw = x.measureText(pre).width; x.restore();
+    serif(x, 'Orang baca', 96, 430, 84, { p: P(t, T.insight2, T.insight2 + .35), a: iA });
+    x.save(); x.globalAlpha = iA; x.font = '700 84px Fraunces'; const nw = x.measureText('nota untuk dia.').width; x.restore();
+    highlight(x, 90, 462, nw + 20, 78, P(t, T.insight2 + .5, T.insight2 + 1.1), 9);
+    serif(x, 'nota untuk dia.', 96, 528, 84, { p: P(t, T.insight2 + .25, T.insight2 + .6), a: iA, italic: true }); }
+  const kA = P(t, T.cards + 1.6, T.cards + 2) * (1 - P(t, T.cta - .3, T.cta)); plate(kA * .7);
+  if (kA > 0) { x.save(); x.globalAlpha = kA; x.font = '500 24px DMMono'; x.letterSpacing = '6px'; x.fillStyle = PURPLE; x.fillText('CARA KAMI MENULIS', 96, 230); x.restore(); }
+  // ---- CTA: everything else fades, serif line + rubber stamp
+  const cA = eo(P(t, T.cta, T.cta + .6)); if (cA > 0) { x.fillStyle = `rgba(239,233,223,${cA * .82})`; x.fillRect(0, 0, W, H);
+    serif(x, 'Kami tulis nota itu', 96, 640, 86, { p: P(t, T.cta + .1, T.cta + .45), w: 400, italic: true });
+    serif(x, 'untuk bisnes anda.', 96, 750, 86, { p: P(t, T.cta + .35, T.cta + .7) });
+    const su = P(t, T.stamp, T.stamp + .14); if (su > 0) { const sc = lerp(1.6, 1, eo(su)); x.save(); x.translate(540, 1080); x.rotate(-.07); x.scale(sc, sc); x.globalAlpha = Math.min(1, su * 2);
+      x.strokeStyle = PURPLE; x.lineWidth = 9; const r = rng(4); x.beginPath(); x.rect(-360, -110, 720, 220); x.stroke(); x.lineWidth = 3; x.strokeRect(-344, -94, 688, 188);
+      x.font = '58px ArchivoBlack'; x.textAlign = 'center'; x.fillStyle = PURPLE; x.fillText('DM LOKADIGITAL', 0, 22);
+      x.font = '500 20px DMMono'; x.letterSpacing = '5px'; x.fillText('CONTENT & ADS STRATEGY', 0, 72);
+      x.globalCompositeOperation = 'destination-out'; for (let k = 0; k < 900; k++) { x.globalAlpha = r() * .7; x.fillRect((r() - .5) * 760, (r() - .5) * 240, 2 + r() * 4, 1 + r() * 3); } x.restore(); }
+    const nA = P(t, T.stamp + .5, T.stamp + 1); if (nA > 0) { x.save(); x.globalAlpha = nA; x.translate(780, 1430); x.rotate(.05); x.scale(.55, .55); x.shadowColor = 'rgba(20,14,10,0.25)'; x.shadowBlur = 12; x.shadowOffsetY = 8; x.drawImage(NOTE, -210, -210); x.shadowColor = 'transparent';
+      x.font = '700 70px Caveat'; x.fillStyle = INK; x.fillText('Untuk anda.', -170, 20); x.restore(); } }
+  // ---- finish: warm vignette + paper grain
+  x.setTransform(1, 0, 0, 1, 0, 0); const v = x.createRadialGradient(W / 2, H / 2, H * .3, W / 2, H / 2, H * .8); v.addColorStop(0, 'rgba(60,40,20,0)'); v.addColorStop(1, 'rgba(60,40,20,0.28)'); x.fillStyle = v; x.fillRect(0, 0, W, H);
+  x.save(); x.globalCompositeOperation = 'overlay'; x.globalAlpha = .09; x.drawImage(grainC[(f || 0) % 4], 0, 0, W, H); x.restore();
+  const fi = 1 - P(t, 0, .12), fo = P(t, 24.6, 25); if (fi > 0 || fo > 0) { x.fillStyle = `rgba(239,233,223,${Math.max(fi, fo)})`; x.fillRect(0, 0, W, H); }
+};
+</script></body></html>
