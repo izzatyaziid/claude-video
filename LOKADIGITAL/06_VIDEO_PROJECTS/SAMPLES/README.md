@@ -1,6 +1,6 @@
 # LOKADIGITAL — Production Test: 3 Sample Videos
 
-> **Status:** 🟡 Untuk semakan kau. Dipilih dari [pelan content Disember](../../08_MONTHLY_CONTENT/MONTHLY_CONTENT_PLAN_2026-12.md).
+> **Status:** 🟡 Ketiga-tiga MP4 siap dirender (30 s). Untuk semakan kau. Dipilih dari [pelan content Disember](../../08_MONTHLY_CONTENT/MONTHLY_CONTENT_PLAN_2026-12.md).
 > Semua: 1080×1920 · 30 fps · 30 s · H.264 / AAC 48 kHz · −14 LUFS · **tiada voiceover** · muzik + SFX dijana khas.
 
 | Sample | Rawatan | Video | Sumber |

@@ -8,7 +8,7 @@ Menghasilkan siri video content LokaDigital yang **premium, sinematik dan berasa
 ## 🚦 Status semasa
 | Projek | Status | Langkah seterusnya |
 |---|---|---|
-| [Production test: 3 sample](../06_VIDEO_PROJECTS/SAMPLES/README.md) | 🟡 **Menunggu semakan kau** | Tetapkan standard production → storyboard video bulanan |
+| [Production test: 3 sample](../06_VIDEO_PROJECTS/SAMPLES/README.md) | ✅ 3 MP4 siap · 🟡 **Menunggu semakan kau** | Tetapkan standard production → storyboard video bulanan |
 | [Signature Character v1](../07_SIGNATURE_CHARACTER/README.md) | 🟡 Menunggu approval | — |
 | [Pelan content Disember](../08_MONTHLY_CONTENT/MONTHLY_CONTENT_PLAN_2026-12.md) | 🟡 Draf | Selepas standard diluluskan |
 | [EP01 — SIGNAL / NOISE](../06_VIDEO_PROJECTS/EP01/README.md) | ✅ Siap | — |
