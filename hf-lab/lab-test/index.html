@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      :root { --ink:#05030A; --purple:#602AC8; --yellow:#E8FF2B; --lav:#AB94FF; --mist:#D4CAF2; --grey:#7C7396; }
+      * { margin:0; padding:0; box-sizing:border-box; }
+      html, body { width:1080px; height:1920px; overflow:hidden; background:var(--ink); }
+      #root { position:relative; width:1080px; height:1920px; background:var(--ink); font-family:'Archivo Black','Inter',sans-serif; color:var(--mist); overflow:hidden; }
+      #glow { position:absolute; left:-300px; top:300px; width:1100px; height:1100px; border-radius:50%;
+              background:radial-gradient(circle, rgba(96,42,200,.75) 0%, rgba(48,18,112,.35) 45%, transparent 70%); }
+      #meta { position:absolute; left:120px; top:330px; font:400 26px 'Space Mono',monospace; letter-spacing:.32em; color:var(--grey); }
+      .line { position:absolute; left:120px; width:840px; font-size:128px; line-height:.98; letter-spacing:-.04em; text-transform:uppercase; }
+      .mask { overflow:hidden; }
+      .mask > span { display:block; }
+      #l1 { top:620px; } #l2 { top:900px; }
+      #l2 em { font-style:normal; color:var(--yellow); }
+      #signal { position:absolute; left:120px; top:1230px; width:840px; height:6px; background:var(--yellow); transform-origin:left center; box-shadow:0 0 30px rgba(232,255,43,.7); }
+      #foot { position:absolute; left:120px; top:1270px; font:400 26px 'Space Mono',monospace; letter-spacing:.32em; color:var(--lav); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920">
+      <div id="glow" class="clip" data-start="0" data-duration="6" data-track-index="0"></div>
+      <div id="meta" class="clip" data-start="0" data-duration="6" data-track-index="1">CONTOH · 01 / HYPERFRAMES TEST</div>
+      <div id="l1" class="line mask clip" data-start="0" data-duration="6" data-track-index="2"><span>Ramai tengok.</span></div>
+      <div id="l2" class="line mask clip" data-start="0" data-duration="6" data-track-index="3"><span>Tapi tak <em>membeli.</em></span></div>
+      <div id="signal" class="clip" data-start="0" data-duration="6" data-track-index="4"></div>
+      <div id="foot" class="clip" data-start="0" data-duration="6" data-track-index="5">LOKADIGITAL</div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#glow", { x:-80, scale:.9 }, { x:60, scale:1.08, duration:5.8, ease:"sine.inOut" }, 0);
+      tl.fromTo("#meta", { opacity:0 }, { opacity:1, duration:.4, ease:"power2.out" }, 0.1);
+      tl.fromTo("#l1 span", { yPercent:110 }, { yPercent:0, duration:.7, ease:"expo.out" }, 0.3);
+      tl.fromTo("#l2 span", { yPercent:110 }, { yPercent:0, duration:.7, ease:"expo.out" }, 1.5);
+      tl.fromTo("#signal", { scaleX:0 }, { scaleX:1, duration:.9, ease:"expo.inOut" }, 2.6);
+      tl.fromTo("#foot", { opacity:0, y:12 }, { opacity:1, y:0, duration:.5, ease:"power3.out" }, 3.4);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
