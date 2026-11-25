@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>LokaCreative Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Schibsted+Grotesk:wght@700;800&display=swap">
+<link rel="stylesheet" href="/admin/assets/admin.css">
+<script src="/admin/assets/admin.js" defer></script>
+</head>
+<body>
+  <section id="login-view" class="login" hidden>
+    <form id="login-form" class="login-card" novalidate>
+      <p class="brand"><span class="wm-loka">Loka</span>Creative <span class="muted">Admin</span></p>
+      <h1>Log masuk</h1>
+      <label for="login-email">Emel<input id="login-email" name="email" type="email" autocomplete="username" required maxlength="254"></label>
+      <label for="login-password">Kata laluan<input id="login-password" name="password" type="password" autocomplete="current-password" required maxlength="200"></label>
+      <p id="login-error" class="form-error" role="alert" hidden></p>
+      <button class="btn" type="submit">Log masuk</button>
+      <p class="muted small">Akses dalaman sahaja. Akaun dikunci 15 minit selepas 5 cubaan gagal.</p>
+    </form>
+  </section>
+
+  <div id="app-view" class="shell" hidden>
+    <aside class="sidebar">
+      <p class="brand"><span class="wm-loka">Loka</span>Creative <span class="muted">Admin</span></p>
+      <nav aria-label="Admin">
+        <ul id="nav" class="side-nav">
+          <li><a href="#overview" data-view="overview">Ringkasan</a></li>
+          <li><a href="#inquiries" data-view="inquiries">Pertanyaan <span id="badge-new" class="badge" hidden></span></a></li>
+          <li><a href="#brands" data-view="brands">Jenama</a></li>
+          <li><a href="#content" data-view="content">Kandungan</a></li>
+          <li><a href="#news" data-view="news">Berita</a></li>
+          <li data-owner hidden><a href="#admins" data-view="admins">Pengguna admin</a></li>
+          <li data-owner hidden><a href="#audit" data-view="audit">Log audit</a></li>
+          <li><a href="#account" data-view="account">Akaun saya</a></li>
+        </ul>
+      </nav>
+      <div class="side-foot">
+        <p id="who" class="small muted"></p>
+        <a class="small" href="/" target="_blank" rel="noopener">Buka laman awam</a>
+        <button id="logout" class="btn btn-ghost btn-small" type="button">Log keluar</button>
+      </div>
+    </aside>
+    <main id="main" class="main" tabindex="-1"></main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
