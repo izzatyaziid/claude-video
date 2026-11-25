@@ -1,0 +1,15 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#05030A}</style></head><body>
+<canvas id="c"></canvas>
+<script type="module">
+import * as THREE from '../../06_VIDEO_PROJECTS/SAMPLES/_engine/vendor/three.module.js';
+import { createCharacter } from './ld_character.js';
+const lm = await (await fetch('landmarks.json')).json();
+const W = 1024, H = 1024;
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('c'), antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H, false); renderer.setPixelRatio(1); renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.setClearColor(0x000000, 0);
+const scene = new THREE.Scene(); const cam = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, 0.1, 10); cam.position.z = 5;
+const ch = await createCharacter(THREE, { texUrl: '../assets/LD_character_master_1024.png', landmarks: lm, height: 1 });
+scene.add(ch.object);
+window.shot = (p) => { ch.set(p); renderer.render(scene, cam); return renderer.domElement.toDataURL('image/png'); };
+window.READY = true;
+</script></body></html>

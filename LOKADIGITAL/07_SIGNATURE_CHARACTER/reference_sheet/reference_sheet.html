@@ -1,0 +1,34 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:"JBM";src:url(../../06_VIDEO_PROJECTS/EP02/ASSETS/STYLE_FRAMES/src/fonts/jetbrains-mono-latin-400-normal.woff2)}
+@font-face{font-family:"JBM";font-weight:600;src:url(../../06_VIDEO_PROJECTS/EP02/ASSETS/STYLE_FRAMES/src/fonts/jetbrains-mono-latin-600-normal.woff2)}
+html,body{margin:0;background:#05030A}</style></head><body><canvas id="c" width="3840" height="2400"></canvas>
+<script>
+const W=3840,H=2400,cv=document.getElementById('c'),x=cv.getContext('2d');
+const C={ink:'#05030A',p1:'#602AC8',p2:'#301270',y:'#E8FF2B',lav:'#AB94FF',mist:'#D4CAF2',grey:'#7C7396',white:'#F4F1FF'};
+const load=s=>new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.src=s;});
+function T(s,X,Y,f,c,o={}){x.save();x.font=f;x.letterSpacing=o.ls||'0px';x.fillStyle=c;x.textAlign=o.al||'left';x.fillText(s,X,Y);x.restore();}
+function bgCard(X,Y,w,h,label){x.fillStyle='rgba(20,10,40,0.7)';x.fillRect(X,Y,w,h);const g=x.createRadialGradient(X+w*0.5,Y+h*0.4,10,X+w*0.5,Y+h*0.4,w*0.8);g.addColorStop(0,'rgba(96,42,200,0.35)');g.addColorStop(1,'rgba(48,18,112,0)');x.fillStyle=g;x.fillRect(X,Y,w,h);
+  x.strokeStyle='rgba(171,148,255,0.3)';x.lineWidth=2;x.strokeRect(X,Y,w,h);if(label)T(label,X+20,Y+h-22,'600 26px JBM',C.mist,{ls:'4px'});}
+(async()=>{await document.fonts.load('800 80px "Inter Display"');await document.fonts.load('600 26px JBM');await document.fonts.load('400 26px JBM');
+x.fillStyle=C.ink;x.fillRect(0,0,W,H);let g=x.createRadialGradient(W*0.2,H*0.5,100,W*0.2,H*0.5,1600);g.addColorStop(0,'rgba(96,42,200,0.35)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,W,H);
+T('LOKADIGITAL',120,150,'800 64px "Inter Display"',C.white,{ls:'-1px'});x.strokeStyle=C.y;x.lineWidth=5;x.beginPath();x.moveTo(120,172);x.lineTo(560,172);x.stroke();
+T('SIGNATURE CHARACTER · REFERENCE SHEET v1 · UNTUK APPROVAL',620,150,'600 30px JBM',C.mist,{ls:'6px'});
+T('2.5D RIG DARI RENDER 3D STYLIZED (LIKENESS PEMILIK) · 2026-11-25',W-120,150,'400 24px JBM',C.grey,{ls:'4px',al:'right'});
+// master
+const M=await load('../expressions/E02_neutral.png');bgCard(120,230,1180,1500,'MASTER · NEUTRAL (CONFIDENT STRATEGIST)');x.drawImage(M,120+40,230+40,1100,1100);
+// palette under master
+const pal=[['RAMBUT','#3A2A28'],['KULIT','#D6A092'],['MATA','#5A3424'],['JAKET','#26222A'],['INK','#05030A'],['UNGU','#602AC8'],['LAVENDER','#AB94FF'],['KUNING','#E8FF2B']];
+pal.forEach(([n,c],i)=>{const X=120+(i%4)*295,Y=1780+Math.floor(i/4)*190;x.fillStyle=c;x.fillRect(X,Y,270,110);x.strokeStyle='rgba(171,148,255,0.35)';x.strokeRect(X,Y,270,110);T(n,X,Y+145,'600 22px JBM',C.mist,{ls:'3px'});T(c,X+270,Y+145,'400 22px JBM',C.grey,{al:'right'});});
+// expressions grid
+const E=[['E01_skeptical','SKEPTIKAL (ASAL)'],['E02_neutral','NEUTRAL'],['E03_confident_smile','SENYUM YAKIN'],['E04_smirk','SMIRK'],['E05_surprised','TERKEJUT'],['E06_thinking','BERFIKIR'],['E07_focused','FOKUS'],['E08_worried','RISAU']];
+T('EKSPRESI',1400,270,'600 30px JBM',C.y,{ls:'6px'});
+for(let i=0;i<8;i++){const X=1400+(i%4)*590,Y=300+Math.floor(i/4)*660;bgCard(X,Y,560,630,E[i][1]);const im=await load('../expressions/'+E[i][0]+'.png');x.drawImage(im,180,120,664,664,X+30,Y+20,500,500);}
+T('POSE & KAWALAN RIG',1400,1640,'600 30px JBM',C.y,{ls:'6px'});
+const P=[['P01_look_left','PANDANG KIRI'],['P02_look_right','PANDANG KANAN'],['P03_tilt_curious','SENGET + PANDANG ATAS'],['P04_blink','KELIP MATA']];
+for(let i=0;i<4;i++){const X=1400+i*590,Y=1670;bgCard(X,Y,560,470,P[i][1]);const im=await load('../expressions/'+P[i][0]+'.png');x.drawImage(im,230,200,564,564,X+90,Y+12,380,380);}
+// rules
+const R=['✓ Wajah, rambut, kening, mata & jaket puffer hitam KEKAL sama dalam semua video','✓ Cahaya rim: ungu dari kiri, kuning (Signal Line) dari kanan','✓ Peranan: pemandu / strategist. Bereaksi kepada objek & data, bukan bercakap','✓ Tiada suara: emosi melalui kening, mata, senget & pandangan','✕ Jangan tukar pakaian, warna rambut atau proporsi kepala','✕ Bukan watak pemilik F&B EP02 (watak itu berasingan)'];
+R.slice(0,3).forEach((s,i)=>T(s,1400,2215+i*52,'400 24px JBM',C.mist));
+R.slice(3).forEach((s,i)=>T(s,2630,2215+i*52,'400 24px JBM',s[0]==='✓'?C.mist:'#FF9A9A'));
+window.DONE=true;})();
+</script></body></html>

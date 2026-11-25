@@ -1,0 +1,190 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:"JBM";src:url(../../../EP02/ASSETS/STYLE_FRAMES/src/fonts/jetbrains-mono-latin-400-normal.woff2)}
+@font-face{font-family:"JBM";font-weight:600;src:url(../../../EP02/ASSETS/STYLE_FRAMES/src/fonts/jetbrains-mono-latin-600-normal.woff2)}
+html,body{margin:0;background:#05030A}canvas{display:block}</style></head><body>
+<canvas id="out" width="1080" height="1920"></canvas>
+<script type="module">
+// SAMPLE 01 — "BOOST POST BILA SALES TURUN?" · character-led storytelling · 30 s · no voiceover
+import * as THREE from '../../_engine/vendor/three.module.js';
+import { createCharacter } from '../../../../07_SIGNATURE_CHARACTER/rig/ld_character.js';
+import { W, H, C, rng, cl, P, lerp, eo, ei, eio, ex, back, hexA, mix, mk, FD, FM, loadFonts, tw, line, mono, flare, sline, uline, rrect, Post } from '../../_engine/kit2d.js';
+
+const T = { // timeline (s)
+  open: 0.2, s1: 0.3, s2: 1.6, taps: [0.8, 1.15, 1.45, 1.7], hearts: 2.0, likes: 3.0, look: 4.4, jualan: 4.6, drain: 5.8, beat: 7.6, shake: 7.8,
+  crack: 8.4, fall: 8.8, boost: 8.7, think: 10.8, c1: 12.2, c2: 14.4, win: 15.6, c3: 16.6, row: 18.6, flow: 20.4, fill: 21.4, ikut: 21.0,
+  cta1: 25.0, dm: 26.9, end: 30.0 };
+let out, x, post, g, renderer, scene, cam3, ch, glc;
+const [BG, bgx] = mk(W, H);
+
+window.init = async () => {
+  await loadFonts();
+  out = document.getElementById('out'); x = out.getContext('2d'); post = new Post(out); g = post.g;
+  glc = document.createElement('canvas'); glc.width = W; glc.height = H;
+  renderer = new THREE.WebGLRenderer({ canvas: glc, antialias: true, alpha: true, preserveDrawingBuffer: true });
+  renderer.setSize(W, H, false); renderer.setPixelRatio(1); renderer.setClearColor(0, 0);
+  scene = new THREE.Scene(); cam3 = new THREE.OrthographicCamera(0, W, H, 0, -10, 10);
+  const lm = await (await fetch('../../../../07_SIGNATURE_CHARACTER/rig/landmarks.json')).json();
+  ch = await createCharacter(THREE, { texUrl: '../../../../07_SIGNATURE_CHARACTER/assets/LD_character_master_1024.png', landmarks: lm, height: 1180 });
+  const grp = new THREE.Group(); grp.add(ch.object); grp.position.set(540, H - 1390, 0); scene.add(grp);
+  // static background: stage, spotlight, floor glow
+  bgx.fillStyle = C.ink; bgx.fillRect(0, 0, W, H);
+  let gr = bgx.createRadialGradient(540, 1250, 50, 540, 1250, 1100); gr.addColorStop(0, hexA(C.p1, .38)); gr.addColorStop(.5, hexA(C.p2, .3)); gr.addColorStop(1, hexA(C.p2, 0)); bgx.fillStyle = gr; bgx.fillRect(0, 0, W, H);
+  gr = bgx.createLinearGradient(540, 0, 540, 1300); gr.addColorStop(0, 'rgba(171,148,255,0.12)'); gr.addColorStop(1, 'rgba(171,148,255,0)');
+  bgx.fillStyle = gr; bgx.beginPath(); bgx.moveTo(420, 0); bgx.lineTo(660, 0); bgx.lineTo(980, 1300); bgx.lineTo(100, 1300); bgx.closePath(); bgx.fill();
+  const r = rng(3); for (let i = 0; i < 160; i++) { bgx.fillStyle = hexA(C.lav, r() * .25); bgx.fillRect(r() * W, r() * 1400, 1.5, 1.5); }
+};
+
+// ---------- props
+function heart(X, Y, s, col, a) { x.save(); x.globalAlpha = a; x.translate(X, Y); x.scale(s / 32, s / 32); x.beginPath(); x.moveTo(0, 10); x.bezierCurveTo(-26, -8, -12, -30, 0, -16); x.bezierCurveTo(12, -30, 26, -8, 0, 10); x.fillStyle = col; x.fill(); x.restore(); }
+function coin(L, X, Y, s, a, col) { L.save(); L.globalAlpha = a; L.beginPath(); L.arc(X, Y, s, 0, 7); L.fillStyle = col || '#3B2C66'; L.fill(); L.strokeStyle = col ? hexA('#FFFFF0', .8) : C.mist; L.lineWidth = 2; L.stroke();
+  L.font = FM(600, s * 0.8); L.textAlign = 'center'; L.fillStyle = col ? C.ink : C.mist; L.fillText('RM', X, Y + s * 0.28); L.restore(); }
+function phone(t, X, Y, rot, a, crack, dim) {
+  x.save(); x.globalAlpha = a; x.translate(X, Y); x.rotate(rot);
+  rrect(x, -150, -260, 300, 520, 34); x.fillStyle = '#120A26'; x.fill(); x.lineWidth = 3; x.strokeStyle = hexA(C.lav, .55); x.stroke();
+  rrect(x, -134, -238, 268, 476, 22); const gr = x.createLinearGradient(0, -238, 0, 238); gr.addColorStop(0, '#2A1858'); gr.addColorStop(1, '#170D33'); x.fillStyle = gr; x.fill();
+  // generic post
+  x.fillStyle = hexA(C.mist, .14); rrect(x, -112, -210, 224, 224, 12); x.fill(); x.fillStyle = hexA(C.mist, .25); x.beginPath(); x.arc(-40, -120, 30, 0, 7); x.fill();
+  x.beginPath(); x.moveTo(-112, -6); x.lineTo(-40, -80); x.lineTo(20, -30); x.lineTo(60, -60); x.lineTo(112, -6); x.closePath(); x.fill();
+  x.fillStyle = hexA(C.mist, .22); x.fillRect(-112, 32, 180, 12); x.fillRect(-112, 56, 130, 12);
+  // BOOST button
+  const pressed = T.taps.some(tp => t > tp && t < tp + .09); const s = pressed ? .93 : 1;
+  x.save(); x.translate(0, 150); x.scale(s, s); rrect(x, -110, -40, 220, 80, 40);
+  x.fillStyle = dim ? '#2A2340' : '#6B4FD8'; x.fill(); x.lineWidth = 2; x.strokeStyle = hexA(C.mist, .7); x.stroke();
+  x.font = FD(800, 38); x.letterSpacing = '2px'; x.textAlign = 'center'; x.fillStyle = dim ? hexA(C.mist, .4) : C.white; x.fillText('BOOST', 0, 13); x.restore();
+  if (crack > 0) { x.strokeStyle = hexA('#FFFFFF', .8); x.lineWidth = 2; const cr = [[0, 150, -60, 120], [-60, 120, -95, 135], [0, 150, 40, 180], [40, 180, 85, 170], [0, 150, 15, 110], [15, 110, -10, 70]];
+    cr.forEach(([a1, b1, a2, b2], i) => { const u = cl(crack * 6 - i); if (u <= 0) return; x.beginPath(); x.moveTo(a1, b1); x.lineTo(lerp(a1, a2, u), lerp(b1, b2, u)); x.stroke(); }); }
+  if (dim) { x.fillStyle = 'rgba(5,3,10,0.45)'; rrect(x, -150, -260, 300, 520, 34); x.fill(); }
+  x.restore();
+}
+function wallet(X, Y, fullness, a) { x.save(); x.globalAlpha = a; x.translate(X, Y); const sq = 0.55 + 0.45 * fullness;
+  x.scale(1, sq); rrect(x, -110, -70, 220, 140, 22); x.fillStyle = '#1D1238'; x.fill(); x.lineWidth = 3; x.strokeStyle = hexA(C.lav, .7); x.stroke();
+  rrect(x, 40, -26, 80, 52, 14); x.stroke(); x.fillStyle = hexA(C.lav, .7); x.beginPath(); x.arc(70, 0, 7, 0, 7); x.fill(); x.restore();
+  mono(x, 'BAJET', X - 110, Y + 112, 18, hexA(C.mist, .8), { alpha: a, ls: '4px' });
+  x.save(); x.globalAlpha = a; x.strokeStyle = hexA(C.mist, .5); x.lineWidth = 1.5; x.strokeRect(X - 110, Y + 124, 220, 12); x.fillStyle = fullness > .2 ? C.lav : '#FF8A8A'; x.fillRect(X - 108, Y + 126, 216 * fullness, 8); x.restore(); }
+function cart(X, Y, fill, a, glow) { x.save(); x.globalAlpha = a; x.strokeStyle = glow ? C.y : hexA(C.mist, .85); x.lineWidth = 5; x.lineJoin = 'round'; x.lineCap = 'round';
+  x.beginPath(); x.moveTo(X - 120, Y - 90); x.lineTo(X - 90, Y - 90); x.lineTo(X - 60, Y + 40); x.lineTo(X + 90, Y + 40); x.lineTo(X + 110, Y - 50); x.lineTo(X - 75, Y - 50); x.stroke();
+  x.beginPath(); x.arc(X - 45, Y + 70, 13, 0, 7); x.stroke(); x.beginPath(); x.arc(X + 75, Y + 70, 13, 0, 7); x.stroke();
+  const n = Math.floor(fill * 7); for (let i = 0; i < n; i++) { const bx = X - 55 + (i % 4) * 36, by = Y + 8 - Math.floor(i / 4) * 34; for (const L of [x, g]) { L.fillStyle = C.y; rrect(L, bx, by - 28, 30, 28, 4); L.fill(); } }
+  x.restore(); }
+function card(cx, cy, s, a, kind, t, t0, lbl, txt_) {
+  if (a <= 0) return; x.save(); x.globalAlpha = a; x.translate(cx, cy); x.scale(s, s);
+  rrect(x, -150, -110, 300, 220, 18); x.fillStyle = 'rgba(20,10,42,0.88)'; x.fill(); x.lineWidth = 2; x.strokeStyle = hexA(C.lav, .55); x.stroke();
+  x.strokeStyle = C.mist; x.lineWidth = 3; x.lineCap = 'round';
+  if (kind === 1) { for (const r of [42, 28, 14]) { x.beginPath(); x.arc(-90, -30, r, 0, 7); x.stroke(); } const d = eo(P(t, t0 + .4, t0 + .8)); x.strokeStyle = C.y; x.beginPath(); x.moveTo(-90 + 70 * (1 - d), -30 - 50 * (1 - d)); x.lineTo(-90 + 130 * (1 - d) + 0, -30 - 90 * (1 - d)); x.stroke(); x.fillStyle = C.y; x.beginPath(); x.arc(-90, -30, 6 * d, 0, 7); x.fill(); }
+  if (kind === 2) { const m = [.35, .9, .45]; for (let i = 0; i < 3; i++) { const X = -128 + i * 38; const win = i === 1 && t > T.win; x.strokeStyle = win ? C.y : hexA(C.mist, .8); x.lineWidth = 2; rrect(x, X, -70, 30, 44, 5); x.stroke(); const h = 40 * m[i] * eo(P(t, t0 + .3, t0 + 1.1)); x.fillStyle = win ? C.y : hexA(C.lav, .6); x.fillRect(X + 4, -14 - h + 40, 22, h * 0 + 4); x.fillRect(X + 4, 34 - h, 22, h); } }
+  if (kind === 3) { for (let k = 0; k < 4; k++) { const ph = ((t - t0) * 1.2 + k / 4) % 1; x.strokeStyle = hexA(C.y, (1 - ph) * .9); x.lineWidth = 2.5; x.beginPath(); x.ellipse(-90, -26, 18 + ph * 46, 6 + ph * 15, 0, 0, 7); x.stroke(); } x.fillStyle = C.y; x.beginPath(); x.ellipse(-90, -26, 16, 5, 0, 0, 7); x.fill(); }
+  x.font = FM(600, 17); x.letterSpacing = '4px'; x.fillStyle = C.y; x.fillText(lbl, -20, -42);
+  x.font = FD(800, 30); x.letterSpacing = '-0.5px'; x.fillStyle = C.white; const words = txt_.split('|'); words.forEach((w_, i) => x.fillText(w_, -128, 44 + i * 36));
+  x.restore(); }
+
+// ---------- character performance (expression curves)
+function perf(t) {
+  const e = {}; const add = (k, w) => { if (w > 0) e[k] = (e[k] || 0) + w; };
+  // base neutral, blended to other states with smooth windows
+  const win = (a, b, f = .3) => cl(Math.min((t - a) / f, (b - t) / f));
+  add('neutral', 1);
+  add('surprised', .7 * win(2.2, 3.8));
+  add('focused', .5 * win(5.0, 7.5) + .9 * win(7.6, 10.6));
+  add('worried', .6 * win(6.0, 7.6));
+  add('thinking', win(10.8, 12.3, .4));
+  add('smirk', .6 * win(12.2, 19.5, .5) + win(25.0, 30.5, .4));
+  add('smile', win(20.8, 25.2, .4));
+  const sk = win(4.4, 5.6, .25); if (sk > 0) { e.neutral = 1 - sk; }     // the original skeptical face at "Jualan?"
+  // eyes: follow objects
+  let eyeX = .55, eyeY = -.25;                                            // toward the phone (upper right)
+  if (t > 2.2 && t < 4.3) { eyeX = .5; eyeY = -.9; }                      // hearts flying up
+  if (t >= 4.3 && t < 5.8) { eyeX = .85; eyeY = .7; }                     // down to the empty cart
+  if (t >= 5.8 && t < 7.6) { eyeX = -.8; eyeY = .7; }                     // to the draining wallet
+  if (t >= 7.6 && t < 10.8) { eyeX = 0; eyeY = 0; }                       // to camera
+  if (t >= 10.8 && t < 12.2) { eyeX = .7; eyeY = -.8; }                   // thinking
+  if (t >= 12.2 && t < 14.4) { eyeX = -.8; eyeY = -.8; }                  // card 1 (left)
+  if (t >= 14.4 && t < 16.6) { eyeX = 0; eyeY = -.9; }                    // card 2
+  if (t >= 16.6 && t < 18.6) { eyeX = .8; eyeY = -.8; }                   // card 3
+  if (t >= 18.6 && t < 21.4) { eyeX = .2; eyeY = -.9; }
+  if (t >= 21.4 && t < 24.8) { eyeX = .85; eyeY = .6; }                   // cart filling
+  if (t >= 24.8) { eyeX = 0; eyeY = 0; }
+  const yaw = (t > T.shake && t < T.shake + 1.2 ? Math.sin((t - T.shake) * 15) * .7 * (1 - P(t, T.shake, T.shake + 1.2)) : 0) + Math.sin(t * .6) * .06;
+  const tilt = .03 * Math.sin(t * .45) + (t > 10.8 && t < 12.2 ? .06 : 0) + (t > 25 ? -.03 : 0);
+  // blinks: natural + the opening blink
+  const blinks = [0.0, 3.9, 9.4, 13.9, 19.1, 23.6, 28.4]; let blink = 0; for (const b of blinks) { const d = t - b; if (d > 0 && d < .2) blink = Math.max(blink, Math.sin(d / .2 * Math.PI)); }
+  if (t < T.open) blink = 1;
+  return { expr: e, eyeX, eyeY, yaw, tilt, blink, breathe: t, rimY: .55 + .45 * P(t, 10.8, 12) };
+}
+// smooth eye targets (critically damped feel via time-blend)
+let eyeS = { x: .55, y: -.25 };
+
+window.renderFrame = (t, f) => {
+  post.begin();
+  // camera: slow push, lift during the system section
+  const zoom = 1 + .05 * P(t, 0, 10) + .03 * eio(P(t, 18.6, 21)) - .04 * eio(P(t, 25, 27));
+  const camY = 40 * eio(P(t, 10.8, 12.5)) - 40 * eio(P(t, 24.8, 26.5));
+  x.setTransform(1, 0, 0, 1, 0, 0); x.drawImage(BG, 0, 0);
+  const apply = (k) => { x.setTransform(1, 0, 0, 1, 0, 0); x.translate(W / 2, H * .62); x.scale(1 + (zoom - 1) * k, 1 + (zoom - 1) * k); x.translate(-W / 2, -H * .62 + camY * k); g.setTransform(x.getTransform()); };
+  // character
+  const p = perf(t); const pre = (f || 0) % 1;
+  const tx = p.eyeX, ty = p.eyeY; eyeS.x += (tx - eyeS.x) * .35; eyeS.y += (ty - eyeS.y) * .35; if (t < .05) eyeS = { x: tx, y: ty };
+  ch.set(Object.assign(p, { eyeX: eyeS.x, eyeY: eyeS.y }));
+  renderer.render(scene, cam3);
+  // props behind character: phone (hook)
+  apply(1.1);
+  const ph = eo(P(t, .1, .7)), fall = ei(P(t, T.fall, T.fall + 1.0));
+  if (t < T.fall + 1.1) phone(t, lerp(1300, 790, ph), 760 + fall * 1400, -.14 + fall * .9, 1, P(t, T.crack, T.crack + .5), t > T.crack + .2);
+  // likes stream + bar
+  if (t > T.hearts && t < 8.6) { const r = rng(9); for (let i = 0; i < 46; i++) { const t0 = T.hearts + r() * 2.4, life = 1.4 + r() * .6, u = (t - t0) / life; if (u < 0 || u > 1) { r(); r(); continue; }
+      const sx = 790 + (r() - .5) * 120, ex_ = sx + (r() - .5) * 340; heart(lerp(sx, ex_, u), 640 - u * 520, 26 + r() * 18, i % 5 === 0 ? C.white : C.lav, (1 - u) * .9 * (1 - P(t, 8.0, 8.6))); }
+    const lb = eo(P(t, T.hearts, T.hearts + 2.2)); mono(x, 'LIKES', 600, 1080, 18, C.mist, { ls: '4px', alpha: 1 - P(t, 8.0, 8.6) }); x.fillStyle = hexA(C.lav, .9 * (1 - P(t, 8, 8.6))); x.fillRect(600, 1094, 360 * lb, 10); }
+  x.setTransform(1, 0, 0, 1, 0, 0);
+  // the character
+  apply(1); x.drawImage(glc, 0, 0);
+  // coins: hook taps (wallet -> phone) and the flow through the system (result)
+  apply(1.15);
+  const wf = t < T.drain ? 1 - .35 * P(t, .8, 5.8) : (t < T.flow ? lerp(.65, .08, P(t, T.drain, T.beat)) : lerp(.08, .7, P(t, T.flow, T.flow + 1.2)));
+  const wA = eo(P(t, .3, .9)) * (1 - P(t, 25.0, 25.6));
+  wallet(200, 1500, wf, wA);
+  T.taps.forEach((tp, i) => { for (let k = 0; k < 3; k++) { const u = P(t, tp + k * .05, tp + k * .05 + .55); if (u <= 0 || u >= 1) continue; const xx = lerp(200, 790, u), yy = lerp(1460, 900, u) - Math.sin(u * Math.PI) * 260; coin(x, xx, yy, 22, 1); } });
+  if (t > T.drain && t < T.beat + .4) { for (let k = 0; k < 7; k++) { const u = P(t, T.drain + k * .22, T.drain + k * .22 + .6); if (u <= 0 || u >= 1) continue; coin(x, lerp(200, 140 + k * 30, u), lerp(1460, 2050, ei(u)), 18, 1 - u); } }
+  const cA = eo(P(t, 4.2, 4.6)) * (1 - P(t, 25.0, 25.6)); const cf = eo(P(t, T.fill, T.fill + 2.6));
+  cart(890, 1520, cf, cA, t > T.fill + 2.6);
+  if (cA > 0 && t < 5.9 && t > 4.4) { const sh = Math.sin(t * 40) * 4 * (1 - P(t, 4.6, 5.4)); x.save(); x.translate(sh, 0); x.restore(); }
+  // system cards
+  const cards = [[1, T.c1, 'SIAPA BELI?', 'Kenal pembeli|sebenar.'], [2, T.c2, 'UJI DULU', 'Cari content|yang menang.'], [3, T.c3, 'BARU BESAR', 'Ads untuk|yang menang.']];
+  const pos0 = [[230, 690], [540, 640], [850, 690]], posRow = [[200, 560], [540, 560], [880, 560]];
+  const rowK = eio(P(t, T.row, T.row + 1.2)); const cardsOut = P(t, 24.8, 25.4);
+  // signal line: from the character's right rim into the cards
+  apply(1.05);
+  if (t > T.think + .4 && t < 25.4) {
+    const pts = [[760, 1260], [900, 1100], [880, 900], [pos0[2][0], pos0[2][1] + 120]]; const pr = eo(P(t, T.think + .4, T.c1));
+    sline(g, pts, pr, { w: 2.2, flare: .5, alpha: (1 - rowK) * (1 - cardsOut) });
+    if (rowK > 0) { const lp = eo(P(t, T.row + .4, T.row + 1.4)); sline(g, [[posRow[0][0] - 170, 560], [posRow[2][0] + 170, 560]], lp, { w: 2.2, flare: .5, alpha: 1 - cardsOut }); }
+  }
+  cards.forEach(([k, t0, lbl, tx_], i) => { const a = eo(P(t, t0, t0 + .45)) * (1 - cardsOut); if (a <= 0) return; const s0 = back(P(t, t0, t0 + .55));
+    const cx = lerp(pos0[i][0], posRow[i][0], rowK), cy = lerp(pos0[i][1], posRow[i][1], rowK); const sc = lerp(.95, .78, rowK) * (0.6 + 0.4 * s0); card(cx, cy, sc, a, k, t, t0, lbl, tx_); });
+  // result flow: coins travel along the system row into the cart
+  if (t > T.flow && t < 25.0) { for (let k = 0; k < 14; k++) { const u = ((t - T.flow) * .55 + k / 14) % 1; const fade = Math.min(1, (t - T.flow) * 2) * (1 - P(t, 24.4, 25));
+      let X, Y; if (u < .25) { X = lerp(200, 30, u / .25); Y = lerp(1440, 560, u / .25); } else if (u < .75) { X = lerp(30, 1050, (u - .25) / .5); Y = 560; } else { X = lerp(1050, 890, (u - .75) / .25); Y = lerp(560, 1460, (u - .75) / .25); }
+      coin(g, X, Y, 16, fade, C.y); } }
+  // ---------- typography (headline zone y 300–560)
+  x.setTransform(1, 0, 0, 1, 0, 0);
+  line(x, g, [['Sales turun?', C.white]], 96, 330, 92, 800, { p: P(t, T.s1, T.s1 + .3), out: P(t, 2.9, 3.15) });
+  line(x, g, [['Terus ', hexA(C.lav, .9)], ['BOOST.', hexA(C.lav, .9)]], 96, 440, 92, 800, { p: P(t, T.s2, T.s2 + .3), out: P(t, 2.95, 3.2) });
+  line(x, g, [['Likes naik.', C.white]], 96, 330, 92, 800, { p: P(t, T.likes + .2, T.likes + .5), out: P(t, 7.4, 7.7) });
+  line(x, g, [['Jualan?', hexA(C.lav, .9)]], 96, 440, 92, 800, { p: P(t, T.jualan, T.jualan + .3), out: P(t, 7.45, 7.75) });
+  if (t > T.jualan + .6 && t < 7.75) { const n = Math.floor((t - T.jualan - .6) * 3) % 4; mono(x, '.'.repeat(n), 470, 440, 60, hexA(C.lav, .9), { ls: '6px', alpha: 1 - P(t, 7.45, 7.75) }); }
+  line(x, g, [['Boost bukan', C.white]], 96, 330, 104, 800, { p: P(t, T.boost, T.boost + .3), out: P(t, 10.6, 10.9) });
+  const r1 = line(x, g, [['strategi.', C.y, true]], 96, 450, 104, 800, { p: P(t, T.boost + .15, T.boost + .45), out: P(t, 10.65, 10.95) });
+  if (r1 && t < 10.6) uline(x, g, 100, 486, r1.w - 30, P(t, T.boost + .4, T.boost + .75));
+  mono(x, 'SISTEM', 96, 330, 22, C.y, { ls: '8px', p: P(t, T.c1 - .3, T.c1 + .2), alpha: 1 - P(t, 20.6, 21) });
+  line(x, g, [['Belanja ikut', C.white]], 96, 330, 96, 800, { p: P(t, T.ikut, T.ikut + .3), out: P(t, 24.6, 24.9) });
+  const r2 = line(x, g, [['sistem.', C.y, true]], 96, 440, 96, 800, { p: P(t, T.ikut + .15, T.ikut + .45), out: P(t, 24.65, 24.95) });
+  if (r2 && t < 24.6) uline(x, g, 100, 476, r2.w - 28, P(t, T.ikut + .4, T.ikut + .75));
+  // CTA
+  line(x, g, [['Nak sistem,', C.white]], 96, 330, 92, 700, { p: P(t, T.cta1, T.cta1 + .3) });
+  line(x, g, [['bukan tekaan?', C.white]], 96, 434, 92, 700, { p: P(t, T.cta1 + .15, T.cta1 + .45) });
+  const r3 = line(x, g, [['DM', C.y, true], [' LOKADIGITAL', C.white]], 96, 600, 96, 800, { p: P(t, T.dm, T.dm + .3) });
+  if (r3) sline(g, [[96, 642], [96 + r3.w, 642]], eo(P(t, T.dm + .15, T.dm + .7)), { w: 2.6, flare: .55 });
+  mono(x, 'CONTENT & ADS STRATEGY · DATA-LED', 96, 700, 20, C.mist, { ls: '5px', p: P(t, T.dm + .6, T.dm + 1.6) });
+  post.bloom(.5, .6); post.finish(f || 0);
+  // fade in/out
+  const fi = 1 - P(t, 0, .25), fo = P(t, 29.6, 30); if (fi > 0 || fo > 0) { x.setTransform(1, 0, 0, 1, 0, 0); x.fillStyle = `rgba(5,3,10,${Math.max(fi * .9, fo)})`; x.fillRect(0, 0, W, H); }
+};
+</script></body></html>
