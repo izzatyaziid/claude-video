@@ -1,0 +1,135 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:"JBM";src:url(../../../EP02/ASSETS/STYLE_FRAMES/src/fonts/jetbrains-mono-latin-400-normal.woff2)}
+@font-face{font-family:"JBM";font-weight:600;src:url(../../../EP02/ASSETS/STYLE_FRAMES/src/fonts/jetbrains-mono-latin-600-normal.woff2)}
+html,body{margin:0;background:#05030A}canvas{display:block}</style></head><body>
+<canvas id="out" width="1080" height="1920"></canvas>
+<script type="module">
+// SAMPLE 03 — "FUNNEL YOU BOCOR" · motion graphics + infographic · 30 s · no voiceover
+// Stateless particle "liquid": every particle position is a pure function of t.
+import { W, H, C, rng, cl, P, lerp, eo, ei, eio, back, hexA, mix, mk, FD, FM, loadFonts, tw, line, mono, flare, sline, uline, rrect, Post } from '../../_engine/kit2d.js';
+
+const T = { views: .3, sikit: 3.0, bocor: 5.4, zoomOut: 5.4, diag: [7.6, 9.6, 11.6, 13.6], fixStart: 15.8, fix: [16.4, 18.0, 19.6, 21.2], result: 23.6, cta: 26.4, dm: 27.8 };
+// geometry (world px): pipe stages narrow downward
+const CX = 400;
+const ST = [{ y0: 430, y1: 700, w: 230, n: '01', l: 'NAMPAK' }, { y0: 730, y1: 1000, w: 180, n: '02', l: 'BERHENTI' }, { y0: 1030, y1: 1300, w: 140, n: '03', l: 'TANYA / DM' }, { y0: 1330, y1: 1580, w: 110, n: '04', l: 'BELI' }];
+const BAG = { y: 1640, h: 200, w: 300 };
+const LEAK = [{ rate: .55, why: 'Hook lemah', fix: 'Hook kuat dalam 3 saat', ico: 'scroll' }, { rate: .5, why: 'Offer tak jelas', fix: 'Offer & harga jelas', ico: 'tag' }, { rate: .5, why: 'Lambat reply', fix: 'Reply cepat', ico: 'chat' }, { rate: .6, why: 'Tiada follow-up', fix: 'Follow-up berjadual', ico: 'loop' }];
+const SPEED = 560, RATE = 75;
+const PATH_LEN = BAG.y + 40 - 380;                     // from the top inlet (y=380) to the bag
+let out, x, post, g;
+const PS = []; { const r = rng(5); for (let i = 0; i < 30 * RATE; i++) PS.push({ s: i / RATE + r() * .01, j: r() * 2 - 1, u: [r(), r(), r(), r()], side: r() < .5 ? -1 : 1, sp: .85 + r() * .3, a: r() }); }
+
+window.init = async () => { await loadFonts(); out = document.getElementById('out'); x = out.getContext('2d'); post = new Post(out); g = post.g; };
+
+const fixT = k => T.fix[k];
+const halfW = y => { for (const s of ST) if (y >= s.y0 - 30 && y <= s.y1) return s.w / 2; return 60; };
+// particle state at time t: {x, y, a, lost, stage}
+function particle(p, t) {
+  const age = t - p.s; if (age < 0) return null;
+  const y = 380 + age * SPEED * p.sp;
+  for (let k = 0; k < 4; k++) { const jy = ST[k].y1; const tj = p.s + (jy - 380) / (SPEED * p.sp);
+    if (y > jy && p.u[k] < LEAK[k].rate && tj < fixT(k)) {            // leaked at junction k (before the patch)
+      const dt = t - tj; const vx = p.side * (260 + p.a * 260), vy = -120 - p.a * 120;
+      const X = CX + p.side * ST[k].w / 2 + vx * dt, Y = jy - 12 + vy * dt + 900 * dt * dt;
+      return { x: X, y: Y, a: Math.max(0, 1 - dt / 1.1), lost: true, k }; }
+    if (y <= jy) break; }
+  if (y > BAG.y + 40) return null;                                   // collected in the bag
+  const hw = halfW(y) - 10; return { x: CX + p.j * hw * .8, y, a: 1, lost: false };
+}
+function collected(t) { let n = 0, tot = 0; for (const p of PS) { const tb = p.s + (BAG.y + 40 - 380) / (SPEED * p.sp); if (tb > t) continue; tot++;
+    let ok = true; for (let k = 0; k < 4; k++) { const tj = p.s + (ST[k].y1 - 380) / (SPEED * p.sp); if (p.u[k] < LEAK[k].rate && tj < fixT(k)) { ok = false; break; } } if (ok) n++; } return n; }
+function stageFlow(k, t) { // share of the inflow that survives stage k (for the side meters), over the last second
+  let a = 0, s = 0; for (const p of PS) { const tj = p.s + (ST[k].y1 - 380) / (SPEED * p.sp); if (tj > t || tj < t - 1.2) continue; s++; let ok = true;
+    for (let q = 0; q <= k; q++) { const tq = p.s + (ST[q].y1 - 380) / (SPEED * p.sp); if (p.u[q] < LEAK[q].rate && tq < fixT(q)) { ok = false; break; } } if (ok) a++; } return s ? a / s : 0; }
+
+function icon(L, kind, X, Y, s, col) { L.save(); L.strokeStyle = col; L.fillStyle = col; L.lineWidth = 3; L.lineCap = 'round'; L.lineJoin = 'round'; L.translate(X, Y); L.scale(s, s);
+  if (kind === 'scroll') { rrect(L, -14, -22, 28, 44, 6); L.stroke(); L.beginPath(); L.moveTo(0, 10); L.lineTo(0, -10); L.moveTo(-6, -4); L.lineTo(0, -10); L.lineTo(6, -4); L.stroke(); }
+  if (kind === 'tag') { L.beginPath(); L.moveTo(-20, -6); L.lineTo(-6, -20); L.lineTo(20, -20); L.lineTo(20, 6); L.lineTo(6, 20); L.closePath(); L.stroke(); L.font = FD(800, 20); L.textAlign = 'center'; L.fillText('?', 4, 7); }
+  if (kind === 'chat') { rrect(L, -22, -18, 44, 30, 8); L.stroke(); L.beginPath(); L.moveTo(-10, 12); L.lineTo(-16, 22); L.lineTo(0, 12); L.stroke(); L.beginPath(); L.arc(0, -3, 8, 0, 7); L.moveTo(0, -3); L.lineTo(0, -8); L.moveTo(0, -3); L.lineTo(4, -1); L.stroke(); }
+  if (kind === 'loop') { L.beginPath(); L.arc(0, 0, 16, .5, Math.PI * 1.6); L.stroke(); L.beginPath(); L.moveTo(14, -14); L.lineTo(22, -6); L.stroke(); L.beginPath(); L.moveTo(19, 4); L.lineTo(14, 10); L.stroke(); }
+  L.restore(); }
+
+window.renderFrame = (t, f) => {
+  post.begin(); x.setTransform(1, 0, 0, 1, 0, 0);
+  x.fillStyle = C.ink; x.fillRect(0, 0, W, H);
+  let gr = x.createRadialGradient(CX, 1000, 60, CX, 1000, 1100); gr.addColorStop(0, hexA(C.p1, .25)); gr.addColorStop(1, hexA(C.p2, 0)); x.fillStyle = gr; x.fillRect(0, 0, W, H);
+  // blueprint grid (infographic layer)
+  x.strokeStyle = hexA(C.lav, .05); x.lineWidth = 1; for (let X = 0; X < W; X += 60) { x.beginPath(); x.moveTo(X, 0); x.lineTo(X, H); x.stroke(); } for (let Y = 0; Y < H; Y += 60) { x.beginPath(); x.moveTo(0, Y); x.lineTo(W, Y); x.stroke(); }
+  // camera: close on the inlet -> full funnel -> visit each leak -> full view
+  let cs = lerp(1.7, 1, eio(P(t, T.zoomOut, T.zoomOut + 1.6))), cy = lerp(520, 1060, eio(P(t, T.zoomOut, T.zoomOut + 1.6)));
+  for (let k = 0; k < 4; k++) { const a = eio(P(t, T.diag[k] - .5, T.diag[k] + .3)) * (1 - eio(P(t, (k < 3 ? T.diag[k + 1] : T.fixStart) - .5, (k < 3 ? T.diag[k + 1] : T.fixStart) + .3)) * (k === 3 ? 1 : 0));
+    if (t > T.diag[k] - .5 && t < (k < 3 ? T.diag[k + 1] + .3 : T.fixStart + .3)) { const ty = ST[k].y1; const kk = eio(P(t, T.diag[k] - .5, T.diag[k] + .3)); const prevY = k === 0 ? 1060 : ST[k - 1].y1; cy = lerp(prevY, ty, kk); cs = lerp(k === 0 ? 1 : 1.35, 1.35, kk); } }
+  if (t >= T.fixStart) { const k = eio(P(t, T.fixStart, T.fixStart + 1.2)); cs = lerp(1.35, 1.0, k); cy = lerp(ST[3].y1, 1060, k); }
+  if (t >= T.result) { const k = eio(P(t, T.result, T.result + 1)); cs = lerp(1, .9, k); cy = lerp(1060, 960, k); }
+  if (t >= T.cta) { const k = eio(P(t, T.cta, T.cta + 1)); cs = lerp(.9, .72, k); cy = lerp(960, 800, k); }
+  let camX = lerp(0, -60, P(t, T.zoomOut, T.zoomOut + 1)) * (t < T.cta ? 1 : 1 - eio(P(t, T.cta, T.cta + 1)));
+  camX += 150 * eio(P(t, T.diag[0] - .5, T.diag[0] + .3)) * (1 - eio(P(t, T.fixStart, T.fixStart + 1.2)));
+  const M = [cs, 0, 0, cs, W / 2 - (CX + 140 + camX) * cs + (CX + 140 - CX) * 0, H * .55 - cy * cs];
+  x.setTransform(...M); g.setTransform(...M);
+  // inlet: eye + "VIEWS" source
+  x.strokeStyle = C.mist; x.lineWidth = 3; x.beginPath(); x.moveTo(CX - 46, 330); x.quadraticCurveTo(CX, 290, CX + 46, 330); x.quadraticCurveTo(CX, 370, CX - 46, 330); x.stroke(); x.beginPath(); x.arc(CX, 330, 13, 0, 7); x.stroke();
+  mono(x, 'VIEWS', CX + 70, 338, 20, C.mist, { ls: '5px' });
+  // pipe glass
+  ST.forEach((s, k) => { const lx = CX - s.w / 2, rx = CX + s.w / 2;
+    x.fillStyle = 'rgba(40,24,90,0.28)'; x.fillRect(lx, s.y0, s.w, s.y1 - s.y0);
+    x.strokeStyle = hexA(C.lav, .7); x.lineWidth = 3; x.beginPath(); x.moveTo(lx, s.y0); x.lineTo(lx, s.y1); x.moveTo(rx, s.y0); x.lineTo(rx, s.y1); x.stroke();
+    x.strokeStyle = 'rgba(255,255,255,0.12)'; x.lineWidth = 6; x.beginPath(); x.moveTo(lx + 14, s.y0 + 10); x.lineTo(lx + 14, s.y1 - 10); x.stroke();
+    if (k < 3) { const n = ST[k + 1]; x.strokeStyle = hexA(C.lav, .7); x.lineWidth = 3; x.beginPath(); x.moveTo(lx, s.y1); x.lineTo(CX - n.w / 2, n.y0); x.moveTo(rx, s.y1); x.lineTo(CX + n.w / 2, n.y0); x.stroke(); }
+    // stage label (left)
+    const la = eo(P(t, T.zoomOut + .6, T.zoomOut + 1.4)); mono(x, s.n, lx - 140, (s.y0 + s.y1) / 2 - 6, 22, C.y, { ls: '4px', alpha: la }); mono(x, s.l, lx - 140, (s.y0 + s.y1) / 2 + 26, 20, C.mist, { ls: '3px', alpha: la });
+    x.strokeStyle = hexA(C.lav, .3); x.lineWidth = 1; x.beginPath(); x.moveTo(lx - 30, (s.y0 + s.y1) / 2); x.lineTo(lx - 6, (s.y0 + s.y1) / 2); x.stroke();
+  });
+  // bag (PELANGGAN TETAP)
+  const bx = CX - BAG.w / 2; x.strokeStyle = C.mist; x.lineWidth = 3; rrect(x, bx, BAG.y, BAG.w, BAG.h, 18); x.stroke();
+  const n = collected(t), cap = 260, lvl = Math.min(1, n / cap);
+  const lvlY = BAG.y + BAG.h - (BAG.h - 16) * lvl; const full = lvl > .98;
+  for (const L of [x, g]) { L.save(); rrect(L, bx + 8, lvlY, BAG.w - 16, BAG.y + BAG.h - 8 - lvlY, 12); L.fillStyle = full ? C.y : mix(C.lav, C.y, lvl); L.globalAlpha = L === g ? lvl * .6 : .9; L.fill(); L.restore(); }
+  mono(x, 'PELANGGAN TETAP', CX, BAG.y + BAG.h + 46, 20, full ? C.y : C.mist, { ls: '4px', align: 'center' });
+  // liquid
+  for (const p of PS) { const s = particle(p, t); if (!s || s.a <= 0) continue; const glow = !s.lost && t > T.fixStart;
+    const L = glow ? g : x; L.globalAlpha = s.a * (s.lost ? .7 : .9); L.fillStyle = s.lost ? mix('#FF9A9A', C.grey, 1 - s.a) : (glow ? mix(C.lav, C.y, P(t, T.fixStart, T.fix[3] + 1)) : C.lav);
+    const r = s.lost ? 3.0 : 3.4; L.fillRect(s.x - r, s.y - r, r * 2, r * 2); }
+  x.globalAlpha = 1; g.globalAlpha = 1;
+  // leaks: cracks, diagnosis brackets, reason/fix cards
+  LEAK.forEach((lk, k) => { const jy = ST[k].y1, rx = CX + ST[k].w / 2; const fixed = t > fixT(k); const fp = eo(P(t, fixT(k) - .3, fixT(k) + .2));
+    // crack mark on both sides
+    if (!fixed) { x.strokeStyle = hexA('#FF8A8A', .9); x.lineWidth = 2; for (const sd of [-1, 1]) { const ex_ = CX + sd * ST[k].w / 2; x.beginPath(); x.moveTo(ex_, jy - 26); x.lineTo(ex_ + sd * 8, jy - 14); x.lineTo(ex_ - sd * 4, jy - 4); x.lineTo(ex_ + sd * 6, jy + 6); x.stroke(); } }
+    // patch clamp (yellow band) snapping on
+    if (fp > 0) { const bw = ST[k].w + 26; for (const L of [x, g]) { L.save(); L.globalAlpha = fp; L.fillStyle = C.y; rrect(L, CX - bw / 2 * back(fp), jy - 22, bw * back(fp), 20, 6); L.fill(); L.restore(); } }
+    // diagnosis bracket + card
+    const da = eo(P(t, T.diag[k], T.diag[k] + .4)); if (da <= 0) return;
+    const cxr = rx + 70, cyr = jy - 60;
+    x.save(); x.globalAlpha = da; x.strokeStyle = fixed ? C.y : hexA('#FF8A8A', .9); x.lineWidth = 2; x.beginPath(); x.moveTo(rx + 12, jy - 12); x.lineTo(cxr - 10, cyr + 40); x.stroke(); x.restore();
+    const cw = 340, ch_ = 92; x.save(); x.globalAlpha = da; rrect(x, cxr, cyr, cw, ch_, 14); x.fillStyle = 'rgba(20,10,42,0.9)'; x.fill(); x.strokeStyle = fixed ? C.y : hexA(C.lav, .5); x.lineWidth = 2; x.stroke(); x.restore();
+    icon(x, lk.ico, cxr + 46, cyr + 46, 1.05, fixed ? C.y : C.mist);
+    const lbl = fixed ? 'BETULKAN' : `BOCOR ${k + 1}`; mono(x, lbl, cxr + 92, cyr + 34, 16, fixed ? C.y : '#FF9A9A', { ls: '4px', alpha: da });
+    x.save(); x.globalAlpha = da; x.font = FD(800, 28); x.letterSpacing = '-0.5px'; x.fillStyle = C.white; x.fillText(fixed ? lk.fix : lk.why, cxr + 92, cyr + 70); x.restore();
+  });
+  // side flow meters (data layer): survival per stage, no numbers
+  const ma = eo(P(t, T.zoomOut + .6, T.zoomOut + 1.4)) * (1 - P(t, T.cta, T.cta + .5));
+  if (ma > 0) ST.forEach((s, k) => { const v = stageFlow(k, t); const mx = 60, my = s.y0 + 30, mh = s.y1 - s.y0 - 60; x.save(); x.globalAlpha = ma; x.strokeStyle = hexA(C.lav, .4); x.lineWidth = 1.5; x.strokeRect(mx, my, 12, mh); x.restore();
+    const L = t > fixT(k) ? g : x; L.save(); L.globalAlpha = ma; L.fillStyle = t > fixT(k) ? C.y : C.lav; L.fillRect(mx + 2, my + mh - mh * v, 8, mh * v); L.restore(); });
+  // Signal Line running down the pipe during the fixes
+  if (t > T.fixStart && t < T.result + .5) { const pr = eo(P(t, T.fixStart, T.fix[3] + .3)); sline(g, [[CX + ST[0].w / 2 + 30, 400], [CX + ST[0].w / 2 + 30, ST[0].y1], [CX + ST[1].w / 2 + 30, ST[1].y1], [CX + ST[2].w / 2 + 30, ST[2].y1], [CX + ST[3].w / 2 + 30, ST[3].y1]], pr, { w: 2.2, flare: .55, alpha: 1 - P(t, T.result, T.result + .5) }); }
+  // ---------- typography (screen space)
+  x.setTransform(1, 0, 0, 1, 0, 0); g.setTransform(1, 0, 0, 1, 0, 0);
+  const plate = (a) => { if (a <= 0) return; const gr2 = x.createLinearGradient(0, 0, 0, 640); gr2.addColorStop(0, `rgba(5,3,10,${.85 * a})`); gr2.addColorStop(1, 'rgba(5,3,10,0)'); x.fillStyle = gr2; x.fillRect(0, 0, W, 640); };
+  plate(1);
+  line(x, g, [['Views banyak.', C.white]], 96, 290, 96, 800, { p: P(t, T.views, T.views + .3), out: P(t, 5.2, 5.5) });
+  line(x, g, [['Sales sikit?', hexA(C.lav, .9)]], 96, 400, 96, 800, { p: P(t, T.sikit, T.sikit + .3), out: P(t, 5.25, 5.55) });
+  line(x, g, [['Funnel you', C.white]], 96, 290, 96, 800, { p: P(t, T.bocor, T.bocor + .3), out: P(t, 7.3, 7.6) });
+  const r1 = line(x, g, [['bocor.', '#FF9A9A']], 96, 400, 96, 800, { p: P(t, T.bocor + .15, T.bocor + .45), out: P(t, 7.35, 7.65) });
+  mono(x, 'DIAGNOSIS · 4 KEBOCORAN', 96, 250, 22, '#FF9A9A', { ls: '6px', p: P(t, T.diag[0], T.diag[0] + .6), alpha: 1 - P(t, T.fixStart - .3, T.fixStart) });
+  mono(x, 'TAMPAL SATU DEMI SATU', 96, 250, 22, C.y, { ls: '6px', p: P(t, T.fixStart, T.fixStart + .6), alpha: 1 - P(t, T.result - .3, T.result) });
+  line(x, g, [['Bukan tambah views.', C.mist]], 96, 290, 80, 700, { p: P(t, T.result, T.result + .3), out: P(t, 26.1, 26.4) });
+  const r2 = line(x, g, [['Tampal ', C.white], ['kebocoran.', C.y, true]], 96, 390, 80, 800, { p: P(t, T.result + .2, T.result + .5), out: P(t, 26.15, 26.45) });
+  if (r2 && t < 26.1) { const dx = tw(x, 'Tampal ', FD(800, 80), '-2.8px'); uline(x, g, 100 + dx, 420, r2.w - dx - 20, P(t, T.result + .5, T.result + .85)); }
+  line(x, g, [['Nak tahu bocor', C.white]], 96, 290, 84, 700, { p: P(t, T.cta, T.cta + .3) });
+  line(x, g, [['di mana?', C.white]], 96, 386, 84, 700, { p: P(t, T.cta + .15, T.cta + .45) });
+  const r3 = line(x, g, [['DM', C.y, true], [' LOKADIGITAL', C.white]], 96, 540, 92, 800, { p: P(t, T.dm, T.dm + .3) });
+  if (r3) sline(g, [[96, 580], [96 + r3.w, 580]], eo(P(t, T.dm + .15, T.dm + .7)), { w: 2.6, flare: .55 });
+  mono(x, 'CONTENT & ADS STRATEGY · DATA-LED', 96, 636, 20, C.mist, { ls: '5px', p: P(t, T.dm + .6, T.dm + 1.6) });
+  post.bloom(.5, .6); post.finish(f || 0, .85);
+  const fi = 1 - P(t, 0, .25), fo = P(t, 29.6, 30); if (fi > 0 || fo > 0) { x.fillStyle = `rgba(5,3,10,${Math.max(fi, fo)})`; x.fillRect(0, 0, W, H); }
+};
+</script></body></html>
