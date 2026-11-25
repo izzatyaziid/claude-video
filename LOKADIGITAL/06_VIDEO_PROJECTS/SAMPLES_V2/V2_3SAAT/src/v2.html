@@ -1,0 +1,250 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:"Anton";src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/anton-latin-400-normal.woff2)}
+@font-face{font-family:"Grot";font-weight:500;src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/space-grotesk-latin-500-normal.woff2)}
+@font-face{font-family:"Grot";font-weight:700;src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/space-grotesk-latin-700-normal.woff2)}
+@font-face{font-family:"ISerif";src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/instrument-serif-latin-400-normal.woff2)}
+@font-face{font-family:"ISerif";font-style:italic;src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/instrument-serif-latin-400-italic.woff2)}
+@font-face{font-family:"Fraunces";font-style:italic;font-weight:400;src:url(../../../../../LOKACREATIVE_STANDARD/_shared/fonts/fraunces-latin-400-italic.woff2)}
+html,body{margin:0;background:#05030A}canvas{display:block}</style></head><body>
+<canvas id="out" width="1080" height="1920"></canvas>
+<script type="module">
+// LOKADIGITAL · V2 "3 SAAT" · reaction-video format: phone feed (top) + Signature Character face-cam (bottom) · 24 s · no voiceover
+import * as THREE from '../../../SAMPLES/_engine/vendor/three.module.js';
+import { createCharacter } from '../../../../07_SIGNATURE_CHARACTER/rig/ld_character.js';
+const W = 1080, H = 1920, INK = '#05030A', P1 = '#602AC8', P2 = '#301270', Y = '#E8FF2B', LAV = '#AB94FF', WH = '#F4F1FF';
+const cl = v => Math.max(0, Math.min(1, v)), P = (t, a, b) => cl((t - a) / (b - a)), lerp = (a, b, u) => a + (b - a) * u;
+const eo = v => 1 - Math.pow(1 - cl(v), 3), ei = v => Math.pow(cl(v), 3), eio = v => { v = cl(v); return v < .5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2; };
+const back = (v, s = 1.7) => { v = cl(v); return 1 + (s + 1) * Math.pow(v - 1, 3) + s * Math.pow(v - 1, 2); };
+const spring = (v, f = 3, d = 5) => { v = Math.max(0, v); return 1 - Math.exp(-d * v) * Math.cos(f * Math.PI * v); };
+function rng(s) { return () => { s |= 0; s = s + 0x6D2B79F5 | 0; let q = Math.imul(s ^ s >>> 15, 1 | s); q = q + Math.imul(q ^ q >>> 7, 61 | q) ^ q; return ((q ^ q >>> 14) >>> 0) / 4294967296; }; }
+const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d')]; };
+const hexA = (h, a) => { const n = parseInt(h.slice(1), 16); return `rgba(${n >> 16},${n >> 8 & 255},${n & 255},${a})`; };
+function rr(g, x0, y0, w, h, r) { g.beginPath(); g.moveTo(x0 + r, y0); g.arcTo(x0 + w, y0, x0 + w, y0 + h, r); g.arcTo(x0 + w, y0 + h, x0, y0 + h, r); g.arcTo(x0, y0 + h, x0, y0, r); g.arcTo(x0, y0, x0 + w, y0, r); g.closePath(); }
+
+// ---- layout
+const SX = 36, SY = 36, SW = 1008, SH = 1030;            // phone screen viewport
+const POST_H = 1130, HEAD = 96, MED = 900;                // one feed post block
+const CAM_Y = 1100;                                       // face-cam region top
+// ---- timeline
+const T = { swipe1: 2.55, swipe2: 4.85, flick: 6.55, hook: 8.35, line2: 9.6, smirk: 10.4, freeze: 11.9, big: 12.2, anat: 14.6, rule: 18.3, cta: 20.3, end: 24 };
+// feed order (index → content). 0 salam, 1 promo, 2 text wall, 3..6 blur filler, 7 HOOK, 8 LOKADIGITAL
+const HOOK = 7, LDI = 8;
+// scroll position in post units
+function scroll(t) {
+  let s = 0;
+  s += eio(P(t, T.swipe1, T.swipe1 + .42));
+  s += eio(P(t, T.swipe2, T.swipe2 + .38));
+  const fu = P(t, T.flick, T.hook + .25); s += 5 * (1 - Math.pow(1 - fu, 2.6)) + (fu > 0 ? Math.sin(fu * Math.PI) * 0 : 0);
+  if (t > T.hook - .1) s += Math.sin(P(t, T.hook - .1, T.hook + .55) * Math.PI) * -.025 * (1 - P(t, T.hook, T.hook + .6));   // settle wobble
+  s += eio(P(t, T.cta, T.cta + .6));
+  return s;
+}
+// screen-light colour per post (lights the face)
+const LIGHT = ['#2F8C7E', '#D8322E', '#E9E6EE', '#5A6CC8', '#E09A3A', '#7A4BD0', '#3BA36A', '#15101C', '#602AC8'];
+
+let out, x, glc, renderer, scene, cam3, ch, grp, POSTS = [], FEED, fx, ROOM, grain = [];
+const [FRZ, frz] = mk(SW, SH);
+
+// ---------- post artwork (media 1008 x 900)
+function media(i) {
+  const [c, g] = mk(SW, MED); const r = rng(40 + i);
+  if (i === 0) { // generic greeting card
+    let gr = g.createLinearGradient(0, 0, SW, MED); gr.addColorStop(0, '#1F6F66'); gr.addColorStop(1, '#0E3D3A'); g.fillStyle = gr; g.fillRect(0, 0, SW, MED);
+    g.globalAlpha = .12; g.strokeStyle = '#E7D7A1'; g.lineWidth = 2; for (let a = 0; a < 14; a++) for (let b = 0; b < 13; b++) { g.save(); g.translate(a * 80, b * 80); g.rotate(Math.PI / 4); g.strokeRect(-22, -22, 44, 44); g.restore(); } g.globalAlpha = 1;
+    g.fillStyle = '#E7C873'; g.beginPath(); g.arc(504, 300, 120, 0, 7); g.fill(); g.fillStyle = '#17564F'; g.beginPath(); g.arc(548, 270, 112, 0, 7); g.fill();
+    g.textAlign = 'center'; g.fillStyle = '#F5E9C4'; g.font = 'italic 400 118px Fraunces'; g.fillText('Salam Jumaat', 504, 590);
+    g.font = '500 34px Grot'; g.globalAlpha = .8; g.fillText('Daripada kami sekeluarga', 504, 670); g.globalAlpha = 1;
+  } else if (i === 1) { // loud promo
+    g.fillStyle = '#C8231F'; g.fillRect(0, 0, SW, MED);
+    g.save(); g.translate(504, 430); g.fillStyle = '#FFD21F'; g.beginPath(); for (let k = 0; k < 48; k++) { const a = k / 48 * Math.PI * 2, rad = k % 2 ? 300 : 400; g.lineTo(Math.cos(a) * rad, Math.sin(a) * rad); } g.fill(); g.restore();
+    g.textAlign = 'center'; g.fillStyle = '#C8231F'; g.font = '190px Anton'; g.fillText('PROMO', 504, 440); g.font = '120px Anton'; g.fillText('SEMUA ITEM!', 504, 570);
+    g.fillStyle = '#fff'; g.font = '700 40px Grot'; g.fillText('JOM SERBU SEKARANG!!!', 504, 820);
+  } else if (i === 2) { // wall of text
+    g.fillStyle = '#F3F1EE'; g.fillRect(0, 0, SW, MED); g.fillStyle = '#2A2A33'; g.font = '500 36px Grot';
+    const txt = 'Kami menyediakan pelbagai perkhidmatan yang berkualiti tinggi dan profesional untuk memenuhi keperluan anda. Dengan pengalaman yang luas dalam industri, kami komited untuk memberikan yang terbaik kepada pelanggan kami. Hubungi kami untuk maklumat lanjut mengenai produk dan perkhidmatan yang ditawarkan. Terima kasih kerana menyokong kami.';
+    let line = '', yy = 130; for (const w of txt.split(' ')) { if (g.measureText(line + w).width > 860) { g.fillText(line, 74, yy); yy += 56; line = ''; } line += w + ' '; } g.fillText(line, 74, yy);
+    g.fillStyle = '#9C9AA6'; g.fillRect(74, 760, 200, 60); g.fillStyle = '#fff'; g.font = '700 26px Grot'; g.fillText('LOGO', 136, 800);
+  } else if (i < HOOK) {
+    const cols = [['#5A6CC8', '#C9D2FF', 'OFFER'], ['#E09A3A', '#3B1F06', 'Selamat Pagi'], ['#7A4BD0', '#F1E8FF', 'NEW ARRIVAL'], ['#3BA36A', '#E8FFEF', 'Jom Order']][i - 3];
+    g.fillStyle = cols[0]; g.fillRect(0, 0, SW, MED); g.fillStyle = cols[1]; g.textAlign = 'center'; g.font = '150px Anton'; g.fillText(cols[2], 504, 500);
+  } else if (i === HOOK) { // the hook
+    g.fillStyle = '#100B14'; g.fillRect(0, 0, SW, MED);
+    const v = g.createRadialGradient(700, 650, 40, 700, 650, 700); v.addColorStop(0, 'rgba(200,35,31,0.35)'); v.addColorStop(1, 'rgba(200,35,31,0)'); g.fillStyle = v; g.fillRect(0, 0, SW, MED);
+    // chilli (drawn), glossy
+    g.save(); g.translate(830, 690); g.rotate(-.45);
+    g.fillStyle = '#D8231C'; g.beginPath(); g.moveTo(-40, -170); g.bezierCurveTo(70, -160, 90, 40, 20, 190); g.bezierCurveTo(0, 230, -10, 240, -20, 250); g.bezierCurveTo(-30, 120, -110, -20, -40, -170); g.fill();
+    g.fillStyle = 'rgba(255,255,255,0.35)'; g.beginPath(); g.ellipse(10, -60, 12, 80, .15, 0, 7); g.fill();
+    g.fillStyle = '#2E8B3A'; g.beginPath(); g.moveTo(-60, -170); g.quadraticCurveTo(-10, -205, 20, -168); g.quadraticCurveTo(-10, -180, -60, -170); g.fill(); g.strokeStyle = '#2E8B3A'; g.lineWidth = 14; g.lineCap = 'round'; g.beginPath(); g.moveTo(-20, -180); g.quadraticCurveTo(-10, -240, 40, -260); g.stroke(); g.restore();
+    POSTS.hookTextOnly = true;
+  } else { // LOKADIGITAL
+    let gr = g.createLinearGradient(0, 0, 0, MED); gr.addColorStop(0, P2); gr.addColorStop(1, '#14082E'); g.fillStyle = gr; g.fillRect(0, 0, SW, MED);
+  }
+  // compression/noise for the bland posts (they look like typical reposted graphics)
+  if (i < HOOK) { const id = g.getImageData(0, 0, SW, MED); for (let k = 0; k < id.data.length; k += 4) { const n = (r() - .5) * 8; id.data[k] += n; id.data[k + 1] += n; id.data[k + 2] += n; } g.putImageData(id, 0, 0); }
+  return c;
+}
+const HANDLES = [['kedai.abc.official', '#1F6F66', ''], ['mega.store.my', '#C8231F', 'Ditaja'], ['syarikat_xyz', '#9C9AA6', ''], ['offer.hari.ini', '#5A6CC8', ''], ['pagi.ceria', '#E09A3A', ''], ['newarrival.my', '#7A4BD0', ''], ['jomorder.co', '#3BA36A', ''], ['sambal.kakros', '#C8231F', ''], ['lokadigital', P1, '']];
+function postBlock(i) {
+  const [c, g] = mk(SW, POST_H); g.fillStyle = '#0D0A12'; g.fillRect(0, 0, SW, POST_H);
+  const [h, col, tag] = HANDLES[i];
+  g.fillStyle = col; g.beginPath(); g.arc(58, 48, 28, 0, 7); g.fill(); g.strokeStyle = 'rgba(255,255,255,0.18)'; g.lineWidth = 3; g.stroke();
+  g.fillStyle = '#fff'; g.font = '700 30px Grot'; g.fillText(h, 104, 46); if (tag) { g.fillStyle = '#9A93A8'; g.font = '500 24px Grot'; g.fillText(tag, 104, 78); }
+  g.fillStyle = '#fff'; for (let k = 0; k < 3; k++) { g.beginPath(); g.arc(950 + k * 14, 48, 4, 0, 7); g.fill(); }
+  g.drawImage(media(i), 0, HEAD);
+  // action row
+  g.strokeStyle = '#fff'; g.lineWidth = 4; g.lineJoin = 'round'; const ay = HEAD + MED + 54;
+  g.save(); g.translate(56, ay); g.beginPath(); g.moveTo(0, 14); g.bezierCurveTo(-30, -6, -14, -32, 0, -14); g.bezierCurveTo(14, -32, 30, -6, 0, 14); g.stroke(); g.restore();
+  g.beginPath(); g.arc(140, ay - 4, 22, .5, Math.PI * 2.2); g.lineTo(116, ay + 22); g.closePath(); g.stroke();
+  g.beginPath(); g.moveTo(200, ay - 24); g.lineTo(246, ay - 24); g.lineTo(222, ay + 20); g.lineTo(218, ay - 4); g.closePath(); g.stroke();
+  g.beginPath(); g.moveTo(944, ay - 26); g.lineTo(974, ay - 26); g.lineTo(974, ay + 24); g.lineTo(959, ay + 10); g.lineTo(944, ay + 24); g.closePath(); g.stroke();
+  return c;
+}
+
+window.init = async () => {
+  for (const f of ['64px Anton', '500 30px Grot', '700 30px Grot', '80px ISerif', 'italic 80px ISerif', 'italic 400 80px Fraunces']) await document.fonts.load(f);
+  out = document.getElementById('out'); x = out.getContext('2d');
+  for (let i = 0; i <= LDI; i++) POSTS.push(postBlock(i));
+  [FEED, fx] = mk(SW, SH);
+  glc = document.createElement('canvas'); glc.width = W; glc.height = H;
+  renderer = new THREE.WebGLRenderer({ canvas: glc, antialias: true, alpha: true, preserveDrawingBuffer: true }); renderer.setSize(W, H, false); renderer.setPixelRatio(1); renderer.setClearColor(0, 0);
+  scene = new THREE.Scene(); cam3 = new THREE.OrthographicCamera(0, W, H, 0, -10, 10);
+  const lm = await (await fetch('../../../../07_SIGNATURE_CHARACTER/rig/landmarks.json')).json();
+  ch = await createCharacter(THREE, { texUrl: '../../../../07_SIGNATURE_CHARACTER/assets/LD_character_master_1024.png', landmarks: lm, height: 1180 });
+  grp = new THREE.Group(); grp.add(ch.object); scene.add(grp);
+  // room behind the face: dark, one warm practical lamp far away (bokeh), purple ambient
+  let g; [ROOM, g] = mk(W, H - CAM_Y); g.fillStyle = '#07050B'; g.fillRect(0, 0, W, H - CAM_Y);
+  let gr = g.createRadialGradient(860, 170, 10, 860, 170, 260); gr.addColorStop(0, 'rgba(255,190,120,0.30)'); gr.addColorStop(1, 'rgba(255,190,120,0)'); g.fillStyle = gr; g.fillRect(0, 0, W, 600);
+  gr = g.createRadialGradient(160, 520, 10, 160, 520, 520); gr.addColorStop(0, hexA(P2, .55)); gr.addColorStop(1, hexA(P2, 0)); g.fillStyle = gr; g.fillRect(0, 0, W, H - CAM_Y);
+  const r = rng(8); for (let k = 0; k < 7; k++) { const bx = 700 + r() * 360, by = 60 + r() * 260, br = 20 + r() * 40; const b = g.createRadialGradient(bx, by, 0, bx, by, br); b.addColorStop(0, `rgba(255,200,140,${.10 + r() * .1})`); b.addColorStop(1, 'rgba(255,200,140,0)'); g.fillStyle = b; g.fillRect(bx - br, by - br, br * 2, br * 2); }
+  for (let k = 0; k < 4; k++) { const [c, q] = mk(540, 960); const d = q.createImageData(540, 960); const rr_ = rng(70 + k); for (let i = 0; i < d.data.length; i += 4) { const v = 128 + (rr_() + rr_() - 1) * 80; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } q.putImageData(d, 0, 0); grain.push(c); }
+};
+
+// ---------- hook post typography (drawn live so it can be annotated / revealed)
+function hookType(g, ox, oy, t) {
+  const a = P(t, T.hook - .05, T.hook + .1);
+  g.save(); g.translate(ox, oy + HEAD); g.textAlign = 'left';
+  g.fillStyle = Y; g.font = '182px Anton';
+  const k1 = spring(P(t, T.hook, T.hook + .7)), k2 = spring(P(t, T.hook + .12, T.hook + .82)), k3 = spring(P(t, T.hook + .24, T.hook + .94));
+  g.globalAlpha = a; g.save(); g.translate(60, 210); g.scale(k1, k1); g.fillText('JANGAN', 0, 0); g.restore();
+  g.save(); g.translate(60, 400); g.scale(k2, k2); g.fillStyle = WH; g.fillText('BELI', 0, 0); g.restore();
+  g.save(); g.translate(60, 590); g.scale(k3, k3); g.fillStyle = WH; g.fillText('SAMBAL NI.', 0, 0); g.restore();
+  const l2 = P(t, T.line2, T.line2 + .5); if (l2 > 0) { g.globalAlpha = eo(l2); g.font = 'italic 64px ISerif'; g.fillStyle = WH; g.fillText('...kalau tak tahan pedas.', 64, 740 + (1 - eo(l2)) * 20); }
+  g.restore();
+}
+function ldType(g, ox, oy, t) {
+  g.save(); g.translate(ox, oy + HEAD); const u = P(t, T.cta + .5, T.cta + 1.0);
+  g.globalAlpha = eo(u); g.fillStyle = LAV; g.font = '500 30px Grot'; g.letterSpacing = '6px'; g.fillText('LOKADIGITAL', 64, 150); g.letterSpacing = '0px';
+  g.fillStyle = WH; g.font = 'italic 92px ISerif'; g.fillText('Kami tulis 3 saat', 64, 330); g.fillText('pertama itu', 64, 430); g.fillStyle = Y; g.fillText('untuk anda.', 64, 530);
+  const v = P(t, T.cta + 1.4, T.cta + 1.8); if (v > 0) { const s = back(v, 2); g.save(); g.translate(64, 640); g.scale(s, s); g.globalAlpha = Math.min(1, v * 3);
+    rr(g, 0, 0, 640, 120, 60); g.fillStyle = Y; g.fill(); g.fillStyle = INK; g.font = '76px Anton'; g.fillText('DM LOKADIGITAL', 44, 92); g.restore(); }
+  g.restore();
+}
+
+// ---------- character performance
+function perf(t) {
+  const e = {}; let blink = .32, eyeX = 0, eyeY = -.85, tilt = .035, lean = 0, yaw = 0;
+  const bored = 1 - P(t, T.hook, T.hook + .12);
+  e.neutral = .6 * bored; e.skeptical = 0;
+  // bored blinks + eye darts that follow the scroll
+  for (const b of [1.4, 3.9, 6.0]) { const u = P(t, b, b + .24); if (u > 0 && u < 1) blink = Math.max(blink, Math.sin(u * Math.PI)); }
+  for (const s of [T.swipe1, T.swipe2]) { const u = P(t, s, s + .4); eyeY += Math.sin(u * Math.PI) * .5; }
+  eyeX = Math.sin(t * .9) * .15 * bored;
+  if (t > T.flick && t < T.hook) { eyeY += Math.sin(t * 30) * .12; blink = .45; }
+  // THE STOP
+  const s = P(t, T.hook, T.hook + .18), stay = 1 - P(t, T.line2 + .2, T.line2 + .6);
+  if (s > 0) { e.surprised = s * (.6 + .4 * stay); blink = lerp(blink, 0, s); lean = eo(P(t, T.hook + .05, T.hook + .6)); eyeY = -.95; eyeX = 0; tilt = lerp(.035, -.02, s); }
+  const th = P(t, T.line2, T.line2 + .4) * (1 - P(t, T.smirk, T.smirk + .3)); if (th > 0) { e.focused = th * .7; }
+  const sm = P(t, T.smirk, T.smirk + .35); if (sm > 0) { e.smirk = sm * (1 - P(t, T.smirk + .9, T.smirk + 1.3)); e.smile = 1.5 * P(t, T.smirk + .9, T.smirk + 1.3); e.smirk += .5 * P(t, T.smirk + .9, T.smirk + 1.3); }
+  for (const b of [11.0, 15.2, 19.1, 22.4]) { const u = P(t, b, b + .2); if (u > 0 && u < 1) blink = Math.max(blink, Math.sin(u * Math.PI)); }
+  if (t > T.freeze) { eyeY = lerp(-.95, 0, eo(P(t, T.freeze, T.freeze + .5))); eyeX = lerp(0, .25, eo(P(t, T.freeze, T.freeze + .5))); }   // looks to camera during the breakdown
+  if (t > T.cta) { eyeY = lerp(eyeY, -.6, eo(P(t, T.cta, T.cta + .4))) + .6 * eo(P(t, T.cta + 1.6, T.cta + 2.0)); eyeX = lerp(eyeX, 0, eo(P(t, T.cta, T.cta + .4))); e.smile = 1.5; e.smirk = .6; tilt = -.02 + Math.sin(P(t, T.cta + 1.6, T.cta + 2.6) * Math.PI * 2) * .03; }
+  return { e, blink, eyeX, eyeY, tilt, lean, yaw };
+}
+
+window.renderFrame = (t, f) => {
+  const tReal = t; const frozen = t >= T.freeze && t < T.cta; const tf = frozen ? T.freeze - .001 : t;
+  x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.filter = 'none'; x.fillStyle = INK; x.fillRect(0, 0, W, H);
+  const sc = scroll(tf), vel = (scroll(tf) - scroll(tf - 1 / 30)) * POST_H;          // px per frame
+  const curIdx = Math.max(0, Math.min(LDI, Math.round(sc)));
+  // ================= FEED (screen space of the phone)
+  fx.setTransform(1, 0, 0, 1, 0, 0); fx.fillStyle = '#0D0A12'; fx.fillRect(0, 0, SW, SH);
+  const topY = 74 - sc * POST_H;   // status bar height
+  const drawFeed = (dy) => { for (let i = 0; i <= LDI; i++) { const py = topY + i * POST_H + dy; if (py > SH || py + POST_H < 0) continue; fx.drawImage(POSTS[i], 0, py);
+      if (i === HOOK) hookType(fx, 0, py, tf); if (i === LDI) ldType(fx, 0, py, tf); } };
+  const blurN = Math.min(9, Math.floor(Math.abs(vel) / 14));
+  if (blurN > 1) { fx.globalAlpha = 1; drawFeed(0); fx.globalAlpha = 1 / blurN * 1.6; for (let k = 1; k < blurN; k++) drawFeed(-vel * k / blurN * .9); fx.globalAlpha = 1; }
+  else drawFeed(0);
+  // status bar
+  fx.fillStyle = '#0D0A12'; fx.fillRect(0, 0, SW, 74); fx.fillStyle = '#fff'; fx.font = '700 30px Grot'; fx.fillText('21:07', 40, 50);
+  fx.fillRect(900, 30, 52, 24); fx.fillStyle = '#0D0A12'; fx.fillRect(904, 34, 30, 16); fx.fillStyle = '#fff'; fx.fillRect(954, 37, 5, 10);
+  // the 3-second bar (attention clock): fills from when a post settles; resets on every swipe
+  const settles = [[.3, T.swipe1], [T.swipe1 + .45, T.swipe2], [T.swipe2 + .4, T.flick], [T.hook + .1, 99]];
+  let barU = -1, barT0 = 0; for (const [a, b] of settles) if (t >= a && t < b) { barU = (t - a) / 3; barT0 = a; }
+  if (barU >= 0 && t < T.freeze + .01 || (t >= T.freeze && t < T.cta)) { if (t >= T.freeze) barU = (T.freeze - (T.hook + .1)) / 3;
+    const u = Math.min(1, barU), full = barU >= 1;
+    fx.fillStyle = 'rgba(255,255,255,0.18)'; rr(fx, 40, 84, SW - 80, 8, 4); fx.fill();
+    fx.fillStyle = full ? Y : '#fff'; rr(fx, 40, 84, (SW - 80) * u, 8, 4); fx.fill();
+    fx.font = '700 30px Grot'; fx.fillStyle = full ? Y : 'rgba(255,255,255,0.85)'; fx.textAlign = 'center'; fx.fillText(full ? '3 SAAT ✓' : (Math.min(barU, 1) * 3).toFixed(1) + 's', SW / 2, 50); fx.textAlign = 'left'; }
+  // touch indicator for swipes
+  for (const [s, d] of [[T.swipe1, .42], [T.swipe2, .38], [T.flick, .3], [T.cta, .5]]) { const u = P(t, s - .08, s + d * .7); if (u > 0 && u < 1) { const ty = lerp(840, 360, eo(u)); fx.fillStyle = `rgba(255,255,255,${.35 * Math.sin(u * Math.PI)})`; fx.beginPath(); fx.arc(640, ty, 46, 0, 7); fx.fill(); fx.strokeStyle = `rgba(255,255,255,${.5 * Math.sin(u * Math.PI)})`; fx.lineWidth = 3; fx.stroke(); } }
+  // freeze-frame capture
+  
+  // ================= draw phone into the frame (with camera moves)
+  const fz = P(t, T.freeze, T.freeze + .5) * (1 - P(t, T.cta - .3, T.cta + .3));
+  const pz = 1 + .0 * fz; const shake = Math.exp(-Math.max(0, t - T.hook) * 6) * (t > T.hook ? 6 : 0);
+  x.save(); x.translate(SX + SW / 2 + Math.sin(t * 50) * shake, SY + SH / 2 + Math.cos(t * 43) * shake); x.scale(pz, pz);
+  rr(x, -SW / 2, -SH / 2, SW, SH, 44); x.clip();
+  if (fz > 0) { x.filter = `saturate(${1 - fz * .5}) brightness(${1 - fz * .25})`; }
+  x.drawImage(FEED, -SW / 2, -SH / 2); x.filter = 'none'; x.restore();
+  x.strokeStyle = 'rgba(255,255,255,0.08)'; x.lineWidth = 2; rr(x, SX, SY, SW, SH, 44); x.stroke();
+  // freeze flash
+  const fl = 1 - P(t, T.freeze, T.freeze + .25); if (t > T.freeze && fl > 0) { x.fillStyle = `rgba(244,241,255,${fl * .35})`; x.fillRect(0, 0, W, H); }
+  // ================= FACE CAM
+  const p = perf(t); const lightCol = new THREE.Color(LIGHT[curIdx]);
+  const lc = t < T.freeze ? lightCol : new THREE.Color(LIGHT[HOOK]);
+  const base = new THREE.Color('#BFC8E8'); const mixc = base.clone().lerp(lc, .35);
+  const flash = t > T.hook ? Math.exp(-(t - T.hook) * 3) * .25 : 0;
+  ch.material.uniforms.tint.value.set(mixc.r + flash, mixc.g + flash, mixc.b + flash);
+  const bright = t < T.flick ? .82 : t < T.hook ? .78 + Math.abs(Math.sin(t * 20)) * .1 : 1.0;
+  ch.set({ expr: p.e, blink: p.blink, eyeX: p.eyeX, eyeY: p.eyeY, tilt: p.tilt, yaw: p.yaw, breathe: t, rimY: t > T.hook ? .9 : .35, rimP: .8, exposure: bright * (1 - fz * .35) });
+  const camDim = 1 - fz * .55;
+  const lean = p.lean, sc3 = 1 + lean * .09 - P(t, T.freeze, T.freeze + .6) * .0;
+  grp.scale.set(sc3, sc3, 1); grp.position.set(540 + Math.sin(t * .7) * 4, H - (1565 - lean * 40) + Math.sin(t * 1.7) * 3, 0);
+  renderer.render(scene, cam3);
+  x.save(); x.beginPath(); x.rect(0, CAM_Y, W, H - CAM_Y); x.clip();
+  x.drawImage(ROOM, 0, CAM_Y);
+  // screen spill on the wall behind
+  const spill = x.createRadialGradient(540, CAM_Y, 20, 540, CAM_Y, 700); spill.addColorStop(0, `rgba(${Math.round(lc.r * 255)},${Math.round(lc.g * 255)},${Math.round(lc.b * 255)},0.20)`); spill.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = spill; x.fillRect(0, CAM_Y, W, 820);
+  x.globalAlpha = camDim; x.drawImage(glc, 0, 0); x.globalAlpha = 1;
+  // top shadow under the phone edge, lens vignette
+  let gr = x.createLinearGradient(0, CAM_Y, 0, CAM_Y + 160); gr.addColorStop(0, 'rgba(5,3,10,0.9)'); gr.addColorStop(1, 'rgba(5,3,10,0)'); x.fillStyle = gr; x.fillRect(0, CAM_Y, W, 160);
+  if (fz > 0) { x.fillStyle = `rgba(5,3,10,${fz * .45})`; x.fillRect(0, CAM_Y, W, H - CAM_Y); }
+  x.restore();
+  // ================= BREAKDOWN TYPOGRAPHY
+  x.textAlign = 'left';
+  const bA = P(t, T.big, T.big + .3) * (1 - P(t, T.anat - .3, T.anat));
+  if (bA > 0) { x.save(); x.globalAlpha = bA; x.fillStyle = WH; x.font = 'italic 110px ISerif'; x.fillText('Anda cuma ada', 80, 1330 + (1 - eo(P(t, T.big, T.big + .4))) * 30);
+    const u = P(t, T.big + .5, T.big + 1.1); const s = spring(u); x.save(); x.translate(80, 1640); x.scale(s, s); x.fillStyle = Y; x.font = '330px Anton'; x.fillText('3 SAAT.', 0, 0); x.restore();
+    x.globalAlpha = bA * P(t, T.big + 1.4, T.big + 1.8); x.fillStyle = LAV; x.font = '500 34px Grot'; x.fillText('Sebelum ibu jari bergerak.', 86, 1730); x.restore(); }
+  // anatomy: three callouts from hook text (phone) down into the cam region
+  const aA = P(t, T.anat, T.anat + .3) * (1 - P(t, T.rule - .3, T.rule));
+  if (aA > 0) { const items = [['01', 'Lawan jangkaan', 'Jangan beli?'], ['02', 'Satu benda spesifik', 'Sambal. Bukan "produk kami".'], ['03', 'Cabar penonton', 'Tahan pedas atau tidak?']];
+    // targets on screen: line positions in the frozen phone (screen coords)
+    const B = SY + 74 + HEAD; const UL = [[SX + 60, SX + 520, B + 228], [SX + 60, SX + 940, B + 608], [SX + 64, SX + 690, B + 762]];
+    items.forEach(([n, a, b], i) => { const u = P(t, T.anat + i * 1.1, T.anat + i * 1.1 + .45); if (u <= 0) return; const yy = 1250 + i * 190;
+      x.save(); x.globalAlpha = aA * eo(u); x.strokeStyle = Y; x.fillStyle = Y; x.lineWidth = 4; const [ux0, ux1, uy] = UL[i]; const e = eo(u);
+      x.fillRect(ux0, uy, (ux1 - ux0) * e, 8);                                          // underline on the frozen post
+      x.beginPath(); x.moveTo(96, yy - 14); x.lineTo(58, yy - 14); x.lineTo(58, lerp(yy - 14, uy + 4, e)); x.lineTo(lerp(58, ux0, e), lerp(yy - 14, uy + 4, e)); x.stroke();
+      x.beginPath(); x.arc(58, yy - 14, 7, 0, 7); x.fill();
+      x.font = '700 28px Grot'; x.fillText(n, 110, yy - 6); x.fillStyle = WH; x.font = 'italic 76px ISerif'; x.fillText(a, 170, yy + 10);
+      x.fillStyle = LAV; x.font = '500 30px Grot'; x.fillText(b, 172, yy + 62); x.restore(); }); }
+  const rA = P(t, T.rule, T.rule + .3) * (1 - P(t, T.cta - .3, T.cta));
+  if (rA > 0) { x.save(); x.globalAlpha = rA; x.fillStyle = WH; x.font = 'italic 120px ISerif'; x.fillText('Hook dulu.', 80, 1420 + (1 - eo(P(t, T.rule, T.rule + .4))) * 30);
+    x.globalAlpha = rA * P(t, T.rule + .5, T.rule + .8); x.fillStyle = Y; x.font = '150px Anton'; x.fillText('BARU CERITA.', 80, 1600); x.restore(); }
+  // ================= finish
+  x.setTransform(1, 0, 0, 1, 0, 0);
+  const v = x.createRadialGradient(W / 2, H / 2, H * .35, W / 2, H / 2, H * .75); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.35)'); x.fillStyle = v; x.fillRect(0, 0, W, H);
+  x.save(); x.globalCompositeOperation = 'overlay'; x.globalAlpha = .07; x.drawImage(grain[(f || 0) % 4], 0, 0, W, H); x.restore();
+  const fi = 1 - P(t, 0, .15), fo = P(t, 23.6, 24); if (fi > 0 || fo > 0) { x.fillStyle = `rgba(5,3,10,${Math.max(fi, fo)})`; x.fillRect(0, 0, W, H); }
+};
+</script></body></html>
