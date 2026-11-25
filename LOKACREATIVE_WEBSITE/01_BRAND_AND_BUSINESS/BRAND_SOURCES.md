@@ -21,7 +21,7 @@ Canva: tiada Brand Kit. Google Drive: tiada fail "loka"/"logo".
 | Putih / cerah | `#FFFFFF` / `#EDEDED` | Sampel piksel deck |
 | Font tajuk | **TBC** (deck: sans geometri sangat tebal, huruf besar). Web guna **League Spartan 900** sebagai padanan terbuka terdekat | Perlu pengesahan nama font rasmi |
 | Font body | **TBC**. Web guna **Open Sans** sebagai padanan terdekat | Perlu pengesahan |
-| Logo LokaCreative | **Tiada fail.** Deck hanya guna teks "LOKACREATIVE VENTURES" huruf besar lime, jadi website ikut cara itu | Bekalkan logo jika ada |
+| Logo LokaCreative | ✅ Dibekalkan pemilik (W07): wordmark putih "LOKACREATIVE VENTURES" | [`07_ASSETS/logos/lokacreative-ventures_logo_original.png`](../07_ASSETS/logos/lokacreative-ventures_logo_original.png) |
 
 ## Logo jenama dalam website (W07, fail dibekalkan pemilik 2026-11-25)
 Logo Canva lama (segitiga LokaDigital, LokaFoodie "kilat") **diganti** atas arahan pemilik. Fail asal disimpan dalam [`07_ASSETS/logos/`](../07_ASSETS/logos/); versi web (latar dibuang, dipotong) dalam `site/public/assets/brands/`.
