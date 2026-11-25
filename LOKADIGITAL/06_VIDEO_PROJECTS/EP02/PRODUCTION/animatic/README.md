@@ -1,6 +1,6 @@
 # EP02 · Animatic v1
 
-> **Status:** 🟡 **Menunggu approval kau.** Tiada full production, final rendering atau export akhir sebelum animatic diluluskan.
+> **Status:** ⏸️ **Ditangguhkan** (2026-11-25). Dinilai semula sebagai terlalu bergantung pada headline dan zarah berulang; lihat [Creative Direction v2 (cadangan)](../../CONCEPT/CREATIVE_DIRECTION_v2_PROPOSAL.md). Disimpan sebagai rekod v1.
 > Visual: berdasarkan [style frames v2](../../ASSETS/STYLE_FRAMES/README.md) (benchmark rasmi). Timing: [`BEAT_MAP_EP02.md`](../BEAT_MAP_EP02.md). **Tiada voiceover**: audio ialah muzik + SFX sahaja.
 
 | Fail | Butiran |

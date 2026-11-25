@@ -99,3 +99,12 @@
 | Papan data terkumpul → rumusan terbina sendiri | Layout HUD yang sama persis |
 | Strikethrough untuk tunjuk logik bertukar | |
 | Bab bernombor, CTA + teaser episod, cover frame | |
+
+#### 1.9 Analisa lanjutan (2026-11-25): bagaimana ia *menerangkan*
+Kajian kedua untuk penilaian semula EP02. Ringkasan prinsip:
+- **Objek kekal yang berubah keadaan:** grid 8 kotak "30k" kekal dari awal hingga rumusan. Setiap fakta ialah perubahan pada objek yang sama (kotak digelapkan / dibahagi), jadi penonton *melihat* pecahan, bukan membacanya.
+- **Empat lapisan serentak dengan tugas berbeza:** headline (apa), kad data (jawapan), diagram salasilah (hubungan), model grid (akibat), ditambah watak (emosi/siapa).
+- **Satu ayat = satu perubahan;** elemen lama diarkibkan (dikelabukan), tidak dibuang.
+- **Watak memberi muka kepada konsep** (ISTERI, DUDA, ANAK DARA) dan hos memberi reaksi emosi.
+- **Kesinambungan melalui objek**, bukan transition efek; tag editorial (`KENAPA?`, `BUKAN 1/4`) memberi personality.
+Penggunaan untuk EP02: [`CREATIVE_DIRECTION_v2_PROPOSAL.md`](../06_VIDEO_PROJECTS/EP02/CONCEPT/CREATIVE_DIRECTION_v2_PROPOSAL.md).

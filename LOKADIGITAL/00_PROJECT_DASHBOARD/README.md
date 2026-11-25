@@ -9,12 +9,13 @@ Menghasilkan siri video content LokaDigital yang **premium, sinematik dan berasa
 | Projek | Status | Langkah seterusnya |
 |---|---|---|
 | [EP01 — SIGNAL / NOISE](../06_VIDEO_PROJECTS/EP01/README.md) | ✅ Siap | — |
-| [EP02 — ORANG YANG BETUL](../06_VIDEO_PROJECTS/EP02/README.md) | ✅ Storyboard v5 · ✅ Style frames v2 · 🟡 **Animatic v1 menunggu approval** | Full production (selepas approval animatic) |
+| [EP02 — ORANG YANG BETUL](../06_VIDEO_PROJECTS/EP02/README.md) | ✅ Storyboard v5 · ✅ Style frames v2 · 🟡 **Creative Direction v2 (cadangan) menunggu approval** | SF4/SF5 → storyboard v6 → beat map v2 → animatic v2 |
 | [EP03 — VIRAL IS NOT A STRATEGY](../06_VIDEO_PROJECTS/EP03/README.md) | 📝 Brief direkod | Reference analysis → konsep (selepas EP02) |
 
 **Workflow:** Reference Analysis → Concept → On-screen Text Script → Storyboard → ✋ **Approval** → Production → Final Review
 
 ## 🆕 Kemas kini terkini
+- **2026-11-25:** Penilaian semula EP02: [Creative Direction v2 (cadangan)](../06_VIDEO_PROJECTS/EP02/CONCEPT/CREATIVE_DIRECTION_v2_PROPOSAL.md). Animatic v1 ditangguhkan.
 - **2026-11-25:** Style frames v2 diluluskan. **Beat map + animatic v1 EP02 siap** untuk semakan ([lihat](../06_VIDEO_PROJECTS/EP02/PRODUCTION/README.md)).
 - **2026-11-25:** Style frames **v2** (diperbetulkan) siap untuk final approval. v1 diarkib.
 - **2026-11-25:** EP02 storyboard v5 diluluskan; Scene 06 → *Cari yang beli*. **3 style frames siap** untuk semakan ([lihat](../06_VIDEO_PROJECTS/EP02/ASSETS/STYLE_FRAMES/README.md)).
@@ -23,7 +24,7 @@ Menghasilkan siri video content LokaDigital yang **premium, sinematik dan berasa
 - **2026-11-25:** Keputusan muktamad D10–D15: tiada claim AI, contoh F&B, CTA DM LOKADIGITAL, EP03 brief, tiada VO, jangan tanya semula.
 
 ## ✋ Keputusan diperlukan daripada kau
-1. **Approval animatic v1 EP02** ([`animatic`](../06_VIDEO_PROJECTS/EP02/PRODUCTION/animatic/README.md)). Ini satu-satunya halangan untuk full production.
+1. **Approval Creative Direction v2 EP02** (C1–C10 dalam [cadangan](../06_VIDEO_PROJECTS/EP02/CONCEPT/CREATIVE_DIRECTION_v2_PROPOSAL.md)), termasuk 3 baris dossier `CONTOH` baharu.
 2. **Fail logo rasmi LokaDigital** (SVG/PNG) dan peraturan penggunaan. Sehingga dibekalkan, video guna wordmark tipografi seperti EP01.
 3. **Muzik:** dijana secara prosedur seperti EP01 (default), atau guna muzik berlesen? *Tidak menghalang. Jika tiada jawapan, default digunakan.*
 
