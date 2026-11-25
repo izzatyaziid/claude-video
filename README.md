@@ -11,7 +11,7 @@ Repository ini mengandungi dua sistem dokumentasi (single source of truth) dan k
 | Projek | Status |
 |---|---|
 | LokaDigital EP01 "SIGNAL / NOISE" | ✅ Siap: [`ep01/out/LOKADIGITAL_EP01_SignalNoise_1080x1920.mp4`](ep01/out/LOKADIGITAL_EP01_SignalNoise_1080x1920.mp4) |
-| LokaDigital EP02 "ORANG YANG BETUL" | ✅ Storyboard v5 · 🟡 Style frames menunggu approval |
+| LokaDigital EP02 "ORANG YANG BETUL" | ✅ Style frames v2 · 🟡 Animatic v1 menunggu approval |
 | LokaDigital EP03 "VIRAL IS NOT A STRATEGY" | 📝 Brief |
 | LokaCreative Ventures website | 📝 Perancangan (tiada build / deploy) |
 

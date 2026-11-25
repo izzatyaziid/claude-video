@@ -1,4 +1,9 @@
 # EP02 · PRODUCTION
-⏳ **Belum bermula. Tiada production sebelum storyboard diluluskan.**
-Urutan selepas approval: 1) beat map 92 BPM · 2) animatic low-fi · 3) render penuh · 4) sound design & mix (−14 LUFS) · 5) QC.
-Kod production EP02 akan diletakkan dalam folder ini.
+
+| Fasa | Status | Fail |
+|---|---|---|
+| Style frames | ✅ v2 diluluskan (benchmark) | [`../ASSETS/STYLE_FRAMES/`](../ASSETS/STYLE_FRAMES/README.md) |
+| **Beat map** | 🟡 Untuk semakan bersama animatic | [`BEAT_MAP_EP02.md`](BEAT_MAP_EP02.md) |
+| **Animatic v1** | 🟡 **Menunggu approval** | [`animatic/`](animatic/README.md) |
+| Full production (render akhir, sound design akhir, mastering) | ⛔ Belum dimulakan; perlu approval animatic | — |
+| QC + final review | ⏳ | — |

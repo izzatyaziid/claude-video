@@ -1,6 +1,6 @@
 # EP02 · Style Frames (look development)
 
-> **Status:** 🟡 **v2 (diperbetulkan) menunggu final approval kau.** Beat map dan animatic tidak dimulakan sebelum style frames diluluskan.
+> **Status:** ✅ **v2 DILULUSKAN (FINAL, D20): visual benchmark rasmi EP02.** Langkah seterusnya: [beat map + animatic](../../PRODUCTION/README.md).
 > Ini imej pegun (stills) sahaja, bukan video atau production. Dirender dengan kod yang sama seperti pipeline EP01 (HTML/Canvas → Playwright).
 
 ![Board v2](v2/EP02_STYLE_FRAMES_BOARD_v2.jpg)
@@ -16,7 +16,7 @@
 | Versi | Tarikh | Perubahan | Status | Fail |
 |---|---|---|---|---|
 | v1 | 2026-11-25 | Style frames pertama (commit `5f7caa1`) | Disemak: approve dengan pembetulan | [`v1/`](v1/) |
-| **v2** | 2026-11-25 | **SF1:** jalur kabus diganti dengan 5 lapisan kedalaman manusia yang jarang, jadi individu di belakang siluet utama boleh dibaca. Kamera sedikit di atas paras kepala supaya lapisan tersebar menegak. Signal Line dipendekkan (≈110 px) dan diturunkan ke paras kepala siluet, jadi tidak lagi selari dengan underline SIAPA. **SF2:** serpihan "KAMI TER…" dibuang (iklan lama sudah hilang pada 28.9 s). **SF3:** kepadatan dan kecerahan siluet kuning di tengah dan bawah ditingkatkan, dan warna "kuning-putih" dikurangkan; latar kekal gelap untuk kontras. Typography, font, palet, komposisi dan focal point tidak diubah | 🟡 Menunggu final approval | [`v2/`](v2/) |
+| **v2** | 2026-11-25 | **SF1:** jalur kabus diganti dengan 5 lapisan kedalaman manusia yang jarang, jadi individu di belakang siluet utama boleh dibaca. Kamera sedikit di atas paras kepala supaya lapisan tersebar menegak. Signal Line dipendekkan (≈110 px) dan diturunkan ke paras kepala siluet, jadi tidak lagi selari dengan underline SIAPA. **SF2:** serpihan "KAMI TER…" dibuang (iklan lama sudah hilang pada 28.9 s). **SF3:** kepadatan dan kecerahan siluet kuning di tengah dan bawah ditingkatkan, dan warna "kuning-putih" dikurangkan; latar kekal gelap untuk kontras. Typography, font, palet, komposisi dan focal point tidak diubah | ✅ Diluluskan (benchmark) | [`v2/`](v2/) |
 
 ## Tujuan setiap frame
 - **SF1: lautan beku, satu manusia.** Mengunci rupa hook: orang ramai kelabu yang beku, satu siluet manusia yang terbentuk daripada titik cahaya (K1), titik kuning yang mula memanjang jadi Signal Line, dan typography paling besar dalam video (**SIAPA.**) dengan underline yang sedang dilukis.
