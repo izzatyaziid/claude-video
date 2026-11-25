@@ -1,5 +1,7 @@
 # EP02 · ASSETS
-⏳ Diisi selepas storyboard diluluskan. Aset yang dirancang (dari konsep):
+🟡 **Style frames siap, menunggu approval:** [`STYLE_FRAMES/`](STYLE_FRAMES/README.md)
+
+Aset yang dirancang (dari konsep):
 | Aset | Sumber | Status |
 |---|---|---|
 | Lautan zarah, Signal Line, HUD, kad creative | Dijana oleh kod (seperti EP01) | Dirancang |

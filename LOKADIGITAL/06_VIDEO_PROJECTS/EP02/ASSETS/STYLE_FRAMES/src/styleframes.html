@@ -1,0 +1,335 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:"JBM";src:url(fonts/jetbrains-mono-latin-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"JBM";src:url(fonts/jetbrains-mono-latin-600-normal.woff2) format("woff2");font-weight:600}
+html,body{margin:0;background:#05030A}
+canvas{display:block}
+</style></head>
+<body><canvas id="c"></canvas>
+<script>
+// LOKADIGITAL EP02 — style frames (look development, stills only)
+// Coordinates are authored in 1080x1920 space and rendered at 2x (2160x3840).
+const W = 1080, H = 1920, S = 2;
+const C = { ink:'#05030A', p1:'#602AC8', p2:'#301270', y:'#E8FF2B', lav:'#AB94FF', mist:'#D4CAF2', grey:'#7C7396', white:'#F4F1FF' };
+const cv = document.getElementById('c'); cv.width = W*S; cv.height = H*S;
+const ctx = cv.getContext('2d');
+
+function rng(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function layer(){ const c = document.createElement('canvas'); c.width = W*S; c.height = H*S; const x = c.getContext('2d'); x.setTransform(S,0,0,S,0,0); return [c,x]; }
+function hexA(hex,a){ const n=parseInt(hex.slice(1),16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; }
+function mix(h1,h2,t){ const a=parseInt(h1.slice(1),16), b=parseInt(h2.slice(1),16); const r=(a>>16&255)*(1-t)+(b>>16&255)*t, g=(a>>8&255)*(1-t)+(b>>8&255)*t, bl=(a&255)*(1-t)+(b&255)*t; return '#'+[r,g,bl].map(v=>Math.round(v).toString(16).padStart(2,'0')).join(''); }
+
+// ---------- human silhouette (head + shoulders bust), normalised: y from -0.75 (top) to 0.6 (bottom)
+function inside(x,y){
+  const hx=x/0.165, hy=(y+0.55)/0.195; if (hx*hx+hy*hy<=1) return true;          // head
+  if (y>-0.38 && y<-0.26 && Math.abs(x)<0.075) return true;                        // neck
+  if (y>=-0.3 && y<=0.6){                                                          // shoulders + torso
+    let hw;
+    if (y < -0.05){ const t=(y+0.3)/0.25; hw = 0.08 + 0.38*Math.sqrt(Math.max(0,1-(1-t)*(1-t))); }
+    else hw = 0.46 - 0.07*((y+0.05)/0.65);
+    return Math.abs(x) <= hw;
+  }
+  return false;
+}
+// precompute a library of sample points per silhouette (edge-weighted)
+function samplePerson(r, n){
+  const pts=[]; let guard=0;
+  while (pts.length<n && guard++<n*60){
+    const x=(r()*2-1)*0.52, y=-0.76+r()*1.36;
+    if (!inside(x,y)) continue;
+    const e=0.03; const edge = !inside(x+e,y)||!inside(x-e,y)||!inside(x,y+e)||!inside(x,y-e);
+    const fadeBottom = y>0.25 ? (0.6-y)/0.35 : 1;               // bust dissolves at the bottom
+    if (r() > (edge ? 1 : 0.32)*fadeBottom) continue;
+    pts.push([x,y,edge]);
+  }
+  return pts;
+}
+
+// soft dot (bokeh) or sharp glowing point
+function dot(x2,x,y,r,col,a,blur){
+  if (blur>1.2){
+    const R=r+blur*0.6; const k=a*Math.min(1,Math.pow((r+1)/R,0.8)*1.6); const g=x2.createRadialGradient(x,y,0,x,y,R);
+    g.addColorStop(0,hexA(col,k*0.55)); g.addColorStop(0.8,hexA(col,k*0.4)); g.addColorStop(1,hexA(col,0));
+    x2.fillStyle=g; x2.beginPath(); x2.arc(x,y,R,0,7); x2.fill();
+  } else {
+    x2.fillStyle=hexA(col,a); x2.beginPath(); x2.arc(x,y,Math.max(0.55,r),0,7); x2.fill();
+  }
+}
+function drawPerson(x2, cx, gy, s, opt){
+  const pts = opt.pts; const bf = opt.blur>1.2 ? 1/(1+opt.blur/5) : 1; const n = Math.min(pts.length, Math.max(4, Math.round(opt.density*s*bf*Math.min(1,Math.pow(s/160,0.9)))));
+  const step = pts.length/n; const rot = opt.rot||0, cr=Math.cos(rot), sr=Math.sin(rot);
+  for (let i=0;i<n;i++){
+    const p = pts[Math.floor(i*step)]; let px=p[0], py=p[1]-0.6;
+    const qx = px*cr - py*sr, qy = px*sr + py*cr;
+    let X = cx + qx*s, Y = gy + qy*s;
+    let a = opt.alpha*(p[2]?1:0.55)/(1+(opt.blur||0)/9);
+    if (opt.scatter){ const k=opt.scatter(p,i); X+=k[0]; Y+=k[1]; a*=k[2]; }
+    const col = opt.colFn ? opt.colFn(p,i) : opt.col;
+    dot(x2, X, Y, opt.r, col, a, opt.blur);
+    if (opt.streak){ const [dx,dy]=opt.streak; x2.strokeStyle=hexA(col,a*0.35); x2.lineWidth=opt.r*0.9; x2.beginPath(); x2.moveTo(X,Y); x2.lineTo(X-dx,Y-dy); x2.stroke(); }
+  }
+}
+
+// ---------- atmosphere
+function atmosphere(x2, cfg){
+  x2.fillStyle=C.ink; x2.fillRect(0,0,W,H);
+  for (const L of cfg.lights){ const g=x2.createRadialGradient(L[0],L[1],0,L[0],L[1],L[2]); g.addColorStop(0,hexA(L[3],L[4])); g.addColorStop(1,hexA(L[3],0)); x2.fillStyle=g; x2.fillRect(0,0,W,H); }
+  // volumetric fog: fbm value noise at low res, stretched
+  const fw=108, fh=192, fc=document.createElement('canvas'); fc.width=fw; fc.height=fh; const f=fc.getContext('2d'); const id=f.createImageData(fw,fh);
+  const r=rng(cfg.seed||7); const grid=[]; for(let i=0;i<40*40;i++) grid.push(r());
+  const vn=(x,y)=>{ const xi=Math.floor(x), yi=Math.floor(y), xf=x-xi, yf=y-yi; const g=(a,b)=>grid[((a%40+40)%40)+((b%40+40)%40)*40]; const sm=t=>t*t*(3-2*t);
+    const a=g(xi,yi), b=g(xi+1,yi), c=g(xi,yi+1), d=g(xi+1,yi+1); return a+(b-a)*sm(xf)+(c-a)*sm(yf)+(a-b-c+d)*sm(xf)*sm(yf); };
+  for (let y=0;y<fh;y++) for (let x=0;x<fw;x++){ let v=0,amp=0.55,fr=0.035; for(let o=0;o<4;o++){ v+=amp*vn(x*fr,y*fr); amp*=0.5; fr*=2; }
+    const k=(y*fw+x)*4; const t=Math.max(0,v-0.42)*1.5; id.data[k]=96*t; id.data[k+1]=42*t; id.data[k+2]=200*t; id.data[k+3]=255; }
+  f.putImageData(id,0,0);
+  x2.save(); x2.globalCompositeOperation='screen'; x2.globalAlpha=cfg.fog; x2.filter='blur(18px)'; x2.drawImage(fc,0,0,W,H); x2.restore();
+}
+function finish(x2, seed){
+  // vignette
+  const g=x2.createRadialGradient(W/2,H*0.52,H*0.25,W/2,H*0.52,H*0.78); g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,0.78)');
+  x2.fillStyle=g; x2.fillRect(0,0,W,H);
+  // film grain (rendered at full output resolution)
+  const gc=document.createElement('canvas'); gc.width=W*S; gc.height=H*S; const gx=gc.getContext('2d'); const id=gx.createImageData(W*S,H*S); const r=rng(seed);
+  for (let i=0;i<id.data.length;i+=4){ const v=128+(r()+r()+r()-1.5)*90; id.data[i]=id.data[i+1]=id.data[i+2]=v; id.data[i+3]=255; }
+  gx.putImageData(id,0,0);
+  x2.save(); x2.setTransform(1,0,0,1,0,0); x2.globalCompositeOperation='overlay'; x2.globalAlpha=0.13; x2.drawImage(gc,0,0); x2.restore();
+}
+function bloom(x2, src, a1, a2){
+  x2.save(); x2.setTransform(1,0,0,1,0,0); x2.globalCompositeOperation='lighter';
+  x2.globalAlpha=a1; x2.filter=`blur(${60*S}px)`; x2.drawImage(src,0,0);
+  x2.globalAlpha=a2; x2.filter=`blur(${14*S}px)`; x2.drawImage(src,0,0);
+  x2.globalAlpha=1; x2.filter='none'; x2.drawImage(src,0,0); x2.restore();
+}
+
+// ---------- Signal Line: smooth path with layered glow + white-hot core + anamorphic flare at the head
+function catmull(pts, seg){ const out=[]; for(let i=0;i<pts.length-1;i++){ const p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[i+1],p3=pts[Math.min(pts.length-1,i+2)];
+  for(let t=0;t<seg;t++){ const u=t/seg,u2=u*u,u3=u2*u; out.push([0.5*((2*p1[0])+(-p0[0]+p2[0])*u+(2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*u2+(-p0[0]+3*p1[0]-3*p2[0]+p3[0])*u3),
+    0.5*((2*p1[1])+(-p0[1]+p2[1])*u+(2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*u2+(-p0[1]+3*p1[1]-3*p2[1]+p3[1])*u3)]); } } out.push(pts[pts.length-1]); return out; }
+function signalLine(x2, pts, o={}){
+  const P=catmull(pts,24), n=P.length, w=o.w||3.2;
+  for (let i=1;i<n;i++){            // taper: thin tail -> full at head
+    const t=i/n, k=o.taper===false?1:Math.min(1,0.15+t*1.4);
+    x2.strokeStyle=hexA(C.y,(o.alpha||1)*Math.min(1,0.25+t)); x2.lineWidth=w*k*1.9; x2.lineCap='round';
+    x2.beginPath(); x2.moveTo(P[i-1][0],P[i-1][1]); x2.lineTo(P[i][0],P[i][1]); x2.stroke();
+  }
+  x2.strokeStyle=hexA('#FFFFF0',0.9*(o.alpha||1)); x2.lineWidth=w*0.55; x2.beginPath(); P.forEach((p,i)=>i?x2.lineTo(p[0],p[1]):x2.moveTo(p[0],p[1])); x2.stroke();
+  if (o.head!==false) flare(x2, P[n-1][0], P[n-1][1], o.flare||1);
+  if (o.sparks){ const r=rng(o.sparks); for (let i=0;i<90;i++){ const p=P[Math.floor(Math.pow(r(),0.6)*(n-1))]; dot(x2,p[0]+(r()-0.5)*22,p[1]+(r()-0.5)*22,0.6+r()*1.2,C.y,0.35+r()*0.5,0); } }
+  return P;
+}
+function flare(x2,x,y,k){
+  let g=x2.createRadialGradient(x,y,0,x,y,26*k); g.addColorStop(0,'rgba(255,255,245,1)'); g.addColorStop(0.25,hexA(C.y,0.9)); g.addColorStop(1,hexA(C.y,0));
+  x2.fillStyle=g; x2.beginPath(); x2.arc(x,y,26*k,0,7); x2.fill();
+  x2.save(); x2.translate(x,y); x2.scale(1,0.018); g=x2.createRadialGradient(0,0,0,0,0,420*k); g.addColorStop(0,hexA('#FFFFF0',0.95)); g.addColorStop(0.15,hexA(C.y,0.5)); g.addColorStop(1,hexA(C.y,0));
+  x2.fillStyle=g; x2.beginPath(); x2.arc(0,0,420*k,0,7); x2.fill(); x2.restore();
+}
+
+// ---------- typography
+function txt(x2, s, x, y, o){
+  x2.save(); x2.font=o.font; x2.letterSpacing=o.ls||'0px'; x2.textBaseline='alphabetic'; x2.textAlign=o.align||'left';
+  if (o.blur) x2.filter=`blur(${o.blur}px)`; x2.globalAlpha=o.alpha==null?1:o.alpha;
+  if (o.glow){ x2.shadowColor=o.glow; x2.shadowBlur=o.glowR||24; }
+  x2.fillStyle=o.col; x2.fillText(s,x,y); const m=x2.measureText(s).width; x2.restore(); return m;
+}
+function underline(x2, x, y, w, prog, glowL){   // drawn L->R, glowing head = motion cue
+  const e=x+w*prog; x2.strokeStyle=C.y; x2.lineWidth=7; x2.lineCap='butt'; x2.beginPath(); x2.moveTo(x,y); x2.lineTo(e,y); x2.stroke();
+  if (glowL){ glowL.strokeStyle=C.y; glowL.lineWidth=7; glowL.beginPath(); glowL.moveTo(x,y); glowL.lineTo(e,y); glowL.stroke(); if(prog<1) flare(glowL,e,y,0.55); }
+}
+function rail(x2, glowL, active){   // Signal Rail HUD at y220-290
+  const y=255, x0=96, x1=W-176, labs=['CARI','CAKAP','SAMBUNG'];
+  x2.strokeStyle=hexA(C.lav,0.35); x2.lineWidth=1.5; x2.beginPath(); x2.moveTo(x0,y); x2.lineTo(x1,y); x2.stroke();
+  const xs=labs.map((_,i)=>x0+(x1-x0)*(i/(labs.length-1)));
+  const doneTo = xs[Math.max(0,active)];
+  glowL.strokeStyle=C.y; glowL.lineWidth=2.5; glowL.beginPath(); glowL.moveTo(x0,y); glowL.lineTo(doneTo,y); glowL.stroke();
+  labs.forEach((l,i)=>{ const x=xs[i];
+    if (i<active){ glowL.fillStyle=C.y; glowL.beginPath(); glowL.arc(x,y,8,0,7); glowL.fill(); }
+    else if (i===active){ glowL.strokeStyle=C.y; glowL.lineWidth=2.5; glowL.beginPath(); glowL.arc(x,y,13,0,7); glowL.stroke(); glowL.fillStyle=C.y; glowL.beginPath(); glowL.arc(x,y,5,0,7); glowL.fill(); }
+    else { x2.strokeStyle=hexA(C.lav,0.55); x2.lineWidth=1.5; x2.beginPath(); x2.arc(x,y,7,0,7); x2.stroke(); }
+    txt(x2, `0${i+1} ${l}`, x, y+46, {font:'600 21px JBM', ls:'5px', col: i<=active?C.mist:hexA(C.lav,0.6), align: i===0?'left':(i===2?'right':'center')});
+  });
+}
+// annotation helpers (review overlay only)
+function note(x2, x, y, lines, ax, ay){
+  x2.save(); x2.font='400 19px JBM'; x2.letterSpacing='1px';
+  const w=Math.max(...lines.map(l=>x2.measureText(l).width))+28, h=lines.length*28+18;
+  x2.fillStyle='rgba(5,3,10,0.82)'; x2.fillRect(x,y,w,h); x2.strokeStyle='rgba(244,241,255,0.55)'; x2.lineWidth=1; x2.strokeRect(x+0.5,y+0.5,w,h);
+  lines.forEach((l,i)=>{ x2.fillStyle= i===0? C.y : 'rgba(244,241,255,0.92)'; x2.fillText(l,x+14,y+32+i*28); });
+  if (ax!=null){ x2.strokeStyle='rgba(244,241,255,0.7)'; x2.setLineDash([5,5]); x2.beginPath(); const sx = ax < x ? x : (ax > x+w ? x+w : x+w/2); const sy = ay < y ? y : y+h; x2.moveTo(sx,sy); x2.lineTo(ax,ay); x2.stroke(); x2.setLineDash([]); x2.fillStyle='rgba(244,241,255,0.9)'; x2.beginPath(); x2.arc(ax,ay,4,0,7); x2.fill(); }
+  x2.restore();
+}
+function arrow(x2, x1,y1,x2_,y2, label){
+  x2.save(); x2.strokeStyle='rgba(244,241,255,0.75)'; x2.lineWidth=2; x2.beginPath(); x2.moveTo(x1,y1); x2.lineTo(x2_,y2); x2.stroke();
+  const a=Math.atan2(y2-y1,x2_-x1); x2.beginPath(); x2.moveTo(x2_,y2); x2.lineTo(x2_-16*Math.cos(a-0.4),y2-16*Math.sin(a-0.4)); x2.moveTo(x2_,y2); x2.lineTo(x2_-16*Math.cos(a+0.4),y2-16*Math.sin(a+0.4)); x2.stroke(); x2.restore();
+}
+
+// ======================================================================
+// SF1 — HOOK "SIAPA." (Scene 01 · ~6.2 s): frozen crowd, one person resolved, Signal point starts to stretch
+function SF1(annot){
+  ctx.setTransform(S,0,0,S,0,0);
+  atmosphere(ctx,{seed:11, fog:0.35, lights:[[W*0.5,H*0.6,900,C.p2,0.55],[W*0.78,H*0.22,700,C.p1,0.22],[W*0.2,H*0.95,600,C.p2,0.4]]});
+  const [gl,g] = layer(); const [pl,p] = layer();
+  const r=rng(101); const lib=[0,1,2,3,4,5].map(i=>samplePerson(rng(500+i), 900));
+  const hor=H*0.62, F=1500, zf=4.0, people=[];
+  for (let i=0;i<1500;i++){ const z=(r()<0.012?1.7:5.5)+Math.pow(r(),0.85)*62; const X=(r()*2-1)*0.5*z; people.push({z,X,k:Math.floor(r()*6)}); }
+  people.sort((a,b)=>b.z-a.z);
+  for (const q of people){
+    const s=F/q.z, cx=W/2+q.X*F/q.z+80, gy=hor+1.05*s;
+    if (cx<-s||cx>W+s) continue;
+    if (Math.abs(q.z-zf)<0.35 && Math.abs(cx-W*0.33)<120) continue;
+    const blur=Math.min(60,Math.abs(1/q.z-1/zf)*(q.z<zf?140:55)), near=q.z<zf;
+    drawPerson(p,cx,gy,s,{pts:lib[q.k],density:near?2.2:2.8,r:Math.max(0.7,s*0.0055),col:mix(C.grey,C.lav,0.35),alpha:near?0.14:Math.max(0.07,0.42-q.z*0.0055),blur});
+  }
+  // the resolved person: dots converging into a crisp silhouette (motion cue: inward streaks)
+  const hero=samplePerson(rng(77),1600), hx=W*0.3, hgy=hor+1.05*(F/zf), hs=F/zf;
+  drawPerson(p,hx,hgy,hs,{pts:hero,density:8,r:1.6,col:'#EEE9FF',alpha:1,blur:0,
+    scatter:(pt,i)=>{ const rr=rng(i*7+3)(); if (rr<0.82) return [0,0,1]; const d=(rr-0.82)*900; const a=Math.atan2(pt[1]+0.1,pt[0]); return [Math.cos(a)*d*0.6,Math.sin(a)*d*0.6,0.6]; }});
+  p.save(); p.globalCompositeOperation='lighter'; const hg=p.createRadialGradient(hx,hgy-hs*0.75,0,hx,hgy-hs*0.75,hs*0.9); hg.addColorStop(0,hexA(C.lav,0.3)); hg.addColorStop(1,hexA(C.lav,0)); p.fillStyle=hg; p.fillRect(0,0,W,H); p.restore();
+  ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.globalCompositeOperation='lighter'; ctx.drawImage(pl,0,0); ctx.restore();
+  // Signal: yellow point beginning to stretch into a line (anamorphic)
+  const sy=1060, sx=W*0.68;
+  signalLine(g,[[sx-250,sy+2],[sx-90,sy],[sx,sy-1]],{w:2.6,flare:1.25,taper:true});
+  g.fillStyle=hexA(C.y,0.9); g.beginPath(); g.arc(sx,sy-1,5,0,7); g.fill();
+  // typography: previous line exiting (masked-rise out), main word in
+  txt(ctx,'Masalahnya bukan berapa ramai.',96,470,{font:'700 54px "Inter Display"',ls:'-1.5px',col:C.white,alpha:0.18,blur:5});
+  const w=txt(ctx,'SIAPA.',90,760,{font:'800 250px "Inter Display"',ls:'-10px',col:C.y});
+  txt(g,'SIAPA.',90,760,{font:'800 250px "Inter Display"',ls:'-10px',col:C.y});
+  underline(ctx,98,808,w-60,0.72,g);
+  bloom(ctx,gl,0.55,0.7);
+  finish(ctx,9001);
+  if (annot){
+    note(ctx,560,330,['TYPOGRAPHY · SUARA SIGNAL','"SIAPA." naik dari garis dasar','(masked rise 6 frame, expo-out).','Ayat sebelum keluar ke atas + kabur'],420,640);
+    note(ctx,560,860,['UNDERLINE','dilukis kiri → kanan 0.30 s,','hujung bercahaya = signal ping'],760,808);
+    note(ctx,40,1290,['ZARAH MANUSIA · K1','titik berkumpul jadi satu siluet','(2.7–3.4 s), kemudian lebur','semula jadi satu titik'],hx,hgy-hs*0.7);
+    note(ctx,600,1250,['SIGNAL LINE','titik kuning memanjang jadi garis;','kamera berpusing 90° mengikutnya','(transition ke Scene 02)'],sx,sy);
+    note(ctx,560,1700,['KAMERA','dolly-in perlahan menembus orang','ramai yang beku (expo-in), rack','focus pada siluet. Orang ramai kelabu'],null,null);
+  }
+}
+
+// ======================================================================
+// SF2 — BAB 02 "CAKAP" (Scene 04 · ~34.5 s): F&B line typed, narrow yellow beam, yellow cluster turns to the message
+function SF2(annot){
+  ctx.setTransform(S,0,0,S,0,0);
+  atmosphere(ctx,{seed:23, fog:0.32, lights:[[W*0.35,H*0.5,800,C.p1,0.28],[W*0.75,H*0.8,700,C.p2,0.6],[W*0.1,H*0.2,600,C.p2,0.45]]});
+  const [gl,g] = layer(); const [pl,p] = layer();
+  const r=rng(202); const lib=[0,1,2,3,4,5].map(i=>samplePerson(rng(600+i),900));
+  // background crowd: grey, drifting away (streaks pointing outwards = motion cue: they turn away from noise)
+  const hor=H*0.56, F=1300;
+  for (let i=0;i<1200;i++){ const z=7+Math.pow(r(),0.85)*50, X=(r()*2-1)*0.5*z, s=F/z, cx=W/2+X*F/z, gy=hor+1.1*s;
+    if (cx<-s||cx>W+s) continue; const blur=Math.min(30,Math.abs(1/z-1/7)*50);
+    const dir = cx<W*0.5 ? -1 : 1;
+    drawPerson(p,cx,gy,s,{pts:lib[i%6],density:2.4,r:Math.max(0.7,s*0.005),col:mix(C.grey,C.lav,0.25),alpha:z<7?0.1:Math.max(0.06,0.34-z*0.0055),blur,streak: z<14?[ -dir*s*0.05, 0]:null});
+  }
+  ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.globalCompositeOperation='lighter'; ctx.drawImage(pl,0,0); ctx.restore();
+  // old self-centred ad dissolving into particles (struck, drifting left/up)
+  const tc=document.createElement('canvas'); tc.width=900; tc.height=200; const tx=tc.getContext('2d'); tx.font='800 64px "Inter Display"'; tx.fillStyle='#fff'; tx.fillText('KAMI YANG',10,80); tx.fillText('TERBAIK!',10,160);
+  const td=tx.getImageData(0,0,900,200).data; const rr=rng(31);
+  for (let y=0;y<200;y+=3) for (let x=0;x<900;x+=3){ if (td[(y*900+x)*4+3]<128) continue; const prog=Math.max(0,(x-120)/520); const dx=-prog*prog*260*(0.6+rr()), dy=-prog*140*(rr()-0.2);
+    if (rr()<prog*0.55) continue; dot(ctx,96+x*0.6+dx,660+y*0.6+dy,0.9,mix(C.grey,C.lav,0.4),0.5*(1-prog*0.6),prog>0.3?1.6:0); }
+  // the ad card (glass, slight perspective)
+  ctx.save(); ctx.translate(96,820); ctx.transform(1,-0.045,0,1,0,0);
+  const cw=800, ch=330;
+  ctx.fillStyle='rgba(22,12,46,0.72)'; ctx.fillRect(0,0,cw,ch);
+  const cg=ctx.createLinearGradient(0,0,cw,ch); cg.addColorStop(0,'rgba(171,148,255,0.10)'); cg.addColorStop(1,'rgba(171,148,255,0)'); ctx.fillStyle=cg; ctx.fillRect(0,0,cw,ch);
+  ctx.strokeStyle=hexA(C.lav,0.45); ctx.lineWidth=1.5; ctx.strokeRect(0,0,cw,ch);
+  txt(ctx,'CONTOH',34,56,{font:'600 20px JBM',ls:'5px',col:C.grey});
+  txt(ctx,'· IKLAN UNTUK PEMILIK F&B',140,56,{font:'400 20px JBM',ls:'3px',col:hexA(C.lav,0.55)});
+  // line icon: cup + saucer
+  ctx.strokeStyle=hexA(C.lav,0.8); ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cw-118,34); ctx.lineTo(cw-112,72); ctx.lineTo(cw-78,72); ctx.lineTo(cw-72,34); ctx.closePath(); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cw-66,50,9,-1.4,1.4); ctx.stroke(); ctx.beginPath(); ctx.moveTo(cw-128,80); ctx.lineTo(cw-60,80); ctx.stroke();
+  txt(ctx,'Post content setiap hari,',34,160,{font:'600 50px "Inter Display"',ls:'-1px',col:C.white});
+  const l2=txt(ctx,'tapi pelanggan tetap tak datang?',34,236,{font:'600 50px "Inter Display"',ls:'-1px',col:C.white});
+  ctx.fillStyle=C.y; ctx.fillRect(34+l2+8,196,5,50);
+  ctx.restore();
+  g.fillStyle=C.y; g.save(); g.translate(96,820); g.transform(1,-0.045,0,1,0,0); g.fillRect(34+705+8,196,5,50); g.restore();
+  // narrow yellow beam: card -> cluster, with wavefronts
+  const bx0=760, by0=1140, bx1=790, by1=1500;
+  signalLine(g,[[bx0,by0],[bx0+30,by0+110],[bx1-10,by1-170]],{w:2.0,flare:0.45,sparks:5});
+  { g.save(); g.filter='blur(14px)'; const cg=g.createLinearGradient(bx0,by0,bx1,by1); cg.addColorStop(0,hexA(C.y,0.30)); cg.addColorStop(0.75,hexA(C.y,0.08)); cg.addColorStop(1,hexA(C.y,0));
+    g.fillStyle=cg; g.beginPath(); g.moveTo(bx0-14,by0); g.lineTo(bx0+14,by0); g.lineTo(bx1+80,by1-40); g.lineTo(bx1-80,by1-40); g.closePath(); g.fill(); g.restore(); }
+  // yellow cluster: F&B owners, lit on the side facing the message, leaning toward it
+  const [yl,yx]=layer(); const cr=rng(404);
+  const cl=[[790,1660,330,-0.06],[600,1700,250,0.05],[960,1700,260,-0.12],[700,1560,170,0.02],[880,1560,175,-0.08],[520,1590,140,0.08],[1010,1590,140,-0.14],[790,1500,120,-0.03]];
+  cl.sort((a,b)=>a[2]-b[2]);
+  for (const c of cl){ const near=c[2]>300; drawPerson(yx,c[0],c[1],c[2],{pts:lib[Math.floor(cr()*6)],density:near?3.2:4.5,r:near?1.4:1.15,rot:c[3],alpha:near?0.6:0.75,blur:near?2:0,
+      colFn:(pt)=> pt[0]<0.05 ? C.y : mix(C.y,'#8F8A2A',0.35)}); }
+  ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.globalCompositeOperation='lighter'; ctx.drawImage(yl,0,0); ctx.restore();
+  g.save(); g.setTransform(1,0,0,1,0,0); g.globalAlpha=0.35; g.drawImage(yl,0,0); g.restore();
+  // HUD + headline
+  rail(ctx,g,1);
+  const a=txt(ctx,'Cakap pasal',96,440,{font:'700 100px "Inter Display"',ls:'-3.5px',col:C.white});
+  const b=txt(ctx,'masalah dia.',96,550,{font:'800 100px "Inter Display"',ls:'-3.5px',col:C.y});
+  txt(g,'masalah dia.',96,550,{font:'800 100px "Inter Display"',ls:'-3.5px',col:C.y});
+  underline(ctx,100,586,b-36,1,g);
+  bloom(ctx,gl,0.5,0.65);
+  finish(ctx,9002);
+  if (annot){
+    note(ctx,560,620,['IKLAN LAMA · SUARA NOISE','"KAMI YANG TERBAIK!" dipotong','Signal Line → huruf pecah jadi','zarah yang hanyut ke kiri'],170,700);
+    note(ctx,560,1160,['TYPEWRITER · SYSTEM → SIGNAL','2 baris ditaip, cursor kuning,','hold ≥ 2.6 s selepas lengkap'],760,1040);
+    note(ctx,40,1250,['PANCARAN','gelombang lavender yang luas jadi','pancaran kuning SEMPIT ke kelompok'],770,1300);
+    note(ctx,40,1420,['ZARAH MANUSIA','kelompok F&B berpaling ke arah','mesej (condong + sisi bercahaya).','Orang ramai kelabu hanyut menjauh'],600,1640);
+    note(ctx,560,110,['SIGNAL RAIL y220–290','CARI selesai · CAKAP aktif'],540,255);
+    note(ctx,40,1740,['KAMERA','push-in ke kad semasa menaip →','pull-back mendedahkan kelompok'],null,null);
+  }
+}
+
+// ======================================================================
+// SF3 — BAB 03 "SAMBUNG" payoff (Scene 05 · ~47.5 s): the sea turns yellow, crane-out, winning path
+function SF3(annot){
+  ctx.setTransform(S,0,0,S,0,0);
+  atmosphere(ctx,{seed:37, fog:0.42, lights:[[W*0.5,H*0.42,800,C.p1,0.3],[W*0.5,H*1.0,900,C.p2,0.6]]});
+  const [gl,g] = layer(); const [pl,p] = layer();
+  const r=rng(303); const lib=[0,1,2,3,4,5].map(i=>samplePerson(rng(700+i),900));
+  // high oblique view over a city-like grid of people
+  const hor=H*0.30, F=1150, camH=7.5, people=[];
+  for (let i=0;i<5200;i++){
+    let Xw=(r()*2-1)*60, Zw=3+Math.pow(r(),1.25)*110;
+    if (r()<0.7){ if (r()<0.5) Xw=Math.round(Xw/6)*6+(r()-0.5)*1.2; else Zw=Math.round(Zw/7)*7+(r()-0.5)*1.4; }   // streets
+    people.push([Xw,Zw,Math.floor(r()*6),r()]);
+  }
+  people.sort((a,b)=>b[1]-a[1]);
+  for (const q of people){ const z=q[1], s=F/z*0.9, cx=W/2+q[0]*F/z, gy=hor+camH*F/z;
+    if (cx<-60||cx>W+60||gy>H+200) continue;
+    const yellow = q[3] < 0.95; const blur = z<6 ? Math.min(26,(6-z)*8) : 0;
+    const col = yellow ? (q[3]<0.25?'#FFFFF0':C.y) : C.lav;
+    if (s>28) drawPerson(yellow?g:p,cx,gy,s,{pts:lib[q[2]],density:3,r:Math.max(0.8,s*0.005),col,alpha:yellow?0.7:0.25,blur});
+    else { const tl=yellow?g:p; dot(tl,cx,gy-s*0.7,Math.max(0.7,s*0.065),col,yellow?Math.min(1,0.5+s*0.03):0.25,0); }
+  }
+  ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.globalCompositeOperation='lighter'; ctx.drawImage(pl,0,0); ctx.restore();
+  // winning path (bright) + two broken test branches (dim, lavender, cut)
+  const path=[[W*0.52,H+40],[W*0.46,1560],[W*0.58,1240],[W*0.47,980],[W*0.53,800],[W*0.5,H*0.31]];
+  const [bl,b]=layer();
+  signalLine(b,[[W*0.46,1560],[W*0.25,1380],[W*0.17,1250]],{w:1.6,alpha:1,head:false,taper:false});
+  signalLine(b,[[W*0.46,1560],[W*0.74,1420],[W*0.84,1330]],{w:1.6,alpha:1,head:false,taper:false});
+  ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.globalAlpha=0.22; ctx.filter='saturate(0.2)'; ctx.drawImage(bl,0,0); ctx.restore();
+  [[W*0.17,1250],[W*0.84,1330]].forEach(([x,y])=>{ ctx.strokeStyle=hexA(C.lav,0.5); ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(x-9,y-9); ctx.lineTo(x+9,y+9); ctx.moveTo(x+9,y-9); ctx.lineTo(x-9,y+9); ctx.stroke(); });
+  signalLine(g,path,{w:4.2,flare:1.1,sparks:9});
+  // foreground: a few large yellow silhouettes out of focus (depth)
+  drawPerson(g,W*0.12,H+60,560,{pts:lib[2],density:2.6,r:1.6,col:C.y,alpha:0.32,blur:14});
+  drawPerson(g,W*0.93,H+30,470,{pts:lib[4],density:2.6,r:1.6,col:C.y,alpha:0.28,blur:12});
+  // HUD + headline
+  rail(ctx,g,2);
+  txt(ctx,'Lebih ramai',96,440,{font:'700 104px "Inter Display"',ls:'-3.5px',col:C.white});
+  const w=txt(ctx,'yang betul.',96,554,{font:'800 104px "Inter Display"',ls:'-3.5px',col:C.y});
+  txt(g,'yang betul.',96,554,{font:'800 104px "Inter Display"',ls:'-3.5px',col:C.y});
+  underline(ctx,100,590,w-34,1,g);
+  bloom(ctx,gl,0.5,0.6);
+  finish(ctx,9003);
+  if (annot){
+    note(ctx,560,640,['PAYOFF · BOOKEND','lautan kelabu Scene 01 kini kuning:','gelombang cahaya merebak dari','kelompok F&B, orang demi orang'],700,860);
+    note(ctx,40,1110,['CABANG UJI','2 daripada 3 variasi iklan malap + putus (✕)'],W*0.17,1250);
+    note(ctx,560,1390,['LALUAN PEMENANG = ADS','arus cahaya menjalar di garis;','satu-satunya gerak kamera laju','(tracking) sebelum crane-out'],W*0.55,1300);
+    note(ctx,40,1700,['KAMERA','crane-out: peta bandar waktu malam.','Drop muzik tepat pada 44.4 s'],null,null);
+    note(ctx,520,110,['SIGNAL RAIL','CARI + CAKAP selesai · SAMBUNG aktif'],W-176,255);
+  }
+}
+
+window.render = async (id, annot) => {
+  await document.fonts.load('800 100px "Inter Display"'); await document.fonts.load('700 100px "Inter Display"'); await document.fonts.load('600 50px "Inter Display"');
+  await document.fonts.load('600 20px JBM'); await document.fonts.load('400 20px JBM');
+  ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,cv.width,cv.height);
+  ({SF1,SF2,SF3})[id](annot);
+  return cv.toDataURL('image/png');
+};
+window.READY = true;
+</script></body></html>

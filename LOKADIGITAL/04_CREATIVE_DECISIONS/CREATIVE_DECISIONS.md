@@ -21,6 +21,8 @@
 | D14 | 2026-11-25 | Voiceover: **tiada langsung, muktamad** (mengesahkan D07) | Aktif. Muktamad |
 | D15 | 2026-11-25 | Keputusan yang dah direkod di sini **tidak ditanya semula**. Jika tiada maklumat baharu yang benar-benar diperlukan, guna keputusan sedia ada dan teruskan | Aktif |
 | D16 | 2026-11-25 | Dokumentasi: `LOKADIGITAL/` = single source of truth untuk LokaDigital; `LOKACREATIVE_WEBSITE/` untuk website korporat. Setiap keputusan baharu → kemas kini fail berkaitan + PROJECT_LOG + dashboard. Tiada merge / PR tanpa arahan | Aktif |
+| D17 | 2026-11-25 | **EP02 storyboard v5 diluluskan** (semakan akhir K1–K8). Scene 06: *Ramai yang nampak.* → *Cari yang* **beli.** (menggantikan *Ramai yang beli.*: elak gambaran semua yang nampak akan beli; selari dengan langkah CARI; morph dikekalkan dengan "yang" sebagai paksi) | Aktif |
+| D18 | 2026-11-25 | **Style frames wajib** sebelum beat map/animatic: 3 frame (SF1 hook, SF2 aha, SF3 payoff) mesti diluluskan dahulu | Aktif |
 
 ## Soalan terbuka
 Tiada. Semua soalan EP02 dijawab (D10–D14).

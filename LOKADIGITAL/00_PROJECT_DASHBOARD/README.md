@@ -9,29 +9,31 @@ Menghasilkan siri video content LokaDigital yang **premium, sinematik dan berasa
 | Projek | Status | Langkah seterusnya |
 |---|---|---|
 | [EP01 — SIGNAL / NOISE](../06_VIDEO_PROJECTS/EP01/README.md) | ✅ Siap | — |
-| [EP02 — ORANG YANG BETUL](../06_VIDEO_PROJECTS/EP02/README.md) | 🟡 **Storyboard final v4, menunggu approval** | Beat map → animatic (selepas approval) |
+| [EP02 — ORANG YANG BETUL](../06_VIDEO_PROJECTS/EP02/README.md) | ✅ Storyboard v5 diluluskan · 🟡 **Style frames menunggu approval** | Beat map → animatic (selepas approval style frames) |
 | [EP03 — VIRAL IS NOT A STRATEGY](../06_VIDEO_PROJECTS/EP03/README.md) | 📝 Brief direkod | Reference analysis → konsep (selepas EP02) |
 
 **Workflow:** Reference Analysis → Concept → On-screen Text Script → Storyboard → ✋ **Approval** → Production → Final Review
 
 ## 🆕 Kemas kini terkini
+- **2026-11-25:** EP02 storyboard v5 diluluskan; Scene 06 → *Cari yang beli*. **3 style frames siap** untuk semakan ([lihat](../06_VIDEO_PROJECTS/EP02/ASSETS/STYLE_FRAMES/README.md)).
 - **2026-11-25:** Sistem dokumentasi `LOKADIGITAL/` diwujudkan. Dokumen lama (`docs/`, `ep01/docs/`, `ep02/docs/`) dipindahkan ke sini.
 - **2026-11-25:** EP02 storyboard final v4 (67 s) dengan ujian "Faham tanpa suara" untuk setiap scene.
 - **2026-11-25:** Keputusan muktamad D10–D15: tiada claim AI, contoh F&B, CTA DM LOKADIGITAL, EP03 brief, tiada VO, jangan tanya semula.
 
 ## ✋ Keputusan diperlukan daripada kau
-1. **Approval storyboard EP02** ([`STORYBOARD_EP02.md`](../06_VIDEO_PROJECTS/EP02/STORYBOARD/STORYBOARD_EP02.md)). Ini satu-satunya halangan untuk production.
+1. **Approval 3 style frames EP02** ([`STYLE_FRAMES`](../06_VIDEO_PROJECTS/EP02/ASSETS/STYLE_FRAMES/README.md)). Ini satu-satunya halangan untuk beat map dan animatic.
 2. **Fail logo rasmi LokaDigital** (SVG/PNG) dan peraturan penggunaan. Sehingga dibekalkan, video guna wordmark tipografi seperti EP01.
 3. **Muzik:** dijana secara prosedur seperti EP01 (default), atau guna muzik berlesen? *Tidak menghalang. Jika tiada jawapan, default digunakan.*
 
 ## 📋 Tugasan tertunda
-- [ ] Approval storyboard EP02
+- [x] Approval storyboard EP02 (v5)
+- [ ] Approval style frames EP02
 - [ ] EP02: beat map 92 BPM → animatic → render → sound design → QC
 - [ ] EP03: reference analysis (reference: **TBC**) → konsep → skrip → storyboard
 - [ ] Brand: fail logo rasmi (**TBC**)
 
 ## ⏭️ Langkah seterusnya
-1. Kau approve storyboard EP02.
+1. Kau approve style frames EP02 (atau minta pembetulan).
 2. Beat map + animatic EP02 dibentang untuk semakan timing.
 3. Render penuh, mix, QC (termasuk ujian mute), dan final review.
 

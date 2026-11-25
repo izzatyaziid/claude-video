@@ -2,18 +2,18 @@
 | | |
 |---|---|
 | **Premis** | Ramai yang nampak. Tak ramai yang beli. Masalahnya bukan berapa ramai, tapi **siapa**. |
-| **Struktur** | CARI → CAKAP → SAMBUNG · 8 scene · 67.0 s · 9:16 |
+| **Struktur** | CARI → CAKAP → SAMBUNG · 8 scene · 67.5 s · 9:16 |
 | **Gaya** | Visual-first, **tiada voiceover**. Signal Line sebagai pemandu. Lautan zarah kelabu → kuning |
-| **Status** | 🟡 **Storyboard final v4, menunggu approval kau** |
-| **Selepas approval** | Beat map → animatic → render → sound design & mix → QC → final review |
+| **Status** | ✅ Storyboard v5 diluluskan · 🟡 **3 style frames menunggu approval kau** |
+| **Selepas approval style frames** | Beat map → animatic → render → sound design & mix → QC → final review |
 | **Reference** | [REF-001](../../03_REFERENCE_LIBRARY/REFERENCE_LIBRARY.md#ref-001) |
 
 | Folder | Isi | Status |
 |---|---|---|
-| [CONCEPT](CONCEPT/) | [`CONCEPT_EP02.md`](CONCEPT/CONCEPT_EP02.md) | ✅ v4 |
-| [SCRIPT](SCRIPT/) | [`VISUAL_STORYTELLING_EP02.md`](SCRIPT/VISUAL_STORYTELLING_EP02.md) (teks di skrin + cue sheet) | ✅ v4 |
-| [STORYBOARD](STORYBOARD/) | [`STORYBOARD_EP02.md`](STORYBOARD/STORYBOARD_EP02.md) | 🟡 Menunggu approval |
-| [ASSETS](ASSETS/) | Senarai aset dirancang | ⏳ Selepas approval |
+| [CONCEPT](CONCEPT/) | [`CONCEPT_EP02.md`](CONCEPT/CONCEPT_EP02.md) | ✅ v5 |
+| [SCRIPT](SCRIPT/) | [`VISUAL_STORYTELLING_EP02.md`](SCRIPT/VISUAL_STORYTELLING_EP02.md) (teks di skrin + cue sheet) | ✅ v5 |
+| [STORYBOARD](STORYBOARD/) | [`STORYBOARD_EP02.md`](STORYBOARD/STORYBOARD_EP02.md) | ✅ v5 diluluskan |
+| [ASSETS](ASSETS/) | [3 style frames](ASSETS/STYLE_FRAMES/README.md) + senarai aset | 🟡 Style frames menunggu approval |
 | [PRODUCTION](PRODUCTION/) | Beat map, animatic, kod render | ⏳ Selepas approval |
 | [FINAL_OUTPUT](FINAL_OUTPUT/) | Master, thumbnail, QC report | ⏳ |
 

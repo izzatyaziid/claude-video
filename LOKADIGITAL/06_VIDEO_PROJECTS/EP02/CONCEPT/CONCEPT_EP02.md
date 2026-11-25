@@ -1,8 +1,8 @@
-# LOKADIGITAL — EP02 "ORANG YANG BETUL" · Creative Concept v4 FINAL · VISUAL-FIRST (FOR APPROVAL)
+# LOKADIGITAL — EP02 "ORANG YANG BETUL" · Creative Concept v5 FINAL · VISUAL-FIRST (DILULUSKAN)
 
-> Status: **STORYBOARD FINAL v4 — menunggu approval.** Tiada production dibuat lagi.
+> Status: ✅ **Arah kreatif v5 DILULUSKAN (2026-11-25).** Langkah semasa: 3 style frames untuk approval. Tiada beat map, animatic atau render sebelum style frames diluluskan.
 > Workflow: Reference Analysis ✅ → Concept ✅ → On-screen Text Script ✅ → Storyboard ✅ → **Final approval kau** → Production → Final Review
-> v4 menggabungkan semua keputusan muktamad (lihat bahagian akhir). Asas v3: **tiada voiceover langsung** (tiada suara manusia, tiada AI voice, tiada ElevenLabs). Cerita dibawa sepenuhnya oleh visual, typography, kinetic text, motion graphics, Signal Line, muzik dan SFX.
+> v5 = v4 + pembaikan semakan akhir K1–K8 + ayat Scene 06 *Cari yang beli* (lihat [sejarah versi](../STORYBOARD/STORYBOARD_EP02.md#sejarah-versi)). Asas sejak v3: **tiada voiceover langsung** (tiada suara manusia, tiada AI voice, tiada ElevenLabs). Cerita dibawa sepenuhnya oleh visual, typography, kinetic text, motion graphics, Signal Line, muzik dan SFX.
 > Dokumen berkaitan: Storyboard [`STORYBOARD_EP02.md`](../STORYBOARD/STORYBOARD_EP02.md) · Skrip teks + cue sheet [`VISUAL_STORYTELLING_EP02.md`](../SCRIPT/VISUAL_STORYTELLING_EP02.md) · Reference [`REF-001`](../../../03_REFERENCE_LIBRARY/REFERENCE_LIBRARY.md#ref-001) · Standard [`EDITING_STANDARDS.md`](../../../02_CREATIVE_WORKFLOW/EDITING_STANDARDS.md)
 
 ---
@@ -12,7 +12,7 @@ Analisa penuh reference (REF-001, explainer Faraid 77.8 s) kini disimpan dalam [
 
 ---
 
-## STEP 2 & 3 — KONSEP LOKADIGITAL (v4 FINAL · VISUAL-FIRST)
+## STEP 2 & 3 — KONSEP LOKADIGITAL (v5 FINAL · VISUAL-FIRST)
 
 ### 3.1 Konsep: **EP02 "ORANG YANG BETUL"**
 **Premis:** situasi yang setiap pemilik bisnes kenal, bukan claim.
@@ -21,7 +21,7 @@ Analisa penuh reference (REF-001, explainer Faraid 77.8 s) kini disimpan dalam [
 
 **Big idea visual:** penonton ialah **lautan zarah** dalam kegelapan, dan setiap titik ialah seorang manusia. **Signal Line** kuning (device siri dari EP01) ialah watak utama. Ia **mencari**, **bercakap** dan **menyambung** dengan orang yang betul.
 
-**Bookend:** dibuka dengan skrin penuh zarah **kelabu-ungu** (ramai, tapi salah). Ditutup dengan skrin penuh zarah **kuning** (ramai, dan betul). Kemudian perkataan **NAMPAK** di skrin bertukar menjadi **BELI**, dan gelung yang dibuka oleh hook pun tertutup.
+**Bookend:** dibuka dengan skrin penuh zarah **kelabu-ungu** (ramai, tapi salah). Ditutup dengan skrin penuh zarah **kuning** (ramai, dan betul). Kemudian ayat hook *Ramai yang nampak.* berubah menjadi *Cari yang* **beli.** (v5): gelung hook ditutup dengan tindakan, bukan janji bahawa semua yang nampak akan membeli.
 
 **Objective**
 1. Tukar cara pemilik bisnes fikir: dari mengejar *reach* kepada mencari *orang yang betul*.
@@ -31,7 +31,7 @@ Analisa penuh reference (REF-001, explainer Faraid 77.8 s) kini disimpan dalam [
 **Prinsip**
 - Tiada VO, tiada angka rekaan, tiada presenter.
 - Cerita dibawa oleh 7 lapisan: visual storytelling · dynamic typography · kinetic text · cinematic motion graphics · Signal Line · muzik · SFX & sound design.
-- Jumlah teks di skrin: **~115 perkataan (termasuk label) dalam 67 s**. Setiap ayat ≤ 6 perkataan dan ada tujuan cerita (pengecualian: petikan iklan `CONTOH` ditaip dalam 2 baris ≤ 5 perkataan setiap satu).
+- Jumlah teks di skrin: **~120 perkataan (termasuk label) dalam 67.5 s**. Setiap ayat ≤ 6 perkataan dan ada tujuan cerita (pengecualian: petikan iklan `CONTOH` ditaip dalam 2 baris ≤ 5 perkataan setiap satu).
 
 ### 3.2 Bagaimana cerita disampaikan tanpa suara
 | Peranan yang biasanya dipikul VO | Siapa memikulnya dalam EP02 |
@@ -51,7 +51,7 @@ Analisa penuh reference (REF-001, explainer Faraid 77.8 s) kini disimpan dalam [
 - **Kod warna yang diajar tanpa kata:** lavender/kelabu = noise (ramai tapi salah); **kuning = signal** (betul, bermakna).
 - **Kamera maya 3D:** dolly, orbit, rack focus, push-through, crane. Sentiasa *mengikut Signal Line*. Easing expo yang berat seperti kamera fizikal.
 
-**Zon 1080×1920:** Signal Rail y120–200 · headline y260–640 · aksi y640–1500 · label y1500–1640 · bawah 280 px & kanan 140 px selamat untuk UI IG.
+**Zon 1080×1920:** atas 200 px selamat · Signal Rail y220–290 · headline y300–680 · aksi y680–1500 · label y1500–1640 · bawah 280 px & kanan 140 px selamat untuk UI IG.
 **Pengecualian zon:** teks *dalam dunia 3D* (tajuk bab, iklan, perkataan yang pecah jadi zarah) boleh berada di zon aksi. Inilah yang menjadikannya bukan slideshow.
 
 ### 3.4 Sistem typography: "3 suara"
@@ -67,10 +67,10 @@ Analisa penuh reference (REF-001, explainer Faraid 77.8 s) kini disimpan dalam [
 3. **Masa bacaan:** hold ≥ 0.4 s + 0.3 s × bilangan perkataan (min 1.0 s). Ayat kuning +0.5 s.
 4. **Beat sync:** setiap kemunculan teks utama jatuh pada beat atau separuh beat.
 5. **Satu fokus:** hanya satu ayat SIGNAL/NOISE di skrin pada satu masa. Label SYSTEM boleh menemaninya.
-6. **Morph & strike:** hanya 3 kali dalam video (Semua orang, PROMOSI HEBAT, NAMPAK → BELI) supaya setiap satu terasa besar.
+6. **Morph & strike:** hanya 3 kali dalam video (*Semua orang*, iklan *KAMI YANG TERBAIK!*, *Ramai yang nampak → Cari yang beli*) supaya setiap satu terasa besar.
 
 ### 3.5 STORYBOARD
-Storyboard final (8 scene, 67.0 s, dengan baris "Faham tanpa suara" untuk setiap scene) kini dalam [`STORYBOARD_EP02.md`](../STORYBOARD/STORYBOARD_EP02.md).
+Storyboard v5 final (8 scene, 67.5 s, dengan baris "Faham tanpa suara" dan peraturan art direction anti-template) kini dalam [`STORYBOARD_EP02.md`](../STORYBOARD/STORYBOARD_EP02.md).
 
 ### 3.6 Muzik & sound design (satu-satunya audio)
 - **Muzik:** dark cinematic electronic, **92 BPM, D minor** (kesinambungan EP01), skor *ikut picture*:
@@ -101,5 +101,7 @@ Storyboard final (8 scene, 67.0 s, dengan baris "Faham tanpa suara" untuk setiap
 | 3 | Kad NEXT | **EP03 · VIRAL IS NOT A STRATEGY** (framework `CONTENT → TEST → FIND WINNER → ADS → SCALE`) |
 | 4 | CTA | Utama: **DM LOKADIGITAL**. Sekunder: FOLLOW · SAVE (kecil, tidak mengganggu cerita) |
 | 5 | Voiceover | **Tiada langsung**. Visual-first storytelling untuk semua video LokaDigital |
+| 6 | Arah kreatif v5 | **Diluluskan.** Termasuk K1–K8 dari semakan akhir (siluet manusia, iklan "sebelum" *KAMI YANG TERBAIK!*, CTA *Nak orang yang betul? → DM LOKADIGITAL*, dll.) |
+| 7 | Ayat Scene 06 | *Ramai yang nampak.* → *Cari yang* **beli.** (menggantikan *Ramai yang beli.*) |
 
-**Status:** storyboard final menunggu approval. Selepas approval → beat map → animatic.
+**Status:** ✅ storyboard v5 diluluskan → **3 style frames** ([`../ASSETS/STYLE_FRAMES/`](../ASSETS/STYLE_FRAMES/README.md)) → approval → beat map → animatic.
