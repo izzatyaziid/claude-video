@@ -1,0 +1,363 @@
+{
+ "duration": 25.903,
+ "lines": [
+  {
+   "id": "s1",
+   "scene": "posts",
+   "text": "Post hari-hari.",
+   "key": "hari-hari",
+   "gap": 0.25,
+   "start": 0.45,
+   "end": 1.585,
+   "words": [
+    {
+     "text": "Post",
+     "start": 0.45,
+     "end": 0.774
+    },
+    {
+     "text": "hari-hari.",
+     "start": 0.774,
+     "end": 1.585
+    }
+   ]
+  },
+  {
+   "id": "s2",
+   "scene": "shop",
+   "text": "Tapi kedai masih lengang.",
+   "key": "lengang",
+   "gap": 0.55,
+   "start": 1.835,
+   "end": 3.275,
+   "words": [
+    {
+     "text": "Tapi",
+     "start": 1.835,
+     "end": 2.096
+    },
+    {
+     "text": "kedai",
+     "start": 2.096,
+     "end": 2.424
+    },
+    {
+     "text": "masih",
+     "start": 2.424,
+     "end": 2.751
+    },
+    {
+     "text": "lengang.",
+     "start": 2.751,
+     "end": 3.275
+    }
+   ]
+  },
+  {
+   "id": "s3",
+   "scene": "views",
+   "text": "Ramai tengok.",
+   "key": "tengok",
+   "gap": 0.2,
+   "start": 3.825,
+   "end": 4.611,
+   "words": [
+    {
+     "text": "Ramai",
+     "start": 3.825,
+     "end": 4.152
+    },
+    {
+     "text": "tengok.",
+     "start": 4.152,
+     "end": 4.611
+    }
+   ]
+  },
+  {
+   "id": "s4",
+   "scene": "views",
+   "text": "Tapi tak membeli.",
+   "key": "membeli",
+   "gap": 0.55,
+   "start": 4.811,
+   "end": 5.899,
+   "words": [
+    {
+     "text": "Tapi",
+     "start": 4.811,
+     "end": 5.101
+    },
+    {
+     "text": "tak",
+     "start": 5.101,
+     "end": 5.319
+    },
+    {
+     "text": "membeli.",
+     "start": 5.319,
+     "end": 5.899
+    }
+   ]
+  },
+  {
+   "id": "s5",
+   "scene": "budget",
+   "text": "Bajet iklan habis.",
+   "key": "habis",
+   "gap": 0.2,
+   "start": 6.449,
+   "end": 7.923,
+   "words": [
+    {
+     "text": "Bajet",
+     "start": 6.449,
+     "end": 6.91
+    },
+    {
+     "text": "iklan",
+     "start": 6.91,
+     "end": 7.371
+    },
+    {
+     "text": "habis.",
+     "start": 7.371,
+     "end": 7.923
+    }
+   ]
+  },
+  {
+   "id": "s6",
+   "scene": "budget",
+   "text": "Pelanggan tak bertambah.",
+   "key": "bertambah",
+   "gap": 0.7,
+   "start": 8.123,
+   "end": 9.393,
+   "words": [
+    {
+     "text": "Pelanggan",
+     "start": 8.123,
+     "end": 8.643
+    },
+    {
+     "text": "tak",
+     "start": 8.643,
+     "end": 8.816
+    },
+    {
+     "text": "bertambah.",
+     "start": 8.816,
+     "end": 9.393
+    }
+   ]
+  },
+  {
+   "id": "s7",
+   "scene": "crowd",
+   "text": "Masalahnya bukan content kau.",
+   "key": "bukan",
+   "gap": 0.3,
+   "start": 10.093,
+   "end": 11.903,
+   "words": [
+    {
+     "text": "Masalahnya",
+     "start": 10.093,
+     "end": 10.789
+    },
+    {
+     "text": "bukan",
+     "start": 10.789,
+     "end": 11.137
+    },
+    {
+     "text": "content",
+     "start": 11.137,
+     "end": 11.625
+    },
+    {
+     "text": "kau.",
+     "start": 11.625,
+     "end": 11.903
+    }
+   ]
+  },
+  {
+   "id": "s8",
+   "scene": "crowd",
+   "text": "Ia sampai pada orang yang salah.",
+   "key": "salah",
+   "gap": 0.7,
+   "start": 12.203,
+   "end": 14.161,
+   "words": [
+    {
+     "text": "Ia",
+     "start": 12.203,
+     "end": 12.348
+    },
+    {
+     "text": "sampai",
+     "start": 12.348,
+     "end": 12.783
+    },
+    {
+     "text": "pada",
+     "start": 12.783,
+     "end": 13.073
+    },
+    {
+     "text": "orang",
+     "start": 13.073,
+     "end": 13.436
+    },
+    {
+     "text": "yang",
+     "start": 13.436,
+     "end": 13.726
+    },
+    {
+     "text": "salah.",
+     "start": 13.726,
+     "end": 14.161
+    }
+   ]
+  },
+  {
+   "id": "s9",
+   "scene": "cari",
+   "text": "Cari orang yang betul.",
+   "key": "betul",
+   "gap": 0.4,
+   "start": 14.861,
+   "end": 16.13,
+   "words": [
+    {
+     "text": "Cari",
+     "start": 14.861,
+     "end": 15.128
+    },
+    {
+     "text": "orang",
+     "start": 15.128,
+     "end": 15.462
+    },
+    {
+     "text": "yang",
+     "start": 15.462,
+     "end": 15.729
+    },
+    {
+     "text": "betul.",
+     "start": 15.729,
+     "end": 16.13
+    }
+   ]
+  },
+  {
+   "id": "s10",
+   "scene": "cakap",
+   "text": "Cakap masalah dia.",
+   "key": "masalah",
+   "gap": 1.6,
+   "start": 16.53,
+   "end": 17.849,
+   "words": [
+    {
+     "text": "Cakap",
+     "start": 16.53,
+     "end": 16.942
+    },
+    {
+     "text": "masalah",
+     "start": 16.942,
+     "end": 17.519
+    },
+    {
+     "text": "dia.",
+     "start": 17.519,
+     "end": 17.849
+    }
+   ]
+  },
+  {
+   "id": "s11",
+   "scene": "sambung",
+   "text": "Sambung dengan sistem.",
+   "key": "sistem",
+   "gap": 0.8,
+   "start": 19.449,
+   "end": 20.623,
+   "words": [
+    {
+     "text": "Sambung",
+     "start": 19.449,
+     "end": 19.86
+    },
+    {
+     "text": "dengan",
+     "start": 19.86,
+     "end": 20.212
+    },
+    {
+     "text": "sistem.",
+     "start": 20.212,
+     "end": 20.623
+    }
+   ]
+  },
+  {
+   "id": "s12",
+   "scene": "cta",
+   "text": "Nak orang yang betul?",
+   "key": "betul",
+   "gap": 0.3,
+   "start": 21.423,
+   "end": 22.734,
+   "words": [
+    {
+     "text": "Nak",
+     "start": 21.423,
+     "end": 21.642
+    },
+    {
+     "text": "orang",
+     "start": 21.642,
+     "end": 22.006
+    },
+    {
+     "text": "yang",
+     "start": 22.006,
+     "end": 22.297
+    },
+    {
+     "text": "betul?",
+     "start": 22.297,
+     "end": 22.734
+    }
+   ]
+  },
+  {
+   "id": "s13",
+   "scene": "cta",
+   "text": "DM LOKADIGITAL.",
+   "key": "LOKADIGITAL",
+   "gap": 1.6,
+   "start": 23.034,
+   "end": 24.303,
+   "words": [
+    {
+     "text": "DM",
+     "start": 23.034,
+     "end": 23.215
+    },
+    {
+     "text": "LOKADIGITAL.",
+     "start": 23.215,
+     "end": 24.303
+    }
+   ]
+  }
+ ]
+}

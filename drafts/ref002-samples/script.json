@@ -1,0 +1,96 @@
+{
+ "note": "DRAFT SAMPLE for comparing REF-002 formats (A: avatar + VO, B: no VO). Copy uses user-approved EP02 lines; F&B example is CONTOH. No invented numbers.",
+ "lines": [
+  {
+   "id": "s1",
+   "scene": "posts",
+   "text": "Post hari-hari.",
+   "key": "hari-hari",
+   "gap": 0.25
+  },
+  {
+   "id": "s2",
+   "scene": "shop",
+   "text": "Tapi kedai masih lengang.",
+   "key": "lengang",
+   "gap": 0.55
+  },
+  {
+   "id": "s3",
+   "scene": "views",
+   "text": "Ramai tengok.",
+   "key": "tengok",
+   "gap": 0.2
+  },
+  {
+   "id": "s4",
+   "scene": "views",
+   "text": "Tapi tak membeli.",
+   "key": "membeli",
+   "gap": 0.55
+  },
+  {
+   "id": "s5",
+   "scene": "budget",
+   "text": "Bajet iklan habis.",
+   "key": "habis",
+   "gap": 0.2
+  },
+  {
+   "id": "s6",
+   "scene": "budget",
+   "text": "Pelanggan tak bertambah.",
+   "key": "bertambah",
+   "gap": 0.7
+  },
+  {
+   "id": "s7",
+   "scene": "crowd",
+   "text": "Masalahnya bukan content kau.",
+   "key": "bukan",
+   "gap": 0.3
+  },
+  {
+   "id": "s8",
+   "scene": "crowd",
+   "text": "Ia sampai pada orang yang salah.",
+   "key": "salah",
+   "gap": 0.7
+  },
+  {
+   "id": "s9",
+   "scene": "cari",
+   "text": "Cari orang yang betul.",
+   "key": "betul",
+   "gap": 0.4
+  },
+  {
+   "id": "s10",
+   "scene": "cakap",
+   "text": "Cakap masalah dia.",
+   "key": "masalah",
+   "gap": 1.6
+  },
+  {
+   "id": "s11",
+   "scene": "sambung",
+   "text": "Sambung dengan sistem.",
+   "key": "sistem",
+   "gap": 0.8
+  },
+  {
+   "id": "s12",
+   "scene": "cta",
+   "text": "Nak orang yang betul?",
+   "key": "betul",
+   "gap": 0.3
+  },
+  {
+   "id": "s13",
+   "scene": "cta",
+   "text": "DM LOKADIGITAL.",
+   "key": "LOKADIGITAL",
+   "gap": 1.6
+  }
+ ]
+}
