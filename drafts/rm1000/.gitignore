@@ -2,3 +2,6 @@ project/.hyperframes/
 project/assets/
 assets/vo/
 assets/bed.wav
+out/work-*/
+out/.*
+out/LOKADIGITAL_KeManaRM1000_v2_1080x1920.mp4

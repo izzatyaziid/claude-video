@@ -2,3 +2,5 @@ project/.hyperframes/
 project/assets/
 assets/vo/
 assets/bed.wav
+out/work-*/
+out/.*
