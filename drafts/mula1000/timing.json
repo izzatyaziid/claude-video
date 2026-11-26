@@ -1,0 +1,442 @@
+{
+ "duration": 56.528,
+ "lines": [
+  {
+   "id": "l1",
+   "text": "Ada seribu ringgit untuk marketing?",
+   "rate": "+4%",
+   "pitch": "+3Hz",
+   "gap": 0.2,
+   "at": 0.3,
+   "start": 0.3,
+   "end": 1.994,
+   "words": [
+    {
+     "text": "Ada",
+     "start": 0.3,
+     "end": 0.54
+    },
+    {
+     "text": "seribu",
+     "start": 0.564,
+     "end": 0.901
+    },
+    {
+     "text": "ringgit",
+     "start": 0.925,
+     "end": 1.25
+    },
+    {
+     "text": "untuk",
+     "start": 1.25,
+     "end": 1.502
+    },
+    {
+     "text": "marketing",
+     "start": 1.514,
+     "end": 2.043
+    }
+   ]
+  },
+  {
+   "id": "l2",
+   "text": "Pertama, jangan cuba jual kepada semua orang.",
+   "rate": "+2%",
+   "pitch": "+1Hz",
+   "gap": 0.25,
+   "at": 4.0,
+   "start": 4.0,
+   "end": 6.673,
+   "words": [
+    {
+     "text": "Pertama",
+     "start": 4.0,
+     "end": 4.478
+    },
+    {
+     "text": "jangan",
+     "start": 4.711,
+     "end": 5.005
+    },
+    {
+     "text": "cuba",
+     "start": 5.066,
+     "end": 5.287
+    },
+    {
+     "text": "jual",
+     "start": 5.336,
+     "end": 5.618
+    },
+    {
+     "text": "kepada",
+     "start": 5.667,
+     "end": 5.912
+    },
+    {
+     "text": "semua",
+     "start": 5.949,
+     "end": 6.243
+    },
+    {
+     "text": "orang",
+     "start": 6.243,
+     "end": 6.684
+    }
+   ]
+  },
+  {
+   "id": "l3",
+   "text": "Pilih satu audience yang jelas.",
+   "rate": "-4%",
+   "pitch": "-1Hz",
+   "gap": 0.3,
+   "start": 6.923,
+   "end": 8.801,
+   "words": [
+    {
+     "text": "Pilih",
+     "start": 6.923,
+     "end": 7.209
+    },
+    {
+     "text": "satu",
+     "start": 7.235,
+     "end": 7.535
+    },
+    {
+     "text": "audience",
+     "start": 7.548,
+     "end": 8.095
+    },
+    {
+     "text": "yang",
+     "start": 8.121,
+     "end": 8.316
+    },
+    {
+     "text": "jelas",
+     "start": 8.355,
+     "end": 8.863
+    }
+   ]
+  },
+  {
+   "id": "l4",
+   "text": "Kedua, hasilkan beberapa content dengan angle berbeza.",
+   "rate": "+2%",
+   "pitch": "+1Hz",
+   "gap": 0.25,
+   "at": 12.0,
+   "start": 12.0,
+   "end": 15.252,
+   "words": [
+    {
+     "text": "Kedua",
+     "start": 12.0,
+     "end": 12.404
+    },
+    {
+     "text": "hasilkan",
+     "start": 12.662,
+     "end": 13.176
+    },
+    {
+     "text": "beberapa",
+     "start": 13.189,
+     "end": 13.569
+    },
+    {
+     "text": "content",
+     "start": 13.605,
+     "end": 14.059
+    },
+    {
+     "text": "dengan",
+     "start": 14.071,
+     "end": 14.316
+    },
+    {
+     "text": "angle",
+     "start": 14.316,
+     "end": 14.721
+    },
+    {
+     "text": "berbeza",
+     "start": 14.745,
+     "end": 15.235
+    }
+   ]
+  },
+  {
+   "id": "l5",
+   "text": "Test masalah, manfaat, dan offer.",
+   "rate": "-2%",
+   "pitch": "+0Hz",
+   "gap": 0.3,
+   "start": 15.502,
+   "end": 18.137,
+   "words": [
+    {
+     "text": "Test",
+     "start": 15.502,
+     "end": 15.795
+    },
+    {
+     "text": "masalah",
+     "start": 15.821,
+     "end": 16.446
+    },
+    {
+     "text": "manfaat",
+     "start": 16.624,
+     "end": 17.3
+    },
+    {
+     "text": "dan",
+     "start": 17.428,
+     "end": 17.619
+    },
+    {
+     "text": "offer",
+     "start": 17.632,
+     "end": 18.18
+    }
+   ]
+  },
+  {
+   "id": "l6",
+   "text": "Ketiga, tengok content mana yang dapat respons berkualiti.",
+   "rate": "+0%",
+   "pitch": "+1Hz",
+   "gap": 0.3,
+   "at": 22.0,
+   "start": 22.0,
+   "end": 25.458,
+   "words": [
+    {
+     "text": "Ketiga",
+     "start": 22.0,
+     "end": 22.512
+    },
+    {
+     "text": "tengok",
+     "start": 22.712,
+     "end": 23.05
+    },
+    {
+     "text": "content",
+     "start": 23.087,
+     "end": 23.425
+    },
+    {
+     "text": "mana",
+     "start": 23.425,
+     "end": 23.75
+    },
+    {
+     "text": "yang",
+     "start": 23.775,
+     "end": 23.9
+    },
+    {
+     "text": "dapat",
+     "start": 23.962,
+     "end": 24.2
+    },
+    {
+     "text": "respons",
+     "start": 24.225,
+     "end": 24.75
+    },
+    {
+     "text": "berkualiti",
+     "start": 24.787,
+     "end": 25.45
+    }
+   ]
+  },
+  {
+   "id": "l7",
+   "text": "Kemudian, baru gunakan bajet untuk scale content yang dah menunjukkan potensi.",
+   "rate": "+0%",
+   "pitch": "+0Hz",
+   "gap": 0.3,
+   "at": 32.0,
+   "start": 32.0,
+   "end": 36.617,
+   "words": [
+    {
+     "text": "Kemudian",
+     "start": 32.0,
+     "end": 32.575
+    },
+    {
+     "text": "baru",
+     "start": 32.788,
+     "end": 33.062
+    },
+    {
+     "text": "gunakan",
+     "start": 33.1,
+     "end": 33.475
+    },
+    {
+     "text": "bajet",
+     "start": 33.487,
+     "end": 33.887
+    },
+    {
+     "text": "untuk",
+     "start": 33.9,
+     "end": 34.15
+    },
+    {
+     "text": "scale",
+     "start": 34.175,
+     "end": 34.462
+    },
+    {
+     "text": "content",
+     "start": 34.487,
+     "end": 34.925
+    },
+    {
+     "text": "yang",
+     "start": 34.938,
+     "end": 35.163
+    },
+    {
+     "text": "dah",
+     "start": 35.225,
+     "end": 35.425
+    },
+    {
+     "text": "menunjukkan",
+     "start": 35.438,
+     "end": 36.0
+    },
+    {
+     "text": "potensi",
+     "start": 36.012,
+     "end": 36.625
+    }
+   ]
+  },
+  {
+   "id": "l8",
+   "text": "Jangan habiskan duit untuk meneka.",
+   "rate": "-4%",
+   "pitch": "-2Hz",
+   "gap": 0.35,
+   "at": 43.0,
+   "start": 43.0,
+   "end": 44.999,
+   "words": [
+    {
+     "text": "Jangan",
+     "start": 43.0,
+     "end": 43.378
+    },
+    {
+     "text": "habiskan",
+     "start": 43.378,
+     "end": 43.911
+    },
+    {
+     "text": "duit",
+     "start": 43.951,
+     "end": 44.25
+    },
+    {
+     "text": "untuk",
+     "start": 44.263,
+     "end": 44.523
+    },
+    {
+     "text": "meneka",
+     "start": 44.55,
+     "end": 44.992
+    }
+   ]
+  },
+  {
+   "id": "l9",
+   "text": "Gunakan data, untuk buat keputusan.",
+   "rate": "-6%",
+   "pitch": "-2Hz",
+   "gap": 0.6,
+   "start": 45.349,
+   "end": 47.743,
+   "words": [
+    {
+     "text": "Gunakan",
+     "start": 45.349,
+     "end": 45.841
+    },
+    {
+     "text": "data",
+     "start": 45.855,
+     "end": 46.254
+    },
+    {
+     "text": "untuk",
+     "start": 46.44,
+     "end": 46.785
+    },
+    {
+     "text": "buat",
+     "start": 46.799,
+     "end": 47.025
+    },
+    {
+     "text": "keputusan",
+     "start": 47.078,
+     "end": 47.809
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "text": "Nak mula dengan betul? DM LokaDigital.",
+   "rate": "-2%",
+   "pitch": "+1Hz",
+   "gap": 1.0,
+   "at": 52.0,
+   "start": 52.0,
+   "end": 55.528,
+   "words": [
+    {
+     "text": "Nak",
+     "start": 52.0,
+     "end": 52.217
+    },
+    {
+     "text": "mula",
+     "start": 52.23,
+     "end": 52.498
+    },
+    {
+     "text": "dengan",
+     "start": 52.523,
+     "end": 52.714
+    },
+    {
+     "text": "betul",
+     "start": 52.74,
+     "end": 53.225
+    },
+    {
+     "text": "DM",
+     "start": 54.208,
+     "end": 54.654
+    },
+    {
+     "text": "LokaDigital",
+     "start": 54.667,
+     "end": 55.547
+    }
+   ]
+  }
+ ]
+}

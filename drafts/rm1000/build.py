@@ -49,8 +49,8 @@ CSS = P.CSS + """
   #flashm span { position:absolute; left:96px; top:880px; font:900 120px/0.9 'Inter'; letter-spacing:-.05em; }
   #flashm small { position:absolute; left:96px; top:820px; font:700 30px 'IBM Plex Mono'; letter-spacing:.2em; color:var(--g); }
   #av { position:absolute; left:560px; top:1300px; width:500px; height:620px; }
-  #av img { position:absolute; left:0; bottom:0; width:500px; opacity:0; filter:drop-shadow(0 0 26px rgba(184,0,240,.55)) drop-shadow(0 30px 40px rgba(0,0,0,.6)); }
-  #avglow { position:absolute; left:520px; top:1330px; width:620px; height:620px; border-radius:50%; background:radial-gradient(circle, rgba(184,0,240,.28), transparent 65%); }
+  #av img { position:absolute; left:0; bottom:0; width:500px; opacity:0; filter:drop-shadow(0 24px 34px rgba(0,0,0,.55)); }
+  #avglow { position:absolute; left:520px; top:1330px; width:620px; height:620px; border-radius:50%; background:none; display:none; }
   .capband { top:1300px; } .cap { left:70px; right:520px; text-align:left; font-size:60px; }
   #flash { position:absolute; inset:0; background:#fff; opacity:0; mix-blend-mode:overlay; }
   .ctab3 { position:absolute; left:90px; top:120px; width:900px; padding:56px 50px; border-radius:36px; }
