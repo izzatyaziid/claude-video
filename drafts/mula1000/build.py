@@ -10,10 +10,11 @@ import lib, pop as P
 
 T = json.load(open(os.path.join(HERE, "timing.json"), encoding="utf-8"))
 L = {l["id"]: l for l in T["lines"]}
-DUR = 60.0
+DUR = None  # set after helpers
 def s(i): return L[i]["start"]
 def e(i): return L[i]["end"]
 def w(i, k): return L[i]["words"][min(k, len(L[i]["words"]) - 1)]["start"]
+DUR = round(T["lines"][-1]["end"] + 1.6, 2)
 KEYS = {"seribu", "ringgit", "semua", "satu", "jelas.", "angle", "masalah,", "manfaat,", "offer.", "respons", "berkualiti.", "bajet", "scale", "potensi.", "meneka.", "data,", "LokaDigital."}
 AVATAR = [p for p in ("neutral", "shock", "think") if os.path.exists(os.path.join(HERE, "assets", f"avatar_{p}.png"))]
 
@@ -86,8 +87,8 @@ def headline(lid):
     spans = " ".join(f'<span class="{"kk" if wd["text"] in KEYS else ""}" id="{lid}w{k}">{wd["text"]}</span>' for k, wd in enumerate(l["words"]))
     return f'<div class="hl clip" id="hl_{lid}" data-start="{max(0, l["start"] - .05):.2f}" data-duration="{l["end"] - l["start"] + l["gap"] + .05:.2f}" data-track-index="3">{spans}</div>'
 
-CAPS = [("k0", 0.0, 4.0, "Ada [RM1,000]?"), ("k1", 4.0, 12.0, "1. Pilih [satu] audience."), ("k2", 12.0, 22.0, "2. Test [3] angle."),
-        ("k3", 22.0, 32.0, "3. Ukur [respons]."), ("k4", 32.0, 43.0, "Baru [scale]."), ("k5", 43.0, 52.0, "Data, bukan [teka]."), ("k6", 52.0, DUR, "[DM] LokaDigital.")]
+CAPS = [("k0", 0.0, s("l2"), "Ada [RM1,000]?"), ("k1", s("l2"), s("l4"), "1. Pilih [satu] audience."), ("k2", s("l4"), s("l6"), "2. Test [3] angle."),
+        ("k3", s("l6"), s("l7"), "3. Ukur [respons]."), ("k4", s("l7"), s("l8"), "Baru [scale]."), ("k5", s("l8"), s("l10"), "Data, bukan [teka]."), ("k6", s("l10"), DUR, "[DM] LokaDigital.")]
 
 NOTES = [(110, 190, -8), (400, 150, 6), (680, 200, -4), (230, 360, 10), (540, 350, -6)]
 DOTS = []
@@ -134,9 +135,9 @@ def body():
         
         <div class="c3 ctab3 lime" id="cta"><label>MULA DENGAN BETUL</label><h2>DM<br>LOKADIGITAL</h2><p>Test dulu. Baru scale.</p><div class="shine"></div></div>
         {P.sparks_html("sa", 14)}{P.sparks_html("sb", 16)}{P.sparks_html("sc", 18)}
-        <div class="ring" id="rg1" style="left:360px;top:120px;width:360px;height:360px"></div>
+        <div class="ring" id="rg1" style="left:690px;top:120px;width:360px;height:360px"></div>
       </div></div>
-      <div id="reveal" class="clip" data-start="{e('l9') + 1.5:.2f}" data-duration="{s('l10') - e('l9') - 1.4:.2f}" data-track-index="6"><img src="assets/logo_t.png" alt="LOKADIGITAL"><h2>LOKA<em>DIGITAL</em></h2></div>
+      <div id="reveal" class="clip" data-start="{e('l9') + .25:.2f}" data-duration="{max(.6, s('l10') - e('l9') - .15):.2f}" data-track-index="6"><img src="assets/logo_t.png" alt="LOKADIGITAL"><h2>LOKA<em>DIGITAL</em></h2></div>
       <div id="avglow" class="clip" data-start="0" data-duration="{DUR}" data-track-index="5" data-layout-ignore></div>
       <div id="av" class="clip" data-start="0" data-duration="{DUR}" data-track-index="5" data-layout-ignore>{av}</div>
       {P.caps(CAPS)}
@@ -155,14 +156,14 @@ def js():
     A('tl.fromTo("#hook .hw", {yPercent:60, opacity:0}, {yPercent:0, opacity:1, duration:.35, ease:"back.out(2)", stagger:.06, immediateRender:false}, 0.05);')
     for i, (x, y, r) in enumerate(NOTES):
         A(P.pop(f"#n{i}", 0, frame0=True))
-        A(f'tl.fromTo("#n{i}", {{rotationZ:{r}, rotationY:{-25 + i * 12}, rotationX:18, z:{-80 + i * 40}}}, {{rotationZ:{-r}, rotationY:{25 - i * 12}, rotationX:-10, z:{60 - i * 30}, y:-30, duration:4, ease:"sine.inOut"}}, 0);')
-    A(P.pop("#tot", .9, z=-600, scale=.2, ease="back.out(2.6)"))
-    A(P.shine("#tot", 1.4, 500))
-    A('tl.fromTo("#cam", {scale:1.12, rotationX:8}, {scale:1, rotationX:0, duration:2.5, ease:"expo.out"}, 0);')
-    A('tl.to("#n0, #n1, #n2, #n3, #n4, #tot", {opacity:0, z:-500, duration:.35, ease:"power3.in"}, 3.7);')
+        A(f'tl.fromTo("#n{i}", {{rotationZ:{r}, rotationY:{-25 + i * 12}, rotationX:18, z:{-80 + i * 40}}}, {{rotationZ:{-r}, rotationY:{25 - i * 12}, rotationX:-10, z:{60 - i * 30}, y:-30, duration:{s("l2"):.2f}, ease:"sine.inOut"}}, 0);')
+    A(P.pop("#tot", .5, z=-600, scale=.2, ease="back.out(2.6)"))
+    A(P.shine("#tot", .9, 500))
+    A(f'tl.fromTo("#cam", {{scale:1.12, rotationX:8}}, {{scale:1, rotationX:0, duration:{min(2.5, s("l2")):.2f}, ease:"expo.out"}}, 0);')
+    A(f'tl.to("#n0, #n1, #n2, #n3, #n4, #tot", {{opacity:0, z:-500, duration:.3, ease:"power3.in"}}, {s("l2") - .3:.2f});')
     # ---- 4-12 s product + one niche audience
-    A(P.pop("#prod", 4.05, ry=40, z=-700, scale=.2)); A(P.shine("#prod", 4.6, 400)); A(P.floaty("#prod", 4.7, 11.6, amp=10, rot=-5))
-    A('tl.fromTo("#crowd .dot", {scale:0, transformOrigin:"50% 50%"}, {scale:1, duration:.3, ease:"back.out(2)", stagger:{each:.01, from:"random"}}, 4.3);')
+    A(P.pop("#prod", s("l2") + .05, ry=40, z=-700, scale=.2)); A(P.shine("#prod", s("l2") + .5, 400)); A(P.floaty("#prod", s("l2") + .6, s("l4") - .4, amp=10, rot=-5))
+    A(f'tl.fromTo("#crowd .dot", {{scale:0, transformOrigin:"50% 50%"}}, {{scale:1, duration:.3, ease:"back.out(2)", stagger:{{each:.008, from:"random"}}}}, {s("l2") + .2:.2f});')
     A(P.pop("#no", w("l2", 4), z=-500, scale=.2, ease="back.out(3)"))
     A(f'tl.to("#no", {{opacity:0, duration:.3}}, {s("l3"):.2f});')
     hx, hy = [(x, y) for x, y, r, h in DOTS if h][2]
@@ -171,25 +172,25 @@ def js():
     A(f'tl.to("#crowd .dot", {{opacity:.15, duration:.4}}, {s("l3") + .2:.2f});')
     A(f'tl.to("#crowd .hit", {{opacity:1, fill:"#B4FF39", duration:.3, stagger:.05}}, {s("l3") + .3:.2f});')
     A(P.pop("#aud", w("l3", 3), z=-600, scale=.2, ease="back.out(2.4)")); A(P.shine("#aud", w("l3", 3) + .5, 600))
-    A('tl.to("#prod, #crowd, #aud", {opacity:0, z:-400, duration:.35, ease:"power3.in"}, 11.6);')
+    A(f'tl.to("#prod, #crowd, #aud", {{opacity:0, z:-400, duration:.3, ease:"power3.in"}}, {s("l4") - .3:.2f});')
     # ---- 12-22 s smartphone shoot + 3 angles
-    A(P.pop("#ph", 12.05, ry=-35, z=-800, scale=.2, ease="back.out(2)"))
-    A('tl.fromTo("#ph .recdot i", {opacity:1}, {opacity:.2, duration:.5, yoyo:true, repeat:17, ease:"steps(1)"}, 12.5);')
-    A('tl.fromTo("#ph .box3", {rotation:-6, scale:.9}, {rotation:6, scale:1.05, duration:4.5, ease:"sine.inOut", yoyo:true, repeat:1}, 12.5);')
+    A(P.pop("#ph", s("l4") + .05, ry=-35, z=-800, scale=.2, ease="back.out(2)"))
+    A(f'tl.fromTo("#ph .recdot i", {{opacity:1}}, {{opacity:.2, duration:.4, yoyo:true, repeat:{int((s("l6") - s("l4")) / .4)}, ease:"steps(1)"}}, {s("l4") + .3:.2f});')
+    A(f'tl.fromTo("#ph .box3", {{rotation:-6, scale:.9}}, {{rotation:6, scale:1.05, duration:{(s("l6") - s("l4")) / 2:.2f}, ease:"sine.inOut", yoyo:true, repeat:1}}, {s("l4") + .3:.2f});')
     for n, (a_id, wk) in enumerate((("#a1", ("l5", 1)), ("#a2", ("l5", 2)), ("#a3", ("l5", 4)))):
         t = w(*wk) if n else w("l5", 1)
         A(P.pop(a_id, t - .05, ry=-60, z=-600, scale=.2, ease="back.out(2.4)"))
         A(f'tl.fromTo("#flash", {{opacity:.35}}, {{opacity:0, duration:.2, immediateRender:false}}, {t:.2f});')
-        A(P.floaty(a_id, t + .6, 21.5, amp=8, rot=(4 if n % 2 else -4)))
-    A('tl.to("#ph, #a1, #a2, #a3", {opacity:0, z:-400, duration:.35, ease:"power3.in"}, 21.6);')
+        A(P.floaty(a_id, t + .6, s("l6") - .4, amp=8, rot=(4 if n % 2 else -4)))
+    A(f'tl.to("#ph, #a1, #a2, #a3", {{opacity:0, z:-400, duration:.3, ease:"power3.in"}}, {s("l6") - .3:.2f});')
     # ---- 22-32 s three videos with metrics; one wins
     for i in range(3):
-        A(P.pop(f"#v{i}", 22.05 + i * .25, rx=-50, z=-700, scale=.2, ease="back.out(2)"))
-        A(P.floaty(f"#v{i}", 23 + i * .25, 27.5, amp=8, rot=(3 if i % 2 else -3)))
+        A(P.pop(f"#v{i}", s("l6") + .05 + i * .2, rx=-50, z=-700, scale=.2, ease="back.out(2)"))
+        A(P.floaty(f"#v{i}", s("l6") + .8 + i * .2, e("l6") - .1, amp=8, rot=(3 if i % 2 else -3)))
     vals = [v.split(",") for _, v, _ in VIDS]
     for i in range(3):
         for k in range(3):
-            A(f'tl.fromTo("#v{i} .met:nth-of-type({k + 1}) .tr i", {{scaleX:0}}, {{scaleX:{vals[i][k]}, duration:1.4, ease:"expo.out"}}, {s("l6") + 1.0 + k * .25:.2f});')
+            A(f'tl.fromTo("#v{i} .met:nth-of-type({k + 1}) .tr i", {{scaleX:0}}, {{scaleX:{vals[i][k]}, duration:1.0, ease:"expo.out"}}, {s("l6") + .7 + k * .2:.2f});')
     A(f'tl.to("#v2 .tr i", {{backgroundColor:"#B4FF39", duration:.3}}, {e("l6") - .2:.2f});')
     A(f'tl.to("#v0, #v1", {{opacity:.35, scale:.92, duration:.5}}, {e("l6"):.2f});')
     A(f'tl.to("#v2", {{scale:1.1, z:120, duration:.6, ease:"back.out(2)"}}, {e("l6"):.2f});')
@@ -197,28 +198,28 @@ def js():
     j += P.burst("sa", 900, 120, e("l6") + .25, n=14, r1=320)
     A(P.shine("#v2", e("l6") + .5, 400))
     A(P.ring("#rg1", e("l6") + .25))
-    A('tl.to("#v0, #v1, #v2", {opacity:0, z:-400, duration:.35, ease:"power3.in"}, 31.6);')
+    A(f'tl.to("#v0, #v1, #v2", {{opacity:0, z:-400, duration:.3, ease:"power3.in"}}, {s("l7") - .3:.2f});')
     # ---- 32-43 s budget flows to the winning creative (no fixed split shown)
-    A(P.pop("#wallet", 32.05, ry=40, z=-700, scale=.2)); A(P.pop("#big", 32.3, ry=-40, z=-700, scale=.2))
+    A(P.pop("#wallet", s("l7") + .05, ry=40, z=-700, scale=.2)); A(P.pop("#big", s("l7") + .25, ry=-40, z=-700, scale=.2))
     for i in range(10):
-        st = s("l7") + 1.6 + i * .45
+        st = s("l7") + .8 + i * .22
         A(f'tl.set("#co{i}", {{left:180, top:400}}, 0);')
         A(f'tl.fromTo("#co{i}", {{x:0, y:0, opacity:1, scale:.6}}, {{x:{560 + (i % 3) * 40}, y:{-260 + (i % 4) * 30}, scale:1, opacity:1, duration:.7, ease:"power2.inOut", immediateRender:false}}, {st:.2f});')
         A(f'tl.to("#co{i}", {{opacity:0, scale:.3, duration:.15}}, {st + .7:.2f});')
-    A(f'tl.to("#big", {{scale:1.12, duration:4.5, ease:"sine.inOut"}}, {s("l7") + 1.6:.2f});')
-    A(P.pop("#sc", s("l7") + 2.6, z=-400, scale=.2, ease="back.out(3)"))
-    A(P.shine("#big", s("l7") + 3.2, 600))
-    A('tl.to("#wallet, #big", {opacity:0, z:-400, duration:.35, ease:"power3.in"}, 42.6);')
+    A(f'tl.to("#big", {{scale:1.12, duration:{e("l7") - s("l7"):.2f}, ease:"sine.inOut"}}, {s("l7") + .8:.2f});')
+    A(P.pop("#sc", s("l7") + 1.6, z=-400, scale=.2, ease="back.out(3)"))
+    A(P.shine("#big", s("l7") + 2.0, 600))
+    A(f'tl.to("#wallet, #big", {{opacity:0, z:-400, duration:.3, ease:"power3.in"}}, {s("l8") - .3:.2f});')
     # ---- 43-52 s message, 52-60 brand reveal + CTA
     for i, q in enumerate(("#q1", "#q2", "#q3")):
-        A(f'tl.fromTo("{q}", {{opacity:0, scale:.4, rotation:{(-20, 10, 25)[i]}}}, {{opacity:.5, scale:1, duration:.4, ease:"back.out(2)"}}, {43.1 + i * .15:.2f});')
-    A(P.pop("#b1", 43.1, z=-500, scale=.3))
+        A(f'tl.fromTo("{q}", {{opacity:0, scale:.4, rotation:{(-20, 10, 25)[i]}}}, {{opacity:.5, scale:1, duration:.35, ease:"back.out(2)"}}, {s("l8") + .05 + i * .12:.2f});')
+    A(P.pop("#b1", s("l8") + .05, z=-500, scale=.3))
     A(f'tl.to("#q1, #q2, #q3, #b1", {{opacity:0, duration:.3}}, {s("l9") - .2:.2f});')
     A(P.pop("#b2", s("l9"), z=-700, scale=.2, ease="back.out(2.6)"))
     A(f'tl.fromTo("#flash", {{opacity:.5}}, {{opacity:0, duration:.25, immediateRender:false}}, {w("l9", 1):.2f});')
     j += P.burst("sb", 300, 300, w("l9", 1), n=16, r1=420)
-    A(f'tl.to("#b2", {{opacity:0, duration:.3}}, {e("l9") + 1.4:.2f});')
-    A(f'tl.fromTo("#reveal", {{opacity:0, scale:.6, z:-600}}, {{opacity:1, scale:1, z:0, duration:.8, ease:"expo.out"}}, {e("l9") + 1.6:.2f});')
+    A(f'tl.to("#b2", {{opacity:0, duration:.25}}, {e("l9") + .2:.2f});')
+    A(f'tl.fromTo("#reveal", {{opacity:0, scale:.6}}, {{opacity:1, scale:1, duration:.5, ease:"expo.out"}}, {e("l9") + .3:.2f});')
     A(f'tl.to("#reveal", {{opacity:0, y:-80, duration:.35}}, {s("l10") - .1:.2f});')
     A(P.pop("#cta", s("l10"), z=-1100, rx=-60, scale=.1, ease="back.out(2.2)", dur=.8))
     j += P.burst("sc", 540, 400, s("l10") + .2, n=18, r1=520)
@@ -252,16 +253,16 @@ Style.BODY = body(); Style.JS = js()
 def sound():
     lib.DUR = DUR; m = lib.Mix(seed=11); m.N = int(lib.SR * DUR); m.bed = np.zeros(m.N); m.fx = np.zeros(m.N)
     prog = [(45, [57, 60, 64, 69]), (41, [53, 57, 60, 65]), (48, [55, 60, 64, 67]), (43, [55, 59, 62, 67])]
-    m.score(104, prog, kind="pluck", drums="half", start=0, end=43)
-    m.score(104, prog, kind="pad", drums="four", start=43, end=DUR - .5)
-    m.at(m.fx, m.thud(), .02, .5); m.at(m.fx, m.whoosh(.8), .1, .3); m.at(m.fx, m.impact(), .92, .45)
-    for t in (4.05, 12.05, 22.05, 32.05): m.at(m.fx, m.whoosh(.6), t - .25, .3)
+    m.score(118, prog, kind="pluck", drums="four", start=0, end=s("l8"))
+    m.score(118, prog, kind="pad", drums="four", start=s("l8"), end=DUR - .5)
+    m.at(m.fx, m.thud(), .02, .5); m.at(m.fx, m.whoosh(.8), .1, .3); m.at(m.fx, m.impact(), .52, .45)
+    for t in (s("l2"), s("l4"), s("l6"), s("l7")): m.at(m.fx, m.whoosh(.5), t - .2, .3)
     m.at(m.fx, m.stamp(), w("l2", 4) + .05, .35); m.at(m.fx, m.coin(), s("l3") + .3, .3)
     for n in range(3): m.at(m.fx, m.pop(800 + 150 * n), (w("l5", 1), w("l5", 2), w("l5", 4))[n], .35)
-    for k in range(18): m.at(m.fx, m.tick(), 12.5 + k * .5, .12)
+    for k in range(int((s("l6") - s("l4")) / .4)): m.at(m.fx, m.tick(), s("l4") + .3 + k * .4, .12)
     m.at(m.fx, m.impact(), e("l6") + .02, .5); m.at(m.fx, m.coin(), e("l6") + .2, .35)
-    for i in range(10): m.at(m.fx, m.coin(), s("l7") + 1.6 + i * .45 + .65, .18)
-    m.at(m.fx, m.thud(), 43.1, .5); m.at(m.fx, m.impact(), w("l9", 1), .55)
+    for i in range(10): m.at(m.fx, m.coin(), s("l7") + .8 + i * .22 + .65, .16)
+    m.at(m.fx, m.thud(), s("l8") + .05, .5); m.at(m.fx, m.impact(), w("l9", 1), .55)
     m.at(m.fx, m.riser(1.4), s("l10") - 1.4, .25); m.at(m.fx, m.impact(), s("l10") + .02, .6)
     with wave.open(os.path.join(HERE, "assets", "vo.wav")) as wv:
         vo = np.frombuffer(wv.readframes(wv.getnframes()), np.int16) / 32768.0

@@ -1,440 +1,433 @@
 {
- "duration": 56.528,
+ "duration": 30.534,
  "lines": [
   {
    "id": "l1",
    "text": "Ada seribu ringgit untuk marketing?",
-   "rate": "+4%",
+   "rate": "+16%",
    "pitch": "+3Hz",
-   "gap": 0.2,
-   "at": 0.3,
-   "start": 0.3,
-   "end": 1.994,
+   "gap": 0.45,
+   "start": 0.25,
+   "end": 1.769,
    "words": [
     {
      "text": "Ada",
-     "start": 0.3,
-     "end": 0.54
+     "start": 0.25,
+     "end": 0.466
     },
     {
      "text": "seribu",
-     "start": 0.564,
-     "end": 0.901
+     "start": 0.487,
+     "end": 0.789
     },
     {
      "text": "ringgit",
-     "start": 0.925,
-     "end": 1.25
+     "start": 0.81,
+     "end": 1.101
     },
     {
      "text": "untuk",
-     "start": 1.25,
-     "end": 1.502
+     "start": 1.101,
+     "end": 1.328
     },
     {
      "text": "marketing",
-     "start": 1.514,
-     "end": 2.043
+     "start": 1.338,
+     "end": 1.812
     }
    ]
   },
   {
    "id": "l2",
    "text": "Pertama, jangan cuba jual kepada semua orang.",
-   "rate": "+2%",
+   "rate": "+14%",
    "pitch": "+1Hz",
-   "gap": 0.25,
-   "at": 4.0,
-   "start": 4.0,
-   "end": 6.673,
+   "gap": 0.11,
+   "start": 2.219,
+   "end": 4.61,
    "words": [
     {
      "text": "Pertama",
-     "start": 4.0,
-     "end": 4.478
+     "start": 2.219,
+     "end": 2.646
     },
     {
      "text": "jangan",
-     "start": 4.711,
-     "end": 5.005
+     "start": 2.855,
+     "end": 3.118
     },
     {
      "text": "cuba",
-     "start": 5.066,
-     "end": 5.287
+     "start": 3.173,
+     "end": 3.37
     },
     {
      "text": "jual",
-     "start": 5.336,
-     "end": 5.618
+     "start": 3.414,
+     "end": 3.666
     },
     {
      "text": "kepada",
-     "start": 5.667,
-     "end": 5.912
+     "start": 3.71,
+     "end": 3.929
     },
     {
      "text": "semua",
-     "start": 5.949,
-     "end": 6.243
+     "start": 3.962,
+     "end": 4.225
     },
     {
      "text": "orang",
-     "start": 6.243,
-     "end": 6.684
+     "start": 4.225,
+     "end": 4.62
     }
    ]
   },
   {
    "id": "l3",
    "text": "Pilih satu audience yang jelas.",
-   "rate": "-4%",
+   "rate": "+8%",
    "pitch": "-1Hz",
-   "gap": 0.3,
-   "start": 6.923,
-   "end": 8.801,
+   "gap": 0.5,
+   "start": 4.72,
+   "end": 6.378,
    "words": [
     {
      "text": "Pilih",
-     "start": 6.923,
-     "end": 7.209
+     "start": 4.72,
+     "end": 4.975
     },
     {
      "text": "satu",
-     "start": 7.235,
-     "end": 7.535
+     "start": 4.998,
+     "end": 5.264
     },
     {
      "text": "audience",
-     "start": 7.548,
-     "end": 8.095
+     "start": 5.276,
+     "end": 5.762
     },
     {
      "text": "yang",
-     "start": 8.121,
-     "end": 8.316
+     "start": 5.785,
+     "end": 5.959
     },
     {
      "text": "jelas",
-     "start": 8.355,
-     "end": 8.863
+     "start": 5.994,
+     "end": 6.445
     }
    ]
   },
   {
    "id": "l4",
    "text": "Kedua, hasilkan beberapa content dengan angle berbeza.",
-   "rate": "+2%",
+   "rate": "+14%",
    "pitch": "+1Hz",
-   "gap": 0.25,
-   "at": 12.0,
-   "start": 12.0,
-   "end": 15.252,
+   "gap": 0.11,
+   "start": 6.878,
+   "end": 9.795,
    "words": [
     {
      "text": "Kedua",
-     "start": 12.0,
-     "end": 12.404
+     "start": 6.878,
+     "end": 7.24
     },
     {
      "text": "hasilkan",
-     "start": 12.662,
-     "end": 13.176
+     "start": 7.47,
+     "end": 7.931
     },
     {
      "text": "beberapa",
-     "start": 13.189,
-     "end": 13.569
+     "start": 7.942,
+     "end": 8.282
     },
     {
      "text": "content",
-     "start": 13.605,
-     "end": 14.059
+     "start": 8.315,
+     "end": 8.72
     },
     {
      "text": "dengan",
-     "start": 14.071,
-     "end": 14.316
+     "start": 8.731,
+     "end": 8.951
     },
     {
      "text": "angle",
-     "start": 14.316,
-     "end": 14.721
+     "start": 8.951,
+     "end": 9.312
     },
     {
      "text": "berbeza",
-     "start": 14.745,
-     "end": 15.235
+     "start": 9.334,
+     "end": 9.773
     }
    ]
   },
   {
    "id": "l5",
    "text": "Test masalah, manfaat, dan offer.",
-   "rate": "-2%",
+   "rate": "+10%",
    "pitch": "+0Hz",
-   "gap": 0.3,
-   "start": 15.502,
-   "end": 18.137,
+   "gap": 0.5,
+   "start": 9.905,
+   "end": 12.251,
    "words": [
     {
      "text": "Test",
-     "start": 15.502,
-     "end": 15.795
+     "start": 9.905,
+     "end": 10.166
     },
     {
      "text": "masalah",
-     "start": 15.821,
-     "end": 16.446
+     "start": 10.189,
+     "end": 10.746
     },
     {
      "text": "manfaat",
-     "start": 16.624,
-     "end": 17.3
+     "start": 10.905,
+     "end": 11.507
     },
     {
      "text": "dan",
-     "start": 17.428,
-     "end": 17.619
+     "start": 11.621,
+     "end": 11.791
     },
     {
      "text": "offer",
-     "start": 17.632,
-     "end": 18.18
+     "start": 11.803,
+     "end": 12.291
     }
    ]
   },
   {
    "id": "l6",
    "text": "Ketiga, tengok content mana yang dapat respons berkualiti.",
-   "rate": "+0%",
+   "rate": "+12%",
    "pitch": "+1Hz",
-   "gap": 0.3,
-   "at": 22.0,
-   "start": 22.0,
-   "end": 25.458,
+   "gap": 1.0,
+   "start": 12.751,
+   "end": 15.839,
    "words": [
     {
      "text": "Ketiga",
-     "start": 22.0,
-     "end": 22.512
+     "start": 12.751,
+     "end": 13.208
     },
     {
      "text": "tengok",
-     "start": 22.712,
-     "end": 23.05
+     "start": 13.387,
+     "end": 13.688
     },
     {
      "text": "content",
-     "start": 23.087,
-     "end": 23.425
+     "start": 13.722,
+     "end": 14.023
     },
     {
      "text": "mana",
-     "start": 23.425,
-     "end": 23.75
+     "start": 14.023,
+     "end": 14.313
     },
     {
      "text": "yang",
-     "start": 23.775,
-     "end": 23.9
+     "start": 14.335,
+     "end": 14.447
     },
     {
      "text": "dapat",
-     "start": 23.962,
-     "end": 24.2
+     "start": 14.503,
+     "end": 14.715
     },
     {
      "text": "respons",
-     "start": 24.225,
-     "end": 24.75
+     "start": 14.737,
+     "end": 15.206
     },
     {
      "text": "berkualiti",
-     "start": 24.787,
-     "end": 25.45
+     "start": 15.239,
+     "end": 15.831
     }
    ]
   },
   {
    "id": "l7",
    "text": "Kemudian, baru gunakan bajet untuk scale content yang dah menunjukkan potensi.",
-   "rate": "+0%",
+   "rate": "+12%",
    "pitch": "+0Hz",
-   "gap": 0.3,
-   "at": 32.0,
-   "start": 32.0,
-   "end": 36.617,
+   "gap": 0.6,
+   "start": 16.839,
+   "end": 20.956,
    "words": [
     {
      "text": "Kemudian",
-     "start": 32.0,
-     "end": 32.575
+     "start": 16.839,
+     "end": 17.353
     },
     {
      "text": "baru",
-     "start": 32.788,
-     "end": 33.062
+     "start": 17.542,
+     "end": 17.788
     },
     {
      "text": "gunakan",
-     "start": 33.1,
-     "end": 33.475
+     "start": 17.821,
+     "end": 18.156
     },
     {
      "text": "bajet",
-     "start": 33.487,
-     "end": 33.887
+     "start": 18.167,
+     "end": 18.524
     },
     {
      "text": "untuk",
-     "start": 33.9,
-     "end": 34.15
+     "start": 18.536,
+     "end": 18.759
     },
     {
      "text": "scale",
-     "start": 34.175,
-     "end": 34.462
+     "start": 18.781,
+     "end": 19.038
     },
     {
      "text": "content",
-     "start": 34.487,
-     "end": 34.925
+     "start": 19.06,
+     "end": 19.451
     },
     {
      "text": "yang",
-     "start": 34.938,
-     "end": 35.163
+     "start": 19.462,
+     "end": 19.663
     },
     {
      "text": "dah",
-     "start": 35.225,
-     "end": 35.425
+     "start": 19.719,
+     "end": 19.897
     },
     {
      "text": "menunjukkan",
-     "start": 35.438,
-     "end": 36.0
+     "start": 19.908,
+     "end": 20.411
     },
     {
      "text": "potensi",
-     "start": 36.012,
-     "end": 36.625
+     "start": 20.422,
+     "end": 20.969
     }
    ]
   },
   {
    "id": "l8",
    "text": "Jangan habiskan duit untuk meneka.",
-   "rate": "-4%",
+   "rate": "+8%",
    "pitch": "-2Hz",
-   "gap": 0.35,
-   "at": 43.0,
-   "start": 43.0,
-   "end": 44.999,
+   "gap": 0.16,
+   "start": 21.556,
+   "end": 23.318,
    "words": [
     {
      "text": "Jangan",
-     "start": 43.0,
-     "end": 43.378
+     "start": 21.556,
+     "end": 21.892
     },
     {
      "text": "habiskan",
-     "start": 43.378,
-     "end": 43.911
+     "start": 21.892,
+     "end": 22.366
     },
     {
      "text": "duit",
-     "start": 43.951,
-     "end": 44.25
+     "start": 22.401,
+     "end": 22.667
     },
     {
      "text": "untuk",
-     "start": 44.263,
-     "end": 44.523
+     "start": 22.679,
+     "end": 22.91
     },
     {
      "text": "meneka",
-     "start": 44.55,
-     "end": 44.992
+     "start": 22.933,
+     "end": 23.327
     }
    ]
   },
   {
    "id": "l9",
    "text": "Gunakan data, untuk buat keputusan.",
-   "rate": "-6%",
+   "rate": "+6%",
    "pitch": "-2Hz",
-   "gap": 0.6,
-   "start": 45.349,
-   "end": 47.743,
+   "gap": 0.9,
+   "start": 23.478,
+   "end": 25.595,
    "words": [
     {
      "text": "Gunakan",
-     "start": 45.349,
-     "end": 45.841
+     "start": 23.478,
+     "end": 23.914
     },
     {
      "text": "data",
-     "start": 45.855,
-     "end": 46.254
+     "start": 23.926,
+     "end": 24.279
     },
     {
      "text": "untuk",
-     "start": 46.44,
-     "end": 46.785
+     "start": 24.445,
+     "end": 24.751
     },
     {
      "text": "buat",
-     "start": 46.799,
-     "end": 47.025
+     "start": 24.763,
+     "end": 24.963
     },
     {
      "text": "keputusan",
-     "start": 47.078,
-     "end": 47.809
+     "start": 25.011,
+     "end": 25.659
     }
    ]
   },
   {
    "id": "l10",
    "text": "Nak mula dengan betul? DM LokaDigital.",
-   "rate": "-2%",
+   "rate": "+10%",
    "pitch": "+1Hz",
-   "gap": 1.0,
-   "at": 52.0,
-   "start": 52.0,
-   "end": 55.528,
+   "gap": 0.9,
+   "start": 26.495,
+   "end": 29.634,
    "words": [
     {
      "text": "Nak",
-     "start": 52.0,
-     "end": 52.217
+     "start": 26.495,
+     "end": 26.688
     },
     {
      "text": "mula",
-     "start": 52.23,
-     "end": 52.498
+     "start": 26.7,
+     "end": 26.938
     },
     {
      "text": "dengan",
-     "start": 52.523,
-     "end": 52.714
+     "start": 26.961,
+     "end": 27.132
     },
     {
      "text": "betul",
-     "start": 52.74,
-     "end": 53.225
+     "start": 27.154,
+     "end": 27.586
     },
     {
      "text": "DM",
-     "start": 54.208,
-     "end": 54.654
+     "start": 28.457,
+     "end": 28.854
     },
     {
      "text": "LokaDigital",
-     "start": 54.667,
-     "end": 55.547
+     "start": 28.866,
+     "end": 29.65
     }
    ]
   }

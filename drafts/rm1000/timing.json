@@ -1,838 +1,838 @@
 {
- "duration": 64.281,
+ "duration": 53.905,
  "lines": [
   {
    "id": "l1",
    "text": "Kedai kek ni habiskan seribu ringgit untuk iklan.",
-   "gap": 0.25,
-   "rate": "+6%",
+   "gap": 0.11,
+   "rate": "+18%",
    "pitch": "+2Hz",
    "start": 0.25,
-   "end": 2.932,
+   "end": 2.652,
    "words": [
     {
      "text": "Kedai",
      "start": 0.25,
-     "end": 0.545
+     "end": 0.515
     },
     {
      "text": "kek",
-     "start": 0.604,
-     "end": 0.792
+     "start": 0.568,
+     "end": 0.737
     },
     {
      "text": "ni",
-     "start": 0.816,
-     "end": 0.946
+     "start": 0.758,
+     "end": 0.875
     },
     {
      "text": "habiskan",
-     "start": 0.969,
-     "end": 1.5
+     "start": 0.896,
+     "end": 1.373
     },
     {
      "text": "seribu",
-     "start": 1.512,
-     "end": 1.83
+     "start": 1.383,
+     "end": 1.669
     },
     {
      "text": "ringgit",
-     "start": 1.866,
-     "end": 2.196
+     "start": 1.701,
+     "end": 1.998
     },
     {
      "text": "untuk",
-     "start": 2.208,
-     "end": 2.467
+     "start": 2.008,
+     "end": 2.241
     },
     {
      "text": "iklan",
-     "start": 2.479,
-     "end": 2.974
+     "start": 2.252,
+     "end": 2.697
     }
    ]
   },
   {
    "id": "l2",
    "text": "Dapat tiga tempahan je.",
-   "gap": 0.2,
-   "rate": "+4%",
+   "gap": 0.09,
+   "rate": "+16%",
    "pitch": "+0Hz",
-   "start": 3.182,
-   "end": 4.557,
+   "start": 2.762,
+   "end": 3.989,
    "words": [
     {
      "text": "Dapat",
-     "start": 3.182,
-     "end": 3.494
+     "start": 2.762,
+     "end": 3.042
     },
     {
      "text": "tiga",
-     "start": 3.518,
-     "end": 3.771
+     "start": 3.064,
+     "end": 3.29
     },
     {
      "text": "tempahan",
-     "start": 3.795,
-     "end": 4.239
+     "start": 3.312,
+     "end": 3.71
     },
     {
      "text": "je",
-     "start": 4.287,
-     "end": 4.564
+     "start": 3.753,
+     "end": 4.001
     }
    ]
   },
   {
    "id": "l3",
    "text": "Kenapa?",
-   "gap": 0.55,
-   "rate": "-8%",
+   "gap": 0.25,
+   "rate": "+4%",
    "pitch": "-3Hz",
-   "start": 4.757,
-   "end": 5.282,
+   "start": 4.079,
+   "end": 4.54,
    "words": [
     {
      "text": "Kenapa",
-     "start": 4.757,
-     "end": 5.287
+     "start": 4.079,
+     "end": 4.548
     }
    ]
   },
   {
    "id": "l4",
    "text": "Jom kita ikut, ke mana setiap ringgit pergi.",
-   "gap": 0.4,
-   "rate": "+0%",
+   "gap": 0.18,
+   "rate": "+12%",
    "pitch": "+1Hz",
-   "start": 5.832,
-   "end": 8.557,
+   "start": 4.79,
+   "end": 7.216,
    "words": [
     {
      "text": "Jom",
-     "start": 5.832,
-     "end": 6.144
+     "start": 4.79,
+     "end": 5.069
     },
     {
      "text": "kita",
-     "start": 6.194,
-     "end": 6.432
+     "start": 5.114,
+     "end": 5.326
     },
     {
      "text": "ikut",
-     "start": 6.432,
-     "end": 6.894
+     "start": 5.326,
+     "end": 5.739
     },
     {
      "text": "ke",
-     "start": 7.069,
-     "end": 7.157
+     "start": 5.895,
+     "end": 5.973
     },
     {
      "text": "mana",
-     "start": 7.169,
-     "end": 7.407
+     "start": 5.985,
+     "end": 6.197
     },
     {
      "text": "setiap",
-     "start": 7.432,
-     "end": 7.782
+     "start": 6.219,
+     "end": 6.531
     },
     {
      "text": "ringgit",
-     "start": 7.807,
-     "end": 8.119
+     "start": 6.554,
+     "end": 6.833
     },
     {
      "text": "pergi",
-     "start": 8.144,
-     "end": 8.544
+     "start": 6.855,
+     "end": 7.212
     }
    ]
   },
   {
    "id": "l5",
    "text": "Seribu ringgit, kita pecahkan jadi sepuluh blok.",
-   "gap": 0.4,
-   "rate": "+2%",
+   "gap": 0.18,
+   "rate": "+14%",
    "pitch": "+0Hz",
-   "start": 8.957,
-   "end": 11.668,
+   "start": 7.396,
+   "end": 9.823,
    "words": [
     {
      "text": "Seribu",
-     "start": 8.957,
-     "end": 9.35
+     "start": 7.396,
+     "end": 7.747
     },
     {
      "text": "ringgit",
-     "start": 9.374,
-     "end": 9.754
+     "start": 7.769,
+     "end": 8.109
     },
     {
      "text": "kita",
-     "start": 9.962,
-     "end": 10.171
+     "start": 8.295,
+     "end": 8.482
     },
     {
      "text": "pecahkan",
-     "start": 10.183,
-     "end": 10.673
+     "start": 8.493,
+     "end": 8.931
     },
     {
      "text": "jadi",
-     "start": 10.71,
-     "end": 10.967
+     "start": 8.964,
+     "end": 9.194
     },
     {
      "text": "sepuluh",
-     "start": 10.992,
-     "end": 11.347
+     "start": 9.216,
+     "end": 9.534
     },
     {
      "text": "blok",
-     "start": 11.372,
-     "end": 11.752
+     "start": 9.556,
+     "end": 9.896
     }
    ]
   },
   {
    "id": "l6",
    "text": "Empat blok habis pada likes dan views.",
-   "gap": 0.2,
-   "rate": "+3%",
+   "gap": 0.09,
+   "rate": "+15%",
    "pitch": "+1Hz",
-   "start": 12.068,
-   "end": 14.499,
+   "start": 10.003,
+   "end": 12.18,
    "words": [
     {
      "text": "Empat",
-     "start": 12.068,
-     "end": 12.384
+     "start": 10.003,
+     "end": 10.286
     },
     {
      "text": "blok",
-     "start": 12.384,
-     "end": 12.627
+     "start": 10.286,
+     "end": 10.503
     },
     {
      "text": "habis",
-     "start": 12.639,
-     "end": 13.1
+     "start": 10.514,
+     "end": 10.927
     },
     {
      "text": "pada",
-     "start": 13.124,
-     "end": 13.306
+     "start": 10.949,
+     "end": 11.112
     },
     {
      "text": "likes",
-     "start": 13.355,
-     "end": 13.78
+     "start": 11.155,
+     "end": 11.536
     },
     {
      "text": "dan",
-     "start": 13.804,
-     "end": 14.01
+     "start": 11.558,
+     "end": 11.742
     },
     {
      "text": "views",
-     "start": 14.034,
-     "end": 14.532
+     "start": 11.764,
+     "end": 12.21
     }
    ]
   },
   {
    "id": "l7",
    "text": "Nampak ramai, tapi tak ada yang tanya.",
-   "gap": 0.5,
-   "rate": "-2%",
+   "gap": 0.23,
+   "rate": "+10%",
    "pitch": "-1Hz",
-   "start": 14.699,
-   "end": 17.106,
+   "start": 12.27,
+   "end": 14.416,
    "words": [
     {
      "text": "Nampak",
-     "start": 14.699,
-     "end": 15.069
+     "start": 12.27,
+     "end": 12.599
     },
     {
      "text": "ramai",
-     "start": 15.107,
-     "end": 15.49
+     "start": 12.633,
+     "end": 12.974
     },
     {
      "text": "tapi",
-     "start": 15.706,
-     "end": 16.038
+     "start": 13.168,
+     "end": 13.463
     },
     {
      "text": "tak",
-     "start": 16.051,
-     "end": 16.153
+     "start": 13.474,
+     "end": 13.565
     },
     {
      "text": "ada",
-     "start": 16.153,
-     "end": 16.459
+     "start": 13.565,
+     "end": 13.838
     },
     {
      "text": "yang",
-     "start": 16.497,
-     "end": 16.65
+     "start": 13.872,
+     "end": 14.008
     },
     {
      "text": "tanya",
-     "start": 16.689,
-     "end": 17.11
+     "start": 14.043,
+     "end": 14.418
     }
    ]
   },
   {
    "id": "l8",
    "text": "Tiga blok bawa DM.",
-   "gap": 0.15,
-   "rate": "+3%",
+   "gap": 0.07,
+   "rate": "+15%",
    "pitch": "+1Hz",
-   "start": 17.606,
-   "end": 19.014,
+   "start": 14.646,
+   "end": 15.909,
    "words": [
     {
      "text": "Tiga",
-     "start": 17.606,
-     "end": 17.897
+     "start": 14.646,
+     "end": 14.907
     },
     {
      "text": "blok",
-     "start": 17.934,
-     "end": 18.201
+     "start": 14.939,
+     "end": 15.178
     },
     {
      "text": "bawa",
-     "start": 18.201,
-     "end": 18.492
+     "start": 15.178,
+     "end": 15.439
     },
     {
      "text": "DM",
-     "start": 18.541,
-     "end": 19.075
+     "start": 15.483,
+     "end": 15.961
     }
    ]
   },
   {
    "id": "l9",
    "text": "Tapi DM dibalas esok. Masa tu, dia dah beli tempat lain.",
-   "gap": 0.5,
-   "rate": "+0%",
+   "gap": 0.23,
+   "rate": "+12%",
    "pitch": "+0Hz",
-   "start": 19.164,
-   "end": 24.029,
+   "start": 15.979,
+   "end": 20.318,
    "words": [
     {
      "text": "Tapi",
-     "start": 19.164,
-     "end": 19.451
+     "start": 15.979,
+     "end": 16.236
     },
     {
      "text": "DM",
-     "start": 19.489,
-     "end": 19.889
+     "start": 16.27,
+     "end": 16.627
     },
     {
      "text": "dibalas",
-     "start": 19.901,
-     "end": 20.314
+     "start": 16.638,
+     "end": 17.006
     },
     {
      "text": "esok",
-     "start": 20.314,
-     "end": 20.789
+     "start": 17.006,
+     "end": 17.43
     },
     {
      "text": "Masa",
-     "start": 21.676,
-     "end": 22.076
+     "start": 18.217,
+     "end": 18.574
     },
     {
      "text": "tu",
-     "start": 22.151,
-     "end": 22.364
+     "start": 18.641,
+     "end": 18.831
     },
     {
      "text": "dia",
-     "start": 22.589,
-     "end": 22.839
+     "start": 19.032,
+     "end": 19.255
     },
     {
      "text": "dah",
-     "start": 22.864,
-     "end": 23.026
+     "start": 19.278,
+     "end": 19.423
     },
     {
      "text": "beli",
-     "start": 23.051,
-     "end": 23.264
+     "start": 19.445,
+     "end": 19.635
     },
     {
      "text": "tempat",
-     "start": 23.289,
-     "end": 23.626
+     "start": 19.657,
+     "end": 19.958
     },
     {
      "text": "lain",
-     "start": 23.639,
-     "end": 24.051
+     "start": 19.97,
+     "end": 20.338
     }
    ]
   },
   {
    "id": "l10",
    "text": "Dua blok, pelanggan tanya harga.",
-   "gap": 0.15,
-   "rate": "+3%",
+   "gap": 0.07,
+   "rate": "+15%",
    "pitch": "+1Hz",
-   "start": 24.529,
-   "end": 26.517,
+   "start": 20.548,
+   "end": 22.326,
    "words": [
     {
      "text": "Dua",
-     "start": 24.529,
-     "end": 24.772
+     "start": 20.548,
+     "end": 20.765
     },
     {
      "text": "blok",
-     "start": 24.808,
-     "end": 25.185
+     "start": 20.798,
+     "end": 21.135
     },
     {
      "text": "pelanggan",
-     "start": 25.367,
-     "end": 25.767
+     "start": 21.298,
+     "end": 21.657
     },
     {
      "text": "tanya",
-     "start": 25.791,
-     "end": 26.046
+     "start": 21.679,
+     "end": 21.907
     },
     {
      "text": "harga",
-     "start": 26.058,
-     "end": 26.507
+     "start": 21.918,
+     "end": 22.32
     }
    ]
   },
   {
    "id": "l11",
    "text": "Dijawab, sembilan puluh ringgit... Lepas tu, senyap.",
-   "gap": 0.6,
-   "rate": "-3%",
+   "gap": 0.27,
+   "rate": "+9%",
    "pitch": "-1Hz",
-   "start": 26.667,
-   "end": 30.758,
+   "start": 22.396,
+   "end": 26.035,
    "words": [
     {
      "text": "Dijawab",
-     "start": 26.667,
-     "end": 27.221
+     "start": 22.396,
+     "end": 22.889
     },
     {
      "text": "sembilan",
-     "start": 27.388,
-     "end": 27.878
+     "start": 23.038,
+     "end": 23.474
     },
     {
      "text": "puluh",
-     "start": 27.891,
-     "end": 28.11
+     "start": 23.485,
+     "end": 23.68
     },
     {
      "text": "ringgit",
-     "start": 28.149,
-     "end": 28.587
+     "start": 23.715,
+     "end": 24.105
     },
     {
      "text": "Lepas",
-     "start": 29.516,
-     "end": 29.941
+     "start": 24.926,
+     "end": 25.305
     },
     {
      "text": "tu",
-     "start": 29.967,
-     "end": 30.186
+     "start": 25.328,
+     "end": 25.522
     },
     {
      "text": "senyap",
-     "start": 30.393,
-     "end": 30.869
+     "start": 25.706,
+     "end": 26.13
     }
    ]
   },
   {
    "id": "l12",
    "text": "Tinggal satu blok. Itulah tiga tempahan tadi.",
-   "gap": 0.6,
-   "rate": "-4%",
+   "gap": 0.27,
+   "rate": "+8%",
    "pitch": "-1Hz",
-   "start": 31.358,
-   "end": 35.031,
+   "start": 26.305,
+   "end": 29.566,
    "words": [
     {
      "text": "Tinggal",
-     "start": 31.358,
-     "end": 31.723
+     "start": 26.305,
+     "end": 26.629
     },
     {
      "text": "satu",
-     "start": 31.736,
-     "end": 32.035
+     "start": 26.641,
+     "end": 26.907
     },
     {
      "text": "blok",
-     "start": 32.061,
-     "end": 32.426
+     "start": 26.93,
+     "end": 27.254
     },
     {
      "text": "Itulah",
-     "start": 33.405,
-     "end": 33.821
+     "start": 28.119,
+     "end": 28.489
     },
     {
      "text": "tiga",
-     "start": 33.86,
-     "end": 34.16
+     "start": 28.524,
+     "end": 28.79
     },
     {
      "text": "tempahan",
-     "start": 34.173,
-     "end": 34.629
+     "start": 28.802,
+     "end": 29.207
     },
     {
      "text": "tadi",
-     "start": 34.655,
-     "end": 35.019
+     "start": 29.23,
+     "end": 29.554
     }
    ]
   },
   {
    "id": "l13",
    "text": "Jadi masalahnya bukan bajet.",
-   "gap": 0.2,
-   "rate": "+0%",
+   "gap": 0.09,
+   "rate": "+12%",
    "pitch": "+0Hz",
-   "start": 35.631,
-   "end": 37.256,
+   "start": 29.836,
+   "end": 31.287,
    "words": [
     {
      "text": "Jadi",
-     "start": 35.631,
-     "end": 35.969
+     "start": 29.836,
+     "end": 30.138
     },
     {
      "text": "masalahnya",
-     "start": 36.006,
-     "end": 36.544
+     "start": 30.171,
+     "end": 30.651
     },
     {
      "text": "bukan",
-     "start": 36.556,
-     "end": 36.869
+     "start": 30.662,
+     "end": 30.941
     },
     {
      "text": "bajet",
-     "start": 36.881,
-     "end": 37.369
+     "start": 30.952,
+     "end": 31.388
     }
    ]
   },
   {
    "id": "l14",
    "text": "Masalahnya... sistem.",
-   "gap": 0.6,
-   "rate": "-10%",
+   "gap": 0.27,
+   "rate": "+2%",
    "pitch": "-4Hz",
-   "start": 37.456,
-   "end": 38.909,
+   "start": 31.377,
+   "end": 32.652,
    "words": [
     {
      "text": "Masalahnya",
-     "start": 37.456,
-     "end": 38.22
+     "start": 31.377,
+     "end": 32.051
     },
     {
      "text": "sistem",
-     "start": 38.387,
-     "end": 38.984
+     "start": 32.198,
+     "end": 32.725
     }
    ]
   },
   {
    "id": "l15",
    "text": "Satu. Objektif iklan, mesej. Bukan likes.",
-   "gap": 0.4,
-   "rate": "+0%",
+   "gap": 0.18,
+   "rate": "+12%",
    "pitch": "+1Hz",
-   "start": 39.509,
-   "end": 44.444,
+   "start": 32.922,
+   "end": 37.314,
    "words": [
     {
      "text": "Satu",
-     "start": 39.509,
-     "end": 39.922
+     "start": 32.922,
+     "end": 33.29
     },
     {
      "text": "Objektif",
-     "start": 40.884,
-     "end": 41.447
+     "start": 34.144,
+     "end": 34.647
     },
     {
      "text": "iklan",
-     "start": 41.447,
-     "end": 41.997
+     "start": 34.647,
+     "end": 35.138
     },
     {
      "text": "mesej",
-     "start": 42.122,
-     "end": 42.684
+     "start": 35.249,
+     "end": 35.752
     },
     {
      "text": "Bukan",
-     "start": 43.609,
-     "end": 43.959
+     "start": 36.577,
+     "end": 36.89
     },
     {
      "text": "likes",
-     "start": 43.972,
-     "end": 44.484
+     "start": 36.901,
+     "end": 37.359
     }
    ]
   },
   {
    "id": "l16",
    "text": "Dua. Balas DM dalam beberapa minit, bukan esok.",
-   "gap": 0.4,
-   "rate": "+0%",
+   "gap": 0.18,
+   "rate": "+12%",
    "pitch": "+1Hz",
-   "start": 44.844,
-   "end": 49.093,
+   "start": 37.494,
+   "end": 41.278,
    "words": [
     {
      "text": "Dua",
-     "start": 44.844,
-     "end": 45.194
+     "start": 37.494,
+     "end": 37.806
     },
     {
      "text": "Balas",
-     "start": 46.194,
-     "end": 46.619
+     "start": 38.694,
+     "end": 39.073
     },
     {
      "text": "DM",
-     "start": 46.631,
-     "end": 47.069
+     "start": 39.084,
+     "end": 39.475
     },
     {
      "text": "dalam",
-     "start": 47.081,
-     "end": 47.331
+     "start": 39.486,
+     "end": 39.709
     },
     {
      "text": "beberapa",
-     "start": 47.356,
-     "end": 47.744
+     "start": 39.731,
+     "end": 40.077
     },
     {
      "text": "minit",
-     "start": 47.769,
-     "end": 48.181
+     "start": 40.1,
+     "end": 40.468
     },
     {
      "text": "bukan",
-     "start": 48.369,
-     "end": 48.706
+     "start": 40.636,
+     "end": 40.937
     },
     {
      "text": "esok",
-     "start": 48.706,
-     "end": 49.194
+     "start": 40.937,
+     "end": 41.372
     }
    ]
   },
   {
    "id": "l17",
    "text": "Tiga. Tanya dulu, tunjuk nilai, baru sebut harga.",
-   "gap": 0.5,
-   "rate": "-2%",
+   "gap": 0.23,
+   "rate": "+10%",
    "pitch": "+0Hz",
-   "start": 49.493,
-   "end": 53.891,
+   "start": 41.458,
+   "end": 45.373,
    "words": [
     {
      "text": "Tiga",
-     "start": 49.493,
-     "end": 49.85
+     "start": 41.458,
+     "end": 41.776
     },
     {
      "text": "Tanya",
-     "start": 50.846,
-     "end": 51.14
+     "start": 42.658,
+     "end": 42.919
     },
     {
      "text": "dulu",
-     "start": 51.165,
-     "end": 51.51
+     "start": 42.942,
+     "end": 43.249
     },
     {
      "text": "tunjuk",
-     "start": 51.739,
-     "end": 52.071
+     "start": 43.453,
+     "end": 43.749
     },
     {
      "text": "nilai",
-     "start": 52.096,
-     "end": 52.543
+     "start": 43.771,
+     "end": 44.169
     },
     {
      "text": "baru",
-     "start": 52.785,
-     "end": 53.079
+     "start": 44.385,
+     "end": 44.646
     },
     {
      "text": "sebut",
-     "start": 53.104,
-     "end": 53.397
+     "start": 44.669,
+     "end": 44.931
     },
     {
      "text": "harga",
-     "start": 53.41,
-     "end": 53.869
+     "start": 44.942,
+     "end": 45.351
     }
    ]
   },
   {
    "id": "l18",
    "text": "Bajet sama. Tapi lebih banyak blok sampai jadi tempahan.",
-   "gap": 0.55,
-   "rate": "+0%",
+   "gap": 0.25,
+   "rate": "+12%",
    "pitch": "+1Hz",
-   "start": 54.391,
-   "end": 58.632,
+   "start": 45.603,
+   "end": 49.388,
    "words": [
     {
      "text": "Bajet",
-     "start": 54.391,
-     "end": 54.754
+     "start": 45.603,
+     "end": 45.926
     },
     {
      "text": "sama",
-     "start": 54.779,
-     "end": 55.166
+     "start": 45.949,
+     "end": 46.295
     },
     {
      "text": "Tapi",
-     "start": 56.116,
-     "end": 56.391
+     "start": 47.137,
+     "end": 47.383
     },
     {
      "text": "lebih",
-     "start": 56.441,
-     "end": 56.654
+     "start": 47.428,
+     "end": 47.617
     },
     {
      "text": "banyak",
-     "start": 56.666,
-     "end": 56.991
+     "start": 47.629,
+     "end": 47.919
     },
     {
      "text": "blok",
-     "start": 57.004,
-     "end": 57.279
+     "start": 47.93,
+     "end": 48.175
     },
     {
      "text": "sampai",
-     "start": 57.316,
-     "end": 57.716
+     "start": 48.209,
+     "end": 48.566
     },
     {
      "text": "jadi",
-     "start": 57.766,
-     "end": 58.054
+     "start": 48.611,
+     "end": 48.867
     },
     {
      "text": "tempahan",
-     "start": 58.066,
-     "end": 58.679
+     "start": 48.879,
+     "end": 49.425
     }
    ]
   },
   {
    "id": "l19",
    "text": "Nak tahu ke mana bajet iklan kau pergi?",
-   "gap": 0.25,
-   "rate": "+2%",
+   "gap": 0.11,
+   "rate": "+14%",
    "pitch": "+2Hz",
-   "start": 59.182,
-   "end": 61.419,
+   "start": 49.638,
+   "end": 51.647,
    "words": [
     {
      "text": "Nak",
-     "start": 59.182,
-     "end": 59.403
+     "start": 49.638,
+     "end": 49.835
     },
     {
      "text": "tahu",
-     "start": 59.403,
-     "end": 59.697
+     "start": 49.835,
+     "end": 50.098
     },
     {
      "text": "ke",
-     "start": 59.734,
-     "end": 59.807
+     "start": 50.131,
+     "end": 50.197
     },
     {
      "text": "mana",
-     "start": 59.832,
-     "end": 60.028
+     "start": 50.219,
+     "end": 50.394
     },
     {
      "text": "bajet",
-     "start": 60.04,
-     "end": 60.371
+     "start": 50.405,
+     "end": 50.701
     },
     {
      "text": "iklan",
-     "start": 60.371,
-     "end": 60.775
+     "start": 50.701,
+     "end": 51.063
     },
     {
      "text": "kau",
-     "start": 60.824,
-     "end": 60.971
+     "start": 51.107,
+     "end": 51.239
     },
     {
      "text": "pergi",
-     "start": 61.008,
-     "end": 61.413
+     "start": 51.272,
+     "end": 51.633
     }
    ]
   },
   {
    "id": "l20",
    "text": "DM LokaDigital.",
-   "gap": 1.2,
-   "rate": "-8%",
+   "gap": 0.9,
+   "rate": "+4%",
    "pitch": "-2Hz",
-   "start": 61.669,
-   "end": 63.081,
+   "start": 51.757,
+   "end": 53.005,
    "words": [
     {
      "text": "DM",
-     "start": 61.669,
-     "end": 62.145
+     "start": 51.757,
+     "end": 52.178
     },
     {
      "text": "LokaDigital",
-     "start": 62.158,
-     "end": 63.096
+     "start": 52.19,
+     "end": 53.019
     }
    ]
   }

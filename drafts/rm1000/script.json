@@ -5,141 +5,141 @@
   {
    "id": "l1",
    "text": "Kedai kek ni habiskan seribu ringgit untuk iklan.",
-   "gap": 0.25,
-   "rate": "+6%",
+   "gap": 0.11,
+   "rate": "+18%",
    "pitch": "+2Hz"
   },
   {
    "id": "l2",
    "text": "Dapat tiga tempahan je.",
-   "gap": 0.2,
-   "rate": "+4%",
+   "gap": 0.09,
+   "rate": "+16%",
    "pitch": "+0Hz"
   },
   {
    "id": "l3",
    "text": "Kenapa?",
-   "gap": 0.55,
-   "rate": "-8%",
+   "gap": 0.25,
+   "rate": "+4%",
    "pitch": "-3Hz"
   },
   {
    "id": "l4",
    "text": "Jom kita ikut, ke mana setiap ringgit pergi.",
-   "gap": 0.4,
-   "rate": "+0%",
+   "gap": 0.18,
+   "rate": "+12%",
    "pitch": "+1Hz"
   },
   {
    "id": "l5",
    "text": "Seribu ringgit, kita pecahkan jadi sepuluh blok.",
-   "gap": 0.4,
-   "rate": "+2%",
+   "gap": 0.18,
+   "rate": "+14%",
    "pitch": "+0Hz"
   },
   {
    "id": "l6",
    "text": "Empat blok habis pada likes dan views.",
-   "gap": 0.2,
-   "rate": "+3%",
+   "gap": 0.09,
+   "rate": "+15%",
    "pitch": "+1Hz"
   },
   {
    "id": "l7",
    "text": "Nampak ramai, tapi tak ada yang tanya.",
-   "gap": 0.5,
-   "rate": "-2%",
+   "gap": 0.23,
+   "rate": "+10%",
    "pitch": "-1Hz"
   },
   {
    "id": "l8",
    "text": "Tiga blok bawa DM.",
-   "gap": 0.15,
-   "rate": "+3%",
+   "gap": 0.07,
+   "rate": "+15%",
    "pitch": "+1Hz"
   },
   {
    "id": "l9",
    "text": "Tapi DM dibalas esok. Masa tu, dia dah beli tempat lain.",
-   "gap": 0.5,
-   "rate": "+0%",
+   "gap": 0.23,
+   "rate": "+12%",
    "pitch": "+0Hz"
   },
   {
    "id": "l10",
    "text": "Dua blok, pelanggan tanya harga.",
-   "gap": 0.15,
-   "rate": "+3%",
+   "gap": 0.07,
+   "rate": "+15%",
    "pitch": "+1Hz"
   },
   {
    "id": "l11",
    "text": "Dijawab, sembilan puluh ringgit... Lepas tu, senyap.",
-   "gap": 0.6,
-   "rate": "-3%",
+   "gap": 0.27,
+   "rate": "+9%",
    "pitch": "-1Hz"
   },
   {
    "id": "l12",
    "text": "Tinggal satu blok. Itulah tiga tempahan tadi.",
-   "gap": 0.6,
-   "rate": "-4%",
+   "gap": 0.27,
+   "rate": "+8%",
    "pitch": "-1Hz"
   },
   {
    "id": "l13",
    "text": "Jadi masalahnya bukan bajet.",
-   "gap": 0.2,
-   "rate": "+0%",
+   "gap": 0.09,
+   "rate": "+12%",
    "pitch": "+0Hz"
   },
   {
    "id": "l14",
    "text": "Masalahnya... sistem.",
-   "gap": 0.6,
-   "rate": "-10%",
+   "gap": 0.27,
+   "rate": "+2%",
    "pitch": "-4Hz"
   },
   {
    "id": "l15",
    "text": "Satu. Objektif iklan, mesej. Bukan likes.",
-   "gap": 0.4,
-   "rate": "+0%",
+   "gap": 0.18,
+   "rate": "+12%",
    "pitch": "+1Hz"
   },
   {
    "id": "l16",
    "text": "Dua. Balas DM dalam beberapa minit, bukan esok.",
-   "gap": 0.4,
-   "rate": "+0%",
+   "gap": 0.18,
+   "rate": "+12%",
    "pitch": "+1Hz"
   },
   {
    "id": "l17",
    "text": "Tiga. Tanya dulu, tunjuk nilai, baru sebut harga.",
-   "gap": 0.5,
-   "rate": "-2%",
+   "gap": 0.23,
+   "rate": "+10%",
    "pitch": "+0Hz"
   },
   {
    "id": "l18",
    "text": "Bajet sama. Tapi lebih banyak blok sampai jadi tempahan.",
-   "gap": 0.55,
-   "rate": "+0%",
+   "gap": 0.25,
+   "rate": "+12%",
    "pitch": "+1Hz"
   },
   {
    "id": "l19",
    "text": "Nak tahu ke mana bajet iklan kau pergi?",
-   "gap": 0.25,
-   "rate": "+2%",
+   "gap": 0.11,
+   "rate": "+14%",
    "pitch": "+2Hz"
   },
   {
    "id": "l20",
    "text": "DM LokaDigital.",
-   "gap": 1.2,
-   "rate": "-8%",
+   "gap": 0.9,
+   "rate": "+4%",
    "pitch": "-2Hz"
   }
  ]

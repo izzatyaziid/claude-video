@@ -1,13 +1,76 @@
-{"voice": "ms-MY-OsmanNeural", "rate": "+2%",
+{
+ "voice": "ms-MY-OsmanNeural",
+ "rate": "+2%",
  "lines": [
-  {"id":"l1","text":"Ada seribu ringgit untuk marketing?","rate":"+4%","pitch":"+3Hz","gap":0.2,"at":0.3},
-  {"id":"l2","text":"Pertama, jangan cuba jual kepada semua orang.","rate":"+2%","pitch":"+1Hz","gap":0.25,"at":4.0},
-  {"id":"l3","text":"Pilih satu audience yang jelas.","rate":"-4%","pitch":"-1Hz","gap":0.3},
-  {"id":"l4","text":"Kedua, hasilkan beberapa content dengan angle berbeza.","rate":"+2%","pitch":"+1Hz","gap":0.25,"at":12.0},
-  {"id":"l5","text":"Test masalah, manfaat, dan offer.","rate":"-2%","pitch":"+0Hz","gap":0.3},
-  {"id":"l6","text":"Ketiga, tengok content mana yang dapat respons berkualiti.","rate":"+0%","pitch":"+1Hz","gap":0.3,"at":22.0},
-  {"id":"l7","text":"Kemudian, baru gunakan bajet untuk scale content yang dah menunjukkan potensi.","rate":"+0%","pitch":"+0Hz","gap":0.3,"at":32.0},
-  {"id":"l8","text":"Jangan habiskan duit untuk meneka.","rate":"-4%","pitch":"-2Hz","gap":0.35,"at":43.0},
-  {"id":"l9","text":"Gunakan data, untuk buat keputusan.","rate":"-6%","pitch":"-2Hz","gap":0.6},
-  {"id":"l10","text":"Nak mula dengan betul? DM LokaDigital.","rate":"-2%","pitch":"+1Hz","gap":1.0,"at":52.0}
- ]}
+  {
+   "id": "l1",
+   "text": "Ada seribu ringgit untuk marketing?",
+   "rate": "+16%",
+   "pitch": "+3Hz",
+   "gap": 0.45
+  },
+  {
+   "id": "l2",
+   "text": "Pertama, jangan cuba jual kepada semua orang.",
+   "rate": "+14%",
+   "pitch": "+1Hz",
+   "gap": 0.11
+  },
+  {
+   "id": "l3",
+   "text": "Pilih satu audience yang jelas.",
+   "rate": "+8%",
+   "pitch": "-1Hz",
+   "gap": 0.5
+  },
+  {
+   "id": "l4",
+   "text": "Kedua, hasilkan beberapa content dengan angle berbeza.",
+   "rate": "+14%",
+   "pitch": "+1Hz",
+   "gap": 0.11
+  },
+  {
+   "id": "l5",
+   "text": "Test masalah, manfaat, dan offer.",
+   "rate": "+10%",
+   "pitch": "+0Hz",
+   "gap": 0.5
+  },
+  {
+   "id": "l6",
+   "text": "Ketiga, tengok content mana yang dapat respons berkualiti.",
+   "rate": "+12%",
+   "pitch": "+1Hz",
+   "gap": 1.0
+  },
+  {
+   "id": "l7",
+   "text": "Kemudian, baru gunakan bajet untuk scale content yang dah menunjukkan potensi.",
+   "rate": "+12%",
+   "pitch": "+0Hz",
+   "gap": 0.6
+  },
+  {
+   "id": "l8",
+   "text": "Jangan habiskan duit untuk meneka.",
+   "rate": "+8%",
+   "pitch": "-2Hz",
+   "gap": 0.16
+  },
+  {
+   "id": "l9",
+   "text": "Gunakan data, untuk buat keputusan.",
+   "rate": "+6%",
+   "pitch": "-2Hz",
+   "gap": 0.9
+  },
+  {
+   "id": "l10",
+   "text": "Nak mula dengan betul? DM LokaDigital.",
+   "rate": "+10%",
+   "pitch": "+1Hz",
+   "gap": 0.9
+  }
+ ]
+}
