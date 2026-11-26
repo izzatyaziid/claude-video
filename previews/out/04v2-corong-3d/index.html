@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>LokaDigital Preview 04 v2 · Corong 3D</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+  :root { --ink:#07040C; --p1:#46096B; --p2:#240538; --mag:#B800F0; --g:#B4FF39; --mist:#D9D0F0; --grey:#8C83A6;
+          --line:rgba(255,255,255,.14); --glass:rgba(255,255,255,.045); }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:1080px; height:1920px; overflow:hidden; background:var(--ink); }
+  #root { position:relative; width:1080px; height:1920px; overflow:hidden; background:var(--ink); font-family:'Inter',sans-serif; color:#fff; }
+  .bgfill { position:absolute; inset:0; background:radial-gradient(120% 45% at 100% 0%, #46096B 0%, transparent 62%), radial-gradient(90% 35% at 0% 100%, #240538 0%, transparent 70%), var(--ink); }
+  .grain { position:absolute; inset:0; opacity:.06; pointer-events:none; mix-blend-mode:overlay;
+           background-image:repeating-radial-gradient(circle at 17% 32%, #fff 0 1px, transparent 1px 3px), repeating-radial-gradient(circle at 71% 63%, #fff 0 1px, transparent 1px 4px); }
+  .vig { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(0,0,0,.72) 100%); }
+  .logo { position:absolute; left:96px; top:262px; width:120px; height:120px; mix-blend-mode:screen; }
+  .pill { position:absolute; right:120px; top:296px; font:600 28px 'Inter'; letter-spacing:.22em; color:var(--g); border:2px solid var(--g); padding:12px 24px; border-radius:99px; }
+  .lab { font:700 28px 'Inter'; letter-spacing:.28em; color:var(--mist); text-transform:uppercase; }
+  .h { font:800 96px/0.98 'Inter'; letter-spacing:-.04em; }
+  .gr { color:var(--g); }
+  .glass { background:var(--glass); border:2px solid var(--line); border-radius:28px; box-shadow:0 40px 110px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08); }
+  .ctablock { background:var(--g); color:var(--ink); border-radius:26px; padding:34px 40px; display:flex; justify-content:space-between; align-items:center; }
+  .ctablock label { display:block; font:800 26px 'Inter'; letter-spacing:.24em; }
+  .ctablock small { display:block; margin-top:8px; font:600 26px 'Inter'; opacity:.75; }
+  .ctablock b { font:900 50px 'Inter'; letter-spacing:-.03em; white-space:nowrap; }
+
+  .stage3d { position:absolute; left:0; right:0; top:400px; height:1000px; perspective:1300px; perspective-origin:50% 45%; }
+  .c3 { position:absolute; border-radius:28px; background:linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,.03)); border:2px solid rgba(255,255,255,.16);
+        box-shadow:0 50px 100px rgba(0,0,0,.65), 0 0 60px rgba(123,22,184,.35), inset 0 1px 0 rgba(255,255,255,.2); overflow:hidden; transform-style:preserve-3d; opacity:0; }
+  .c3.lime { background:var(--g); color:var(--ink); border-color:rgba(255,255,255,.5); box-shadow:0 50px 100px rgba(0,0,0,.6), 0 0 80px rgba(180,255,57,.45); }
+  .c3.mag { background:linear-gradient(160deg,#B800F0,#46096B); border-color:rgba(255,255,255,.3); box-shadow:0 50px 100px rgba(0,0,0,.6), 0 0 80px rgba(184,0,240,.5); }
+  .shine { position:absolute; top:-20%; bottom:-20%; width:120px; left:-200px; transform:skewX(-20deg);
+           background:linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); pointer-events:none; }
+  .spark { position:absolute; width:18px; height:18px; border-radius:50%; background:var(--g); box-shadow:0 0 16px rgba(180,255,57,.9); opacity:0; }
+  .spark.m { background:#B800F0; box-shadow:0 0 16px rgba(184,0,240,.9); }
+  .spark.w { background:#fff; box-shadow:0 0 16px rgba(255,255,255,.9); width:12px; height:12px; }
+  .ring { position:absolute; border-radius:50%; border:6px solid var(--g); box-shadow:0 0 40px rgba(180,255,57,.6), inset 0 0 30px rgba(180,255,57,.3); opacity:0; }
+  .capband { position:absolute; left:0; right:0; top:1420px; height:220px; }
+  .cap { position:absolute; left:80px; right:80px; top:0; text-align:center; font:900 74px/1.08 'Inter'; letter-spacing:-.04em; color:#fff; opacity:0;
+         text-shadow:0 10px 40px rgba(0,0,0,.8); }
+  .cap .w { display:inline-block; }
+  .cap .k { position:relative; display:inline-block; padding:0 14px; margin:0 4px; color:var(--ink); isolation:isolate; }
+  .cap .k b { position:absolute; inset:-2px 0 -6px; background:var(--g); border-radius:14px; z-index:-1; transform-origin:0 50%; }
+
+  #rig { position:absolute; left:540px; top:520px; width:0; height:0; transform-style:preserve-3d; }
+  .rg { position:absolute; border-radius:50%; }
+  .rg i { position:absolute; inset:0; border-radius:50%; border:10px solid rgba(201,155,255,.55);
+          box-shadow:0 0 36px rgba(184,0,240,.45), inset 0 0 30px rgba(184,0,240,.3); }
+  .coin { position:absolute; left:-30px; top:-30px; width:60px; height:60px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #e6ff9a, #B4FF39 55%, #7fb81e);
+          border:4px solid #e9ffb8; box-shadow:0 0 20px rgba(180,255,57,.8); font:900 22px/52px 'Inter'; text-align:center; color:#07040C; opacity:0; }
+  .coin.lk { background:radial-gradient(circle at 35% 30%, #f1b8ff, #B800F0 60%, #6c0090); border-color:#f1b8ff; box-shadow:0 0 20px rgba(184,0,240,.8); color:#fff; }
+  #drips { position:absolute; left:0; top:0; width:1080px; height:1000px; overflow:visible; }
+  .lc { position:absolute; width:380px; z-index:5; padding:26px 30px; }
+  .lc b { display:block; font:900 50px/1 'Inter'; letter-spacing:-.03em; } .lc small { display:block; margin-top:10px; font:700 28px 'Inter'; opacity:.8; }
+  #jar { position:absolute; left:340px; top:800px; width:400px; height:190px; border-radius:0 0 40px 40px; border:4px solid rgba(255,255,255,.3); border-top:none; overflow:hidden; opacity:0; }
+  #jar i { position:absolute; left:0; right:0; bottom:0; height:100%; background:linear-gradient(180deg,#B4FF39,#7fb81e); transform-origin:50% 100%; }
+  #jar span { position:absolute; left:0; right:0; top:60px; text-align:center; font:900 40px 'Inter'; color:#07040C; z-index:2; letter-spacing:.02em; }
+  .ctab3 { position:absolute; left:90px; top:280px; width:900px; padding:56px 50px; border-radius:36px; }
+  .ctab3 label { display:block; font:800 30px 'Inter'; letter-spacing:.24em; } .ctab3 h2 { margin-top:16px; font:900 120px/0.9 'Inter'; letter-spacing:-.05em; }
+  .ctab3 p { margin-top:20px; font:700 34px 'Inter'; opacity:.8; }
+  #flash { position:absolute; inset:0; background:#fff; opacity:0; mix-blend-mode:overlay; }
+</style>
+  </head>
+  <body>
+
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60.0" data-width="1080" data-height="1920">
+      <div class="bgfill clip" id="bgfill" data-start="0" data-duration="60.0" data-track-index="0"></div>
+      
+      <div class="stage3d clip" id="st" data-start="0" data-duration="60" data-track-index="2" data-layout-allow-overflow data-layout-ignore><div id="cam" style="position:absolute;inset:0;transform-style:preserve-3d">
+        <svg id="drips" viewBox="0 0 1080 1000"><path class="drip" id="dp0" d="M774 360 C 894 350, 994 440, 1034 690" fill="none" stroke="#B800F0" stroke-width="16" stroke-linecap="round" opacity=".85"/><path class="drip" id="dp1" d="M358 500 C 238 490, 138 580, 98 830" fill="none" stroke="#B800F0" stroke-width="16" stroke-linecap="round" opacity=".85"/><path class="drip" id="dp2" d="M671 640 C 791 630, 891 720, 931 970" fill="none" stroke="#B800F0" stroke-width="16" stroke-linecap="round" opacity=".85"/></svg>
+        <div id="rig"><div class="rg" id="r0" style="left:-300px;top:-396.0px;width:600px;height:192px"><i></i></div><div class="rg" id="r1" style="left:-273px;top:-317.36px;width:546px;height:175px"><i></i></div><div class="rg" id="r2" style="left:-246px;top:-238.72px;width:492px;height:157px"><i></i></div><div class="rg" id="r3" style="left:-219px;top:-160.07999999999998px;width:438px;height:140px"><i></i></div><div class="rg" id="r4" style="left:-192px;top:-81.44px;width:384px;height:123px"><i></i></div><div class="rg" id="r5" style="left:-165px;top:-2.8000000000000043px;width:330px;height:106px"><i></i></div><div class="rg" id="r6" style="left:-138px;top:75.84px;width:276px;height:88px"><i></i></div><div class="rg" id="r7" style="left:-111px;top:154.48px;width:222px;height:71px"><i></i></div><div class="rg" id="r8" style="left:-84px;top:233.12px;width:168px;height:54px"><i></i></div><div class="coin" id="co0">RM</div><div class="coin" id="co1">RM</div><div class="coin" id="co2">RM</div><div class="coin" id="co3">RM</div><div class="coin" id="co4">RM</div><div class="coin" id="co5">RM</div><div class="coin" id="co6">RM</div><div class="coin" id="co7">RM</div><div class="coin" id="co8">RM</div><div class="coin" id="co9">RM</div><div class="coin" id="co10">RM</div><div class="coin" id="co11">RM</div><div class="coin" id="co12">RM</div><div class="coin" id="co13">RM</div><div class="coin" id="co14">RM</div><div class="coin" id="co15">RM</div><div class="coin lk" id="cl0">RM</div><div class="coin lk" id="cl1">RM</div><div class="coin lk" id="cl2">RM</div><div class="coin lk" id="cl3">RM</div><div class="coin lk" id="cl4">RM</div><div class="coin lk" id="cl5">RM</div><div class="coin lk" id="cl6">RM</div><div class="coin lk" id="cl7">RM</div><div class="coin lk" id="cl8">RM</div><div class="coin lk" id="cl9">RM</div><div class="coin lk" id="cl10">RM</div><div class="coin lk" id="cl11">RM</div><div class="coin lk" id="cl12">RM</div><div class="coin lk" id="cl13">RM</div><div class="coin lk" id="cl14">RM</div><div class="coin lk" id="cl15">RM</div><div class="coin" id="cg0">RM</div><div class="coin" id="cg1">RM</div><div class="coin" id="cg2">RM</div><div class="coin" id="cg3">RM</div><div class="coin" id="cg4">RM</div><div class="coin" id="cg5">RM</div><div class="coin" id="cg6">RM</div><div class="coin" id="cg7">RM</div><div class="coin" id="cg8">RM</div><div class="coin" id="cg9">RM</div><div class="coin" id="cg10">RM</div><div class="coin" id="cg11">RM</div><div class="coin" id="cg12">RM</div><div class="coin" id="cg13">RM</div><div class="coin" id="cg14">RM</div><div class="coin" id="cg15">RM</div><div class="coin" id="ch0">RM</div><div class="coin" id="ch1">RM</div><div class="coin" id="ch2">RM</div><div class="coin" id="ch3">RM</div><div class="coin" id="ch4">RM</div><div class="coin" id="ch5">RM</div></div>
+        <div class="c3 lc mag" id="L0" style="left:640px;top:300px"><b>PAGE LAMBAT</b><small>Loading 8 saat · CONTOH</small><div class="shine"></div></div><div class="c3 lc lime" id="F0" style="left:640px;top:300px"><b>✓ PAGE LAJU</b><small>Tampal · CONTOH</small><div class="shine"></div></div><div class="ring" id="sr0" style="left:656px;top:230px;width:260px;height:260px"></div><div class="c3 lc mag" id="L1" style="left:60px;top:440px"><b>OFFER TAK JELAS</b><small>Apa aku dapat?</small><div class="shine"></div></div><div class="c3 lc lime" id="F1" style="left:60px;top:440px"><b>✓ OFFER JELAS</b><small>Tampal · CONTOH</small><div class="shine"></div></div><div class="ring" id="sr1" style="left:218px;top:370px;width:260px;height:260px"></div><div class="c3 lc mag" id="L2" style="left:640px;top:580px"><b>CHECKOUT SUSAH</b><small>6 borang untuk bayar · CONTOH</small><div class="shine"></div></div><div class="c3 lc lime" id="F2" style="left:640px;top:580px"><b>✓ BAYAR 1 LANGKAH</b><small>Tampal · CONTOH</small><div class="shine"></div></div><div class="ring" id="sr2" style="left:548px;top:510px;width:260px;height:260px"></div>
+        <div id="jar"><i id="jfill"></i><span>JUALAN · CONTOH</span></div>
+        <div class="spark " id="sa0"></div><div class="spark m" id="sa1"></div><div class="spark w" id="sa2"></div><div class="spark " id="sa3"></div><div class="spark m" id="sa4"></div><div class="spark w" id="sa5"></div><div class="spark " id="sa6"></div><div class="spark m" id="sa7"></div><div class="spark w" id="sa8"></div><div class="spark " id="sa9"></div><div class="spark m" id="sa10"></div><div class="spark w" id="sa11"></div><div class="spark " id="sa12"></div><div class="spark m" id="sa13"></div><div class="spark " id="sb0"></div><div class="spark m" id="sb1"></div><div class="spark w" id="sb2"></div><div class="spark " id="sb3"></div><div class="spark m" id="sb4"></div><div class="spark w" id="sb5"></div><div class="spark " id="sb6"></div><div class="spark m" id="sb7"></div><div class="spark w" id="sb8"></div><div class="spark " id="sb9"></div><div class="spark m" id="sb10"></div><div class="spark w" id="sb11"></div><div class="spark " id="sb12"></div><div class="spark m" id="sb13"></div><div class="spark " id="sc0"></div><div class="spark m" id="sc1"></div><div class="spark w" id="sc2"></div><div class="spark " id="sc3"></div><div class="spark m" id="sc4"></div><div class="spark w" id="sc5"></div><div class="spark " id="sc6"></div><div class="spark m" id="sc7"></div><div class="spark w" id="sc8"></div><div class="spark " id="sc9"></div><div class="spark m" id="sc10"></div><div class="spark w" id="sc11"></div><div class="spark " id="sc12"></div><div class="spark m" id="sc13"></div><div class="spark " id="sd0"></div><div class="spark m" id="sd1"></div><div class="spark w" id="sd2"></div><div class="spark " id="sd3"></div><div class="spark m" id="sd4"></div><div class="spark w" id="sd5"></div><div class="spark " id="sd6"></div><div class="spark m" id="sd7"></div><div class="spark w" id="sd8"></div><div class="spark " id="sd9"></div><div class="spark m" id="sd10"></div><div class="spark w" id="sd11"></div><div class="spark " id="sd12"></div><div class="spark m" id="sd13"></div><div class="spark w" id="sd14"></div><div class="spark " id="sd15"></div><div class="spark m" id="sd16"></div><div class="spark w" id="sd17"></div>
+        <div class="c3 ctab3 lime" id="ctab3"><label>AUDIT CUSTOMER JOURNEY</label><h2>DM<br>LOKADIGITAL</h2><p>Tampal bocor dulu. Baru scale.</p><div class="shine"></div></div>
+      </div></div>
+      <div id="flash" class="clip" data-start="0" data-duration="60" data-track-index="8" data-layout-ignore></div><div class="capband"><div class="cap clip" id="c0" data-start="0.00" data-duration="1.80" data-track-index="7"><span class="w">Bajet</span> <span class="w">iklan</span> <span class="w">kau</span> <span class="k"><b></b>bocor</span>.</div><div class="cap clip" id="c1" data-start="1.80" data-duration="2.20" data-track-index="7"><span class="w">Setiap</span> <span class="k"><b></b>ringgit</span> <span class="w">masuk...</span></div><div class="cap clip" id="c2" data-start="4.00" data-duration="2.50" data-track-index="7"><span class="w">...banyak</span> <span class="w">yang</span> <span class="k"><b></b>keluar</span> <span class="w">tepi.</span></div><div class="cap clip" id="c3" data-start="6.50" data-duration="3.00" data-track-index="7"><span class="w">Tambah</span> <span class="w">bajet?</span> <span class="w">Bocor</span> <span class="w">makin</span> <span class="k"><b></b>besar</span>.</div><div class="cap clip" id="c4" data-start="9.50" data-duration="3.00" data-track-index="7"><span class="w">Masalahnya</span> <span class="w">bukan</span> <span class="k"><b></b>iklan</span>.</div><div class="cap clip" id="c5" data-start="12.50" data-duration="3.00" data-track-index="7"><span class="w">Corong</span> <span class="w">kau</span> <span class="w">yang</span> <span class="k"><b></b>bocor</span>.</div><div class="cap clip" id="c6" data-start="15.50" data-duration="3.50" data-track-index="7"><span class="w">Bocor</span> <span class="w">1:</span> <span class="w">page</span> <span class="k"><b></b>lambat</span>.</div><div class="cap clip" id="c7" data-start="19.00" data-duration="3.50" data-track-index="7"><span class="w">Bocor</span> <span class="w">2:</span> <span class="w">offer</span> <span class="w">tak</span> <span class="k"><b></b>jelas</span>.</div><div class="cap clip" id="c8" data-start="22.50" data-duration="3.50" data-track-index="7"><span class="w">Bocor</span> <span class="w">3:</span> <span class="w">checkout</span> <span class="k"><b></b>susah</span>.</div><div class="cap clip" id="c9" data-start="26.00" data-duration="3.50" data-track-index="7"><span class="w">Dia</span> <span class="w">dah</span> <span class="w">nak</span> <span class="w">beli.</span> <span class="w">Tapi</span> <span class="k"><b></b>tersangkut</span>.</div><div class="cap clip" id="c10" data-start="29.50" data-duration="3.50" data-track-index="7"><span class="w">Jadi,</span> <span class="w">tampal</span> <span class="k"><b></b>dulu</span>.</div><div class="cap clip" id="c11" data-start="33.00" data-duration="4.00" data-track-index="7"><span class="w">Page</span> <span class="k"><b></b>laju</span>.</div><div class="cap clip" id="c12" data-start="37.00" data-duration="4.00" data-track-index="7"><span class="w">Offer</span> <span class="k"><b></b>jelas</span>.</div><div class="cap clip" id="c13" data-start="41.00" data-duration="4.00" data-track-index="7"><span class="w">Bayar</span> <span class="k"><b></b>1-langkah</span>.</div><div class="cap clip" id="c14" data-start="45.00" data-duration="5.00" data-track-index="7"><span class="w">Baru</span> <span class="w">setiap</span> <span class="w">ringgit</span> <span class="k"><b></b>sampai</span>.</div><div class="cap clip" id="c15" data-start="50.00" data-duration="10.00" data-track-index="7"><span class="w">Audit</span> <span class="w">corong</span> <span class="w">kau:</span> <span class="k"><b></b>DM</span> <span class="w">LOKADIGITAL.</span></div></div>
+      
+      <img class="logo clip" id="logo" src="assets/logo.jpg" alt="LOKADIGITAL" data-start="0" data-duration="60.0" data-track-index="8">
+      <div class="pill clip" id="pill" data-start="0" data-duration="60.0" data-track-index="8">CUSTOMER JOURNEY</div>
+      <div class="vig clip" id="vig" data-start="0" data-duration="60.0" data-track-index="9" data-layout-ignore></div>
+      <div class="grain clip" id="grain" data-start="0" data-duration="60.0" data-track-index="9" data-layout-ignore></div>
+      <audio id="mix" src="assets/mix.wav" class="clip" data-start="0" data-duration="60.0" data-track-index="10"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.set("#r0", {opacity:1}, 0);
+      tl.set("#r1", {opacity:1}, 0);
+      tl.set("#r2", {opacity:1}, 0);
+      tl.set("#r3", {opacity:1}, 0);
+      tl.set("#r4", {opacity:1}, 0);
+      tl.set("#r5", {opacity:1}, 0);
+      tl.set("#r6", {opacity:1}, 0);
+      tl.set("#r7", {opacity:1}, 0);
+      tl.set("#r8", {opacity:1}, 0);
+      tl.fromTo("#rig", {rotationX:14, rotationY:-18, scale:1.04}, {rotationX:8, rotationY:14, scale:1, duration:15, ease:"sine.inOut"}, 0);
+      tl.fromTo("#drips path", {strokeDasharray:600, strokeDashoffset:0}, {strokeDashoffset:-600, duration:2.4, ease:"none", repeat:11}, 0);
+      tl.set("#co0, #cl0, #cg0", {opacity:0}, 0);
+      tl.fromTo("#cl0", {x:165, y:-480, opacity:1, scale:.9}, {x:221, y:-160, duration:0.59, ease:"power1.in", immediateRender:false}, 0.00);
+      tl.to("#cl0", {x:526, y:200, rotation:200, opacity:0, duration:.8, ease:"power2.in"}, 0.59);
+      tl.fromTo("#co0", {x:165, y:-480, opacity:1, scale:.9}, {x:30, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 5.90);
+      tl.to("#co0", {opacity:0, duration:.15}, 7.50);
+      tl.fromTo("#cl0", {x:165, y:-480, opacity:1, scale:.9}, {x:221, y:-160, duration:0.59, ease:"power1.in", immediateRender:false}, 11.80);
+      tl.to("#cl0", {x:526, y:200, rotation:200, opacity:0, duration:.8, ease:"power2.in"}, 12.39);
+      tl.fromTo("#co0", {x:165, y:-480, opacity:1, scale:.9}, {x:30, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 17.70);
+      tl.to("#co0", {opacity:0, duration:.15}, 19.30);
+      tl.fromTo("#cl0", {x:165, y:-480, opacity:1, scale:.9}, {x:221, y:-160, duration:0.59, ease:"power1.in", immediateRender:false}, 23.60);
+      tl.to("#cl0", {x:526, y:200, rotation:200, opacity:0, duration:.8, ease:"power2.in"}, 24.19);
+      tl.set("#co1, #cl1, #cg1", {opacity:0}, 0);
+      tl.fromTo("#co1", {x:-110, y:-480, opacity:1, scale:.9}, {x:-20, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 0.37);
+      tl.to("#co1", {opacity:0, duration:.15}, 1.97);
+      tl.fromTo("#co1", {x:-110, y:-480, opacity:1, scale:.9}, {x:-20, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 6.27);
+      tl.to("#co1", {opacity:0, duration:.15}, 7.87);
+      tl.fromTo("#co1", {x:-110, y:-480, opacity:1, scale:.9}, {x:-20, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 12.17);
+      tl.to("#co1", {opacity:0, duration:.15}, 13.77);
+      tl.fromTo("#co1", {x:-110, y:-480, opacity:1, scale:.9}, {x:-20, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 18.07);
+      tl.to("#co1", {opacity:0, duration:.15}, 19.67);
+      tl.fromTo("#co1", {x:-110, y:-480, opacity:1, scale:.9}, {x:-20, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 23.97);
+      tl.to("#co1", {opacity:0, duration:.15}, 25.57);
+      tl.set("#co2, #cl2, #cg2", {opacity:0}, 0);
+      tl.fromTo("#co2", {x:-19, y:-480, opacity:1, scale:.9}, {x:-3, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 0.74);
+      tl.to("#co2", {opacity:0, duration:.15}, 2.34);
+      tl.fromTo("#co2", {x:-19, y:-480, opacity:1, scale:.9}, {x:-3, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 6.64);
+      tl.to("#co2", {opacity:0, duration:.15}, 8.24);
+      tl.fromTo("#co2", {x:-19, y:-480, opacity:1, scale:.9}, {x:-3, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 12.54);
+      tl.to("#co2", {opacity:0, duration:.15}, 14.14);
+      tl.fromTo("#co2", {x:-19, y:-480, opacity:1, scale:.9}, {x:-3, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 18.44);
+      tl.to("#co2", {opacity:0, duration:.15}, 20.04);
+      tl.fromTo("#co2", {x:-19, y:-480, opacity:1, scale:.9}, {x:-3, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 24.34);
+      tl.to("#co2", {opacity:0, duration:.15}, 25.94);
+      tl.set("#co3, #cl3, #cg3", {opacity:0}, 0);
+      tl.fromTo("#cl3", {x:135, y:-480, opacity:1, scale:.9}, {x:-173, y:-20, duration:0.83, ease:"power1.in", immediateRender:false}, 1.11);
+      tl.to("#cl3", {x:-472, y:340, rotation:-200, opacity:0, duration:.8, ease:"power2.in"}, 1.94);
+      tl.fromTo("#co3", {x:135, y:-480, opacity:1, scale:.9}, {x:24, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 7.01);
+      tl.to("#co3", {opacity:0, duration:.15}, 8.61);
+      tl.fromTo("#cl3", {x:135, y:-480, opacity:1, scale:.9}, {x:-173, y:-20, duration:0.83, ease:"power1.in", immediateRender:false}, 12.91);
+      tl.to("#cl3", {x:-472, y:340, rotation:-200, opacity:0, duration:.8, ease:"power2.in"}, 13.74);
+      tl.fromTo("#co3", {x:135, y:-480, opacity:1, scale:.9}, {x:24, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 18.81);
+      tl.to("#co3", {opacity:0, duration:.15}, 20.41);
+      tl.fromTo("#cl3", {x:135, y:-480, opacity:1, scale:.9}, {x:-173, y:-20, duration:0.83, ease:"power1.in", immediateRender:false}, 24.71);
+      tl.to("#cl3", {x:-472, y:340, rotation:-200, opacity:0, duration:.8, ease:"power2.in"}, 25.54);
+      tl.set("#co4, #cl4, #cg4", {opacity:0}, 0);
+      tl.fromTo("#co4", {x:-161, y:-480, opacity:1, scale:.9}, {x:-29, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 1.48);
+      tl.to("#co4", {opacity:0, duration:.15}, 3.08);
+      tl.fromTo("#co4", {x:-161, y:-480, opacity:1, scale:.9}, {x:-29, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 7.38);
+      tl.to("#co4", {opacity:0, duration:.15}, 8.98);
+      tl.fromTo("#co4", {x:-161, y:-480, opacity:1, scale:.9}, {x:-29, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 13.28);
+      tl.to("#co4", {opacity:0, duration:.15}, 14.88);
+      tl.fromTo("#co4", {x:-161, y:-480, opacity:1, scale:.9}, {x:-29, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 19.18);
+      tl.to("#co4", {opacity:0, duration:.15}, 20.78);
+      tl.fromTo("#co4", {x:-161, y:-480, opacity:1, scale:.9}, {x:-29, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 25.08);
+      tl.to("#co4", {opacity:0, duration:.15}, 26.68);
+      tl.set("#co5, #cl5, #cg5", {opacity:0}, 0);
+      tl.fromTo("#co5", {x:80, y:-480, opacity:1, scale:.9}, {x:14, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 1.85);
+      tl.to("#co5", {opacity:0, duration:.15}, 3.45);
+      tl.fromTo("#co5", {x:80, y:-480, opacity:1, scale:.9}, {x:14, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 7.75);
+      tl.to("#co5", {opacity:0, duration:.15}, 9.35);
+      tl.fromTo("#co5", {x:80, y:-480, opacity:1, scale:.9}, {x:14, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 13.65);
+      tl.to("#co5", {opacity:0, duration:.15}, 15.25);
+      tl.fromTo("#co5", {x:80, y:-480, opacity:1, scale:.9}, {x:14, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 19.55);
+      tl.to("#co5", {opacity:0, duration:.15}, 21.15);
+      tl.fromTo("#co5", {x:80, y:-480, opacity:1, scale:.9}, {x:14, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 25.45);
+      tl.to("#co5", {opacity:0, duration:.15}, 27.05);
+      tl.set("#co6, #cl6, #cg6", {opacity:0}, 0);
+      tl.fromTo("#cl6", {x:55, y:-480, opacity:1, scale:.9}, {x:124, y:120, duration:1.07, ease:"power1.in", immediateRender:false}, 2.22);
+      tl.to("#cl6", {x:418, y:480, rotation:200, opacity:0, duration:.8, ease:"power2.in"}, 3.29);
+      tl.fromTo("#co6", {x:55, y:-480, opacity:1, scale:.9}, {x:10, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 8.12);
+      tl.to("#co6", {opacity:0, duration:.15}, 9.72);
+      tl.fromTo("#cl6", {x:55, y:-480, opacity:1, scale:.9}, {x:124, y:120, duration:1.07, ease:"power1.in", immediateRender:false}, 14.02);
+      tl.to("#cl6", {x:418, y:480, rotation:200, opacity:0, duration:.8, ease:"power2.in"}, 15.09);
+      tl.fromTo("#co6", {x:55, y:-480, opacity:1, scale:.9}, {x:10, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 19.92);
+      tl.to("#co6", {opacity:0, duration:.15}, 21.52);
+      tl.fromTo("#cl6", {x:55, y:-480, opacity:1, scale:.9}, {x:124, y:120, duration:1.07, ease:"power1.in", immediateRender:false}, 25.82);
+      tl.to("#cl6", {x:418, y:480, rotation:200, opacity:0, duration:.8, ease:"power2.in"}, 26.89);
+      tl.set("#co7, #cl7, #cg7", {opacity:0}, 0);
+      tl.fromTo("#co7", {x:-152, y:-480, opacity:1, scale:.9}, {x:-28, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 2.59);
+      tl.to("#co7", {opacity:0, duration:.15}, 4.19);
+      tl.fromTo("#co7", {x:-152, y:-480, opacity:1, scale:.9}, {x:-28, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 8.49);
+      tl.to("#co7", {opacity:0, duration:.15}, 10.09);
+      tl.fromTo("#co7", {x:-152, y:-480, opacity:1, scale:.9}, {x:-28, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 14.39);
+      tl.to("#co7", {opacity:0, duration:.15}, 15.99);
+      tl.fromTo("#co7", {x:-152, y:-480, opacity:1, scale:.9}, {x:-28, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 20.29);
+      tl.to("#co7", {opacity:0, duration:.15}, 21.89);
+      tl.fromTo("#co7", {x:-152, y:-480, opacity:1, scale:.9}, {x:-28, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 26.19);
+      tl.to("#co7", {opacity:0, duration:.15}, 27.79);
+      tl.set("#co8, #cl8, #cg8", {opacity:0}, 0);
+      tl.fromTo("#co8", {x:149, y:-480, opacity:1, scale:.9}, {x:27, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 2.96);
+      tl.to("#co8", {opacity:0, duration:.15}, 4.56);
+      tl.fromTo("#co8", {x:149, y:-480, opacity:1, scale:.9}, {x:27, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 8.86);
+      tl.to("#co8", {opacity:0, duration:.15}, 10.46);
+      tl.fromTo("#co8", {x:149, y:-480, opacity:1, scale:.9}, {x:27, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 14.76);
+      tl.to("#co8", {opacity:0, duration:.15}, 16.36);
+      tl.fromTo("#co8", {x:149, y:-480, opacity:1, scale:.9}, {x:27, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 20.66);
+      tl.to("#co8", {opacity:0, duration:.15}, 22.26);
+      tl.fromTo("#co8", {x:149, y:-480, opacity:1, scale:.9}, {x:27, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 26.56);
+      tl.to("#co8", {opacity:0, duration:.15}, 28.16);
+      tl.set("#co9, #cl9, #cg9", {opacity:0}, 0);
+      tl.fromTo("#cl9", {x:-46, y:-480, opacity:1, scale:.9}, {x:221, y:-160, duration:0.59, ease:"power1.in", immediateRender:false}, 3.33);
+      tl.to("#cl9", {x:526, y:200, rotation:200, opacity:0, duration:.8, ease:"power2.in"}, 3.92);
+      tl.fromTo("#co9", {x:-46, y:-480, opacity:1, scale:.9}, {x:-8, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 9.23);
+      tl.to("#co9", {opacity:0, duration:.15}, 10.83);
+      tl.fromTo("#cl9", {x:-46, y:-480, opacity:1, scale:.9}, {x:221, y:-160, duration:0.59, ease:"power1.in", immediateRender:false}, 15.13);
+      tl.to("#cl9", {x:526, y:200, rotation:200, opacity:0, duration:.8, ease:"power2.in"}, 15.72);
+      tl.fromTo("#co9", {x:-46, y:-480, opacity:1, scale:.9}, {x:-8, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 21.03);
+      tl.to("#co9", {opacity:0, duration:.15}, 22.63);
+      tl.fromTo("#cl9", {x:-46, y:-480, opacity:1, scale:.9}, {x:221, y:-160, duration:0.59, ease:"power1.in", immediateRender:false}, 26.93);
+      tl.to("#cl9", {x:526, y:200, rotation:200, opacity:0, duration:.8, ease:"power2.in"}, 27.52);
+      tl.set("#co10, #cl10, #cg10", {opacity:0}, 0);
+      tl.fromTo("#co10", {x:-88, y:-480, opacity:1, scale:.9}, {x:-16, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 3.70);
+      tl.to("#co10", {opacity:0, duration:.15}, 5.30);
+      tl.fromTo("#co10", {x:-88, y:-480, opacity:1, scale:.9}, {x:-16, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 9.60);
+      tl.to("#co10", {opacity:0, duration:.15}, 11.20);
+      tl.fromTo("#co10", {x:-88, y:-480, opacity:1, scale:.9}, {x:-16, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 15.50);
+      tl.to("#co10", {opacity:0, duration:.15}, 17.10);
+      tl.fromTo("#co10", {x:-88, y:-480, opacity:1, scale:.9}, {x:-16, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 21.40);
+      tl.to("#co10", {opacity:0, duration:.15}, 23.00);
+      tl.fromTo("#co10", {x:-88, y:-480, opacity:1, scale:.9}, {x:-16, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 27.30);
+      tl.to("#co10", {opacity:0, duration:.15}, 28.90);
+      tl.set("#co11, #cl11, #cg11", {opacity:0}, 0);
+      tl.fromTo("#co11", {x:163, y:-480, opacity:1, scale:.9}, {x:30, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 4.07);
+      tl.to("#co11", {opacity:0, duration:.15}, 5.67);
+      tl.fromTo("#co11", {x:163, y:-480, opacity:1, scale:.9}, {x:30, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 9.97);
+      tl.to("#co11", {opacity:0, duration:.15}, 11.57);
+      tl.fromTo("#co11", {x:163, y:-480, opacity:1, scale:.9}, {x:30, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 15.87);
+      tl.to("#co11", {opacity:0, duration:.15}, 17.47);
+      tl.fromTo("#co11", {x:163, y:-480, opacity:1, scale:.9}, {x:30, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 21.77);
+      tl.to("#co11", {opacity:0, duration:.15}, 23.37);
+      tl.fromTo("#co11", {x:163, y:-480, opacity:1, scale:.9}, {x:30, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 27.67);
+      tl.to("#co11", {opacity:0, duration:.15}, 29.27);
+      tl.set("#co12, #cl12, #cg12", {opacity:0}, 0);
+      tl.fromTo("#cl12", {x:-129, y:-480, opacity:1, scale:.9}, {x:-173, y:-20, duration:0.83, ease:"power1.in", immediateRender:false}, 4.44);
+      tl.to("#cl12", {x:-472, y:340, rotation:-200, opacity:0, duration:.8, ease:"power2.in"}, 5.27);
+      tl.fromTo("#co12", {x:-129, y:-480, opacity:1, scale:.9}, {x:-23, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 10.34);
+      tl.to("#co12", {opacity:0, duration:.15}, 11.94);
+      tl.fromTo("#cl12", {x:-129, y:-480, opacity:1, scale:.9}, {x:-173, y:-20, duration:0.83, ease:"power1.in", immediateRender:false}, 16.24);
+      tl.to("#cl12", {x:-472, y:340, rotation:-200, opacity:0, duration:.8, ease:"power2.in"}, 17.07);
+      tl.fromTo("#co12", {x:-129, y:-480, opacity:1, scale:.9}, {x:-23, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 22.14);
+      tl.to("#co12", {opacity:0, duration:.15}, 23.74);
+      tl.fromTo("#cl12", {x:-129, y:-480, opacity:1, scale:.9}, {x:-173, y:-20, duration:0.83, ease:"power1.in", immediateRender:false}, 28.04);
+      tl.to("#cl12", {x:-472, y:340, rotation:-200, opacity:0, duration:.8, ease:"power2.in"}, 28.87);
+      tl.set("#co13, #cl13, #cg13", {opacity:0}, 0);
+      tl.fromTo("#co13", {x:9, y:-480, opacity:1, scale:.9}, {x:2, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 4.81);
+      tl.to("#co13", {opacity:0, duration:.15}, 6.41);
+      tl.fromTo("#co13", {x:9, y:-480, opacity:1, scale:.9}, {x:2, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 10.71);
+      tl.to("#co13", {opacity:0, duration:.15}, 12.31);
+      tl.fromTo("#co13", {x:9, y:-480, opacity:1, scale:.9}, {x:2, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 16.61);
+      tl.to("#co13", {opacity:0, duration:.15}, 18.21);
+      tl.fromTo("#co13", {x:9, y:-480, opacity:1, scale:.9}, {x:2, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 22.51);
+      tl.to("#co13", {opacity:0, duration:.15}, 24.11);
+      tl.fromTo("#co13", {x:9, y:-480, opacity:1, scale:.9}, {x:2, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 28.41);
+      tl.to("#co13", {opacity:0, duration:.15}, 30.01);
+      tl.set("#co14, #cl14, #cg14", {opacity:0}, 0);
+      tl.fromTo("#co14", {x:117, y:-480, opacity:1, scale:.9}, {x:21, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 5.18);
+      tl.to("#co14", {opacity:0, duration:.15}, 6.78);
+      tl.fromTo("#co14", {x:117, y:-480, opacity:1, scale:.9}, {x:21, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 11.08);
+      tl.to("#co14", {opacity:0, duration:.15}, 12.68);
+      tl.fromTo("#co14", {x:117, y:-480, opacity:1, scale:.9}, {x:21, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 16.98);
+      tl.to("#co14", {opacity:0, duration:.15}, 18.58);
+      tl.fromTo("#co14", {x:117, y:-480, opacity:1, scale:.9}, {x:21, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 22.88);
+      tl.to("#co14", {opacity:0, duration:.15}, 24.48);
+      tl.fromTo("#co14", {x:117, y:-480, opacity:1, scale:.9}, {x:21, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 28.78);
+      tl.to("#co14", {opacity:0, duration:.15}, 30.38);
+      tl.set("#co15, #cl15, #cg15", {opacity:0}, 0);
+      tl.fromTo("#cl15", {x:-165, y:-480, opacity:1, scale:.9}, {x:124, y:120, duration:1.07, ease:"power1.in", immediateRender:false}, 5.55);
+      tl.to("#cl15", {x:418, y:480, rotation:200, opacity:0, duration:.8, ease:"power2.in"}, 6.62);
+      tl.fromTo("#co15", {x:-165, y:-480, opacity:1, scale:.9}, {x:-30, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 11.45);
+      tl.to("#co15", {opacity:0, duration:.15}, 13.05);
+      tl.fromTo("#cl15", {x:-165, y:-480, opacity:1, scale:.9}, {x:124, y:120, duration:1.07, ease:"power1.in", immediateRender:false}, 17.35);
+      tl.to("#cl15", {x:418, y:480, rotation:200, opacity:0, duration:.8, ease:"power2.in"}, 18.42);
+      tl.fromTo("#co15", {x:-165, y:-480, opacity:1, scale:.9}, {x:-30, y:320, scale:.55, duration:1.6, ease:"power1.in", immediateRender:false}, 23.25);
+      tl.to("#co15", {opacity:0, duration:.15}, 24.85);
+      tl.fromTo("#cl15", {x:-165, y:-480, opacity:1, scale:.9}, {x:124, y:120, duration:1.07, ease:"power1.in", immediateRender:false}, 0.15);
+      tl.to("#cl15", {x:418, y:480, rotation:200, opacity:0, duration:.8, ease:"power2.in"}, 1.22);
+      tl.fromTo("#cg0", {x:165, y:-480, opacity:1, scale:.9}, {x:20, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 41.60);
+      tl.to("#cg0", {opacity:0, duration:.12}, 43.10);
+      tl.fromTo("#cg0", {x:165, y:-480, opacity:1, scale:.9}, {x:20, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 45.60);
+      tl.to("#cg0", {opacity:0, duration:.12}, 47.10);
+      tl.fromTo("#cg1", {x:-110, y:-480, opacity:1, scale:.9}, {x:-13, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 41.86);
+      tl.to("#cg1", {opacity:0, duration:.12}, 43.36);
+      tl.fromTo("#cg1", {x:-110, y:-480, opacity:1, scale:.9}, {x:-13, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 45.86);
+      tl.to("#cg1", {opacity:0, duration:.12}, 47.36);
+      tl.fromTo("#cg2", {x:-19, y:-480, opacity:1, scale:.9}, {x:-2, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 42.12);
+      tl.to("#cg2", {opacity:0, duration:.12}, 43.62);
+      tl.fromTo("#cg2", {x:-19, y:-480, opacity:1, scale:.9}, {x:-2, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 46.12);
+      tl.to("#cg2", {opacity:0, duration:.12}, 47.62);
+      tl.fromTo("#cg3", {x:135, y:-480, opacity:1, scale:.9}, {x:16, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 42.38);
+      tl.to("#cg3", {opacity:0, duration:.12}, 43.88);
+      tl.fromTo("#cg3", {x:135, y:-480, opacity:1, scale:.9}, {x:16, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 46.38);
+      tl.to("#cg3", {opacity:0, duration:.12}, 47.88);
+      tl.fromTo("#cg4", {x:-161, y:-480, opacity:1, scale:.9}, {x:-19, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 42.64);
+      tl.to("#cg4", {opacity:0, duration:.12}, 44.14);
+      tl.fromTo("#cg4", {x:-161, y:-480, opacity:1, scale:.9}, {x:-19, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 46.64);
+      tl.to("#cg4", {opacity:0, duration:.12}, 48.14);
+      tl.fromTo("#cg5", {x:80, y:-480, opacity:1, scale:.9}, {x:10, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 42.90);
+      tl.to("#cg5", {opacity:0, duration:.12}, 44.40);
+      tl.fromTo("#cg5", {x:80, y:-480, opacity:1, scale:.9}, {x:10, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 46.90);
+      tl.to("#cg5", {opacity:0, duration:.12}, 48.40);
+      tl.fromTo("#cg6", {x:55, y:-480, opacity:1, scale:.9}, {x:7, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 43.16);
+      tl.to("#cg6", {opacity:0, duration:.12}, 44.66);
+      tl.fromTo("#cg6", {x:55, y:-480, opacity:1, scale:.9}, {x:7, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 47.16);
+      tl.to("#cg6", {opacity:0, duration:.12}, 48.66);
+      tl.fromTo("#cg7", {x:-152, y:-480, opacity:1, scale:.9}, {x:-18, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 43.42);
+      tl.to("#cg7", {opacity:0, duration:.12}, 44.92);
+      tl.fromTo("#cg7", {x:-152, y:-480, opacity:1, scale:.9}, {x:-18, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 47.42);
+      tl.to("#cg7", {opacity:0, duration:.12}, 48.92);
+      tl.fromTo("#cg8", {x:149, y:-480, opacity:1, scale:.9}, {x:18, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 43.68);
+      tl.to("#cg8", {opacity:0, duration:.12}, 45.18);
+      tl.fromTo("#cg8", {x:149, y:-480, opacity:1, scale:.9}, {x:18, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 47.68);
+      tl.to("#cg8", {opacity:0, duration:.12}, 49.18);
+      tl.fromTo("#cg9", {x:-46, y:-480, opacity:1, scale:.9}, {x:-6, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 43.94);
+      tl.to("#cg9", {opacity:0, duration:.12}, 45.44);
+      tl.fromTo("#cg9", {x:-46, y:-480, opacity:1, scale:.9}, {x:-6, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 47.94);
+      tl.to("#cg9", {opacity:0, duration:.12}, 49.44);
+      tl.fromTo("#cg10", {x:-88, y:-480, opacity:1, scale:.9}, {x:-11, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 44.20);
+      tl.to("#cg10", {opacity:0, duration:.12}, 45.70);
+      tl.fromTo("#cg10", {x:-88, y:-480, opacity:1, scale:.9}, {x:-11, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 48.20);
+      tl.to("#cg10", {opacity:0, duration:.12}, 49.70);
+      tl.fromTo("#cg11", {x:163, y:-480, opacity:1, scale:.9}, {x:20, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 44.46);
+      tl.to("#cg11", {opacity:0, duration:.12}, 45.96);
+      tl.fromTo("#cg11", {x:163, y:-480, opacity:1, scale:.9}, {x:20, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 48.46);
+      tl.to("#cg11", {opacity:0, duration:.12}, 49.96);
+      tl.fromTo("#cg12", {x:-129, y:-480, opacity:1, scale:.9}, {x:-16, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 44.72);
+      tl.to("#cg12", {opacity:0, duration:.12}, 46.22);
+      tl.fromTo("#cg12", {x:-129, y:-480, opacity:1, scale:.9}, {x:-16, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 48.72);
+      tl.to("#cg12", {opacity:0, duration:.12}, 50.22);
+      tl.fromTo("#cg13", {x:9, y:-480, opacity:1, scale:.9}, {x:1, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 44.98);
+      tl.to("#cg13", {opacity:0, duration:.12}, 46.48);
+      tl.fromTo("#cg13", {x:9, y:-480, opacity:1, scale:.9}, {x:1, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 48.98);
+      tl.to("#cg13", {opacity:0, duration:.12}, 50.48);
+      tl.fromTo("#cg14", {x:117, y:-480, opacity:1, scale:.9}, {x:14, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 45.24);
+      tl.to("#cg14", {opacity:0, duration:.12}, 46.74);
+      tl.fromTo("#cg14", {x:117, y:-480, opacity:1, scale:.9}, {x:14, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 49.24);
+      tl.to("#cg14", {opacity:0, duration:.12}, 50.74);
+      tl.fromTo("#cg15", {x:-165, y:-480, opacity:1, scale:.9}, {x:-20, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 45.50);
+      tl.to("#cg15", {opacity:0, duration:.12}, 47.00);
+      tl.fromTo("#cg15", {x:-165, y:-480, opacity:1, scale:.9}, {x:-20, y:410, scale:.5, duration:1.5, ease:"power1.in", immediateRender:false}, 49.50);
+      tl.to("#cg15", {opacity:0, duration:.12}, 51.00);
+      tl.set("#ch0", {x:-150, y:-560, opacity:1, scale:1}, 0);
+      tl.to("#ch0", {x:-330, y:-40, opacity:0, duration:0.90, ease:"power1.in"}, 0);
+      tl.set("#ch1", {x:-90, y:-490, opacity:1, scale:1}, 0);
+      tl.to("#ch1", {x:-18, y:0, opacity:0, duration:1.02, ease:"power1.in"}, 0);
+      tl.set("#ch2", {x:-30, y:-420, opacity:1, scale:1}, 0);
+      tl.to("#ch2", {x:-6, y:40, opacity:0, duration:1.14, ease:"power1.in"}, 0);
+      tl.set("#ch3", {x:30, y:-350, opacity:1, scale:1}, 0);
+      tl.to("#ch3", {x:330, y:80, opacity:0, duration:1.26, ease:"power1.in"}, 0);
+      tl.set("#ch4", {x:90, y:-280, opacity:1, scale:1}, 0);
+      tl.to("#ch4", {x:18, y:120, opacity:0, duration:1.38, ease:"power1.in"}, 0);
+      tl.set("#ch5", {x:150, y:-210, opacity:1, scale:1}, 0);
+      tl.to("#ch5", {x:30, y:160, opacity:0, duration:1.50, ease:"power1.in"}, 0);
+      tl.fromTo("#cam", {scale:1.12}, {scale:1, duration:1.8, ease:"expo.out"}, 0);
+      tl.fromTo("#sr0", {opacity:1, scale:.3}, {opacity:0, scale:1.6, duration:0.8, ease:"expo.out", immediateRender:false}, 0.90);
+      tl.to("#cam", {scale:1.08, duration:3, ease:"sine.inOut"}, 6.5);
+      tl.to("#cam", {scale:1, duration:1, ease:"expo.out"}, 9.5);
+      tl.to("#r2 i", {borderColor:"rgba(184,0,240,1)", boxShadow:"0 0 60px rgba(184,0,240,.9)", duration:.3}, 15.60);
+      tl.fromTo("#sr0", {opacity:1, scale:.3}, {opacity:0, scale:1.6, duration:0.7, ease:"expo.out", immediateRender:false}, 15.60);
+      tl.fromTo("#L0", {opacity:0, scale:0.15, z:-700, rotationX:-40, rotationY:-60, y:120}, {opacity:1, scale:1, z:0, rotationX:0, rotationY:0, y:0, duration:0.6, ease:"back.out(2.4)"}, 15.70);
+      tl.fromTo("#L0 .shine", {x:0}, {x:900, duration:.7, ease:"power2.inOut"}, 16.30);
+      tl.to("#L0", {y:"-=10", rotationY:5, duration:1.10, ease:"sine.inOut", yoyo:true, repeat:9}, 16.30);
+      tl.to("#cam", {y:32, scale:1.08, duration:.6, ease:"expo.out"}, 15.60);
+      tl.to("#L0", {z:50, duration:.3}, 16.30);
+      tl.to("#cam", {x:0, y:0, scale:1, duration:.8, ease:"power2.inOut"}, 18.20);
+      tl.to("#r4 i", {borderColor:"rgba(184,0,240,1)", boxShadow:"0 0 60px rgba(184,0,240,.9)", duration:.3}, 19.10);
+      tl.fromTo("#sr1", {opacity:1, scale:.3}, {opacity:0, scale:1.6, duration:0.7, ease:"expo.out", immediateRender:false}, 19.10);
+      tl.fromTo("#L1", {opacity:0, scale:0.15, z:-700, rotationX:-40, rotationY:60, y:120}, {opacity:1, scale:1, z:0, rotationX:0, rotationY:0, y:0, duration:0.6, ease:"back.out(2.4)"}, 19.20);
+      tl.fromTo("#L1 .shine", {x:0}, {x:900, duration:.7, ease:"power2.inOut"}, 19.80);
+      tl.to("#L1", {y:"-=10", rotationY:-5, duration:1.10, ease:"sine.inOut", yoyo:true, repeat:7}, 19.80);
+      tl.to("#cam", {y:4, scale:1.08, duration:.6, ease:"expo.out"}, 19.10);
+      tl.to("#L1", {z:50, duration:.3}, 19.80);
+      tl.to("#cam", {x:0, y:0, scale:1, duration:.8, ease:"power2.inOut"}, 21.70);
+      tl.to("#r6 i", {borderColor:"rgba(184,0,240,1)", boxShadow:"0 0 60px rgba(184,0,240,.9)", duration:.3}, 22.60);
+      tl.fromTo("#sr2", {opacity:1, scale:.3}, {opacity:0, scale:1.6, duration:0.7, ease:"expo.out", immediateRender:false}, 22.60);
+      tl.fromTo("#L2", {opacity:0, scale:0.15, z:-700, rotationX:-40, rotationY:-60, y:120}, {opacity:1, scale:1, z:0, rotationX:0, rotationY:0, y:0, duration:0.6, ease:"back.out(2.4)"}, 22.70);
+      tl.fromTo("#L2 .shine", {x:0}, {x:900, duration:.7, ease:"power2.inOut"}, 23.30);
+      tl.to("#L2", {y:"-=10", rotationY:5, duration:1.10, ease:"sine.inOut", yoyo:true, repeat:3}, 23.30);
+      tl.to("#cam", {y:-24, scale:1.08, duration:.6, ease:"expo.out"}, 22.60);
+      tl.to("#L2", {z:50, duration:.3}, 23.30);
+      tl.to("#cam", {x:0, y:0, scale:1, duration:.8, ease:"power2.inOut"}, 25.20);
+      tl.to("#L0, #L1, #L2", {opacity:.35, duration:.4}, 29.4);
+      tl.to("#L0", {opacity:0, rotationY:90, duration:.25, ease:"power3.in"}, 32.95);
+      tl.fromTo("#F0", {opacity:0, scale:0.15, z:-700, rotationX:-40, rotationY:-70, y:120}, {opacity:1, scale:1, z:0, rotationX:0, rotationY:0, y:0, duration:0.6, ease:"back.out(2.6)"}, 33.20);
+      tl.to("#r2 i", {borderColor:"rgba(180,255,57,1)", boxShadow:"0 0 60px rgba(180,255,57,.9)", duration:.3}, 33.20);
+      tl.to("#dp0", {opacity:0, duration:.4}, 33.20);
+      tl.fromTo("#flash", {opacity:.4}, {opacity:0, duration:.25, immediateRender:false}, 33.25);
+      tl.set("#sa0", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa0", {x:40, y:0, opacity:1, scale:1.2}, {x:195, y:0, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.set("#sa1", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa1", {x:32, y:24, opacity:1, scale:1.2}, {x:197, y:150, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.set("#sa2", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa2", {x:11, y:39, opacity:1, scale:1.2}, {x:81, y:289, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.set("#sa3", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa3", {x:9, y:39, opacity:1, scale:1.2}, {x:49, y:216, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.set("#sa4", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa4", {x:-16, y:36, opacity:1, scale:1.2}, {x:-113, y:249, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.set("#sa5", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa5", {x:-35, y:19, opacity:1, scale:1.2}, {x:-171, y:93, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.set("#sa6", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa6", {x:-36, y:17, opacity:1, scale:1.2}, {x:-223, y:107, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.set("#sa7", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa7", {x:-39, y:-8, opacity:1, scale:1.2}, {x:-294, y:-60, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.set("#sa8", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa8", {x:-26, y:-30, opacity:1, scale:1.2}, {x:-146, y:-166, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.set("#sa9", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa9", {x:-25, y:-31, opacity:1, scale:1.2}, {x:-171, y:-214, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.set("#sa10", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa10", {x:-1, y:-40, opacity:1, scale:1.2}, {x:-5, y:-195, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.set("#sa11", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa11", {x:23, y:-32, opacity:1, scale:1.2}, {x:145, y:-201, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.set("#sa12", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa12", {x:25, y:-31, opacity:1, scale:1.2}, {x:187, y:-235, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.set("#sa13", {left:786, top:360, opacity:0}, 0);
+      tl.fromTo("#sa13", {x:39, y:-10, opacity:1, scale:1.2}, {x:214, y:-54, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 33.30);
+      tl.fromTo("#F0 .shine", {x:0}, {x:900, duration:.7, ease:"power2.inOut"}, 33.80);
+      tl.to("#F0", {z:50, duration:.3}, 33.80);
+      tl.to("#F0", {y:"-=8", rotationY:4, duration:1.10, ease:"sine.inOut", yoyo:true, repeat:13}, 33.80);
+      tl.to("#L1", {opacity:0, rotationY:-90, duration:.25, ease:"power3.in"}, 36.95);
+      tl.fromTo("#F1", {opacity:0, scale:0.15, z:-700, rotationX:-40, rotationY:70, y:120}, {opacity:1, scale:1, z:0, rotationX:0, rotationY:0, y:0, duration:0.6, ease:"back.out(2.6)"}, 37.20);
+      tl.to("#r4 i", {borderColor:"rgba(180,255,57,1)", boxShadow:"0 0 60px rgba(180,255,57,.9)", duration:.3}, 37.20);
+      tl.to("#dp1", {opacity:0, duration:.4}, 37.20);
+      tl.fromTo("#flash", {opacity:.4}, {opacity:0, duration:.25, immediateRender:false}, 37.25);
+      tl.set("#sb0", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb0", {x:40, y:0, opacity:1, scale:1.2}, {x:195, y:0, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.set("#sb1", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb1", {x:32, y:24, opacity:1, scale:1.2}, {x:197, y:150, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.set("#sb2", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb2", {x:11, y:39, opacity:1, scale:1.2}, {x:81, y:289, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.set("#sb3", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb3", {x:9, y:39, opacity:1, scale:1.2}, {x:49, y:216, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.set("#sb4", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb4", {x:-16, y:36, opacity:1, scale:1.2}, {x:-113, y:249, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.set("#sb5", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb5", {x:-35, y:19, opacity:1, scale:1.2}, {x:-171, y:93, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.set("#sb6", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb6", {x:-36, y:17, opacity:1, scale:1.2}, {x:-223, y:107, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.set("#sb7", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb7", {x:-39, y:-8, opacity:1, scale:1.2}, {x:-294, y:-60, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.set("#sb8", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb8", {x:-26, y:-30, opacity:1, scale:1.2}, {x:-146, y:-166, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.set("#sb9", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb9", {x:-25, y:-31, opacity:1, scale:1.2}, {x:-171, y:-214, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.set("#sb10", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb10", {x:-1, y:-40, opacity:1, scale:1.2}, {x:-5, y:-195, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.set("#sb11", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb11", {x:23, y:-32, opacity:1, scale:1.2}, {x:145, y:-201, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.set("#sb12", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb12", {x:25, y:-31, opacity:1, scale:1.2}, {x:187, y:-235, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.set("#sb13", {left:348, top:500, opacity:0}, 0);
+      tl.fromTo("#sb13", {x:39, y:-10, opacity:1, scale:1.2}, {x:214, y:-54, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 37.30);
+      tl.fromTo("#F1 .shine", {x:0}, {x:900, duration:.7, ease:"power2.inOut"}, 37.80);
+      tl.to("#F1", {z:50, duration:.3}, 37.80);
+      tl.to("#F1", {y:"-=8", rotationY:-4, duration:1.10, ease:"sine.inOut", yoyo:true, repeat:9}, 37.80);
+      tl.to("#L2", {opacity:0, rotationY:90, duration:.25, ease:"power3.in"}, 40.95);
+      tl.fromTo("#F2", {opacity:0, scale:0.15, z:-700, rotationX:-40, rotationY:-70, y:120}, {opacity:1, scale:1, z:0, rotationX:0, rotationY:0, y:0, duration:0.6, ease:"back.out(2.6)"}, 41.20);
+      tl.to("#r6 i", {borderColor:"rgba(180,255,57,1)", boxShadow:"0 0 60px rgba(180,255,57,.9)", duration:.3}, 41.20);
+      tl.to("#dp2", {opacity:0, duration:.4}, 41.20);
+      tl.fromTo("#flash", {opacity:.4}, {opacity:0, duration:.25, immediateRender:false}, 41.25);
+      tl.set("#sc0", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc0", {x:40, y:0, opacity:1, scale:1.2}, {x:195, y:0, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.set("#sc1", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc1", {x:32, y:24, opacity:1, scale:1.2}, {x:197, y:150, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.set("#sc2", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc2", {x:11, y:39, opacity:1, scale:1.2}, {x:81, y:289, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.set("#sc3", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc3", {x:9, y:39, opacity:1, scale:1.2}, {x:49, y:216, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.set("#sc4", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc4", {x:-16, y:36, opacity:1, scale:1.2}, {x:-113, y:249, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.set("#sc5", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc5", {x:-35, y:19, opacity:1, scale:1.2}, {x:-171, y:93, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.set("#sc6", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc6", {x:-36, y:17, opacity:1, scale:1.2}, {x:-223, y:107, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.set("#sc7", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc7", {x:-39, y:-8, opacity:1, scale:1.2}, {x:-294, y:-60, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.set("#sc8", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc8", {x:-26, y:-30, opacity:1, scale:1.2}, {x:-146, y:-166, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.set("#sc9", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc9", {x:-25, y:-31, opacity:1, scale:1.2}, {x:-171, y:-214, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.set("#sc10", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc10", {x:-1, y:-40, opacity:1, scale:1.2}, {x:-5, y:-195, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.set("#sc11", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc11", {x:23, y:-32, opacity:1, scale:1.2}, {x:145, y:-201, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.set("#sc12", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc12", {x:25, y:-31, opacity:1, scale:1.2}, {x:187, y:-235, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.set("#sc13", {left:678, top:640, opacity:0}, 0);
+      tl.fromTo("#sc13", {x:39, y:-10, opacity:1, scale:1.2}, {x:214, y:-54, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 41.30);
+      tl.fromTo("#F2 .shine", {x:0}, {x:900, duration:.7, ease:"power2.inOut"}, 41.80);
+      tl.to("#F2", {z:50, duration:.3}, 41.80);
+      tl.to("#F2", {y:"-=8", rotationY:4, duration:1.10, ease:"sine.inOut", yoyo:true, repeat:5}, 41.80);
+      tl.to("#r0 i", {borderColor:"rgba(180,255,57,.85)", duration:.4}, 44.60);
+      tl.to("#r1 i", {borderColor:"rgba(180,255,57,.85)", duration:.4}, 44.66);
+      tl.to("#r2 i", {borderColor:"rgba(180,255,57,.85)", duration:.4}, 44.72);
+      tl.to("#r3 i", {borderColor:"rgba(180,255,57,.85)", duration:.4}, 44.78);
+      tl.to("#r4 i", {borderColor:"rgba(180,255,57,.85)", duration:.4}, 44.84);
+      tl.to("#r5 i", {borderColor:"rgba(180,255,57,.85)", duration:.4}, 44.90);
+      tl.to("#r6 i", {borderColor:"rgba(180,255,57,.85)", duration:.4}, 44.96);
+      tl.to("#r7 i", {borderColor:"rgba(180,255,57,.85)", duration:.4}, 45.02);
+      tl.to("#r8 i", {borderColor:"rgba(180,255,57,.85)", duration:.4}, 45.08);
+      tl.fromTo("#jar", {opacity:0, scale:0.4, z:-400, rotationX:-40, rotationY:0, y:120}, {opacity:1, scale:1, z:0, rotationX:0, rotationY:0, y:0, duration:0.6, ease:"back.out(2)"}, 44.80);
+      tl.fromTo("#jfill", {scaleY:0}, {scaleY:1, duration:5, ease:"power1.inOut"}, 45.2);
+      tl.to("#rig, #F0, #F1, #F2, #jar, #drips", {opacity:0, z:-500, duration:.4, ease:"power3.in"}, 49.6);
+      tl.fromTo("#ctab3", {opacity:0, scale:0.1, z:-1100, rotationX:-60, rotationY:0, y:120}, {opacity:1, scale:1, z:0, rotationX:0, rotationY:0, y:0, duration:0.8, ease:"back.out(2.2)"}, 50.10);
+      tl.fromTo("#flash", {opacity:.5}, {opacity:0, duration:.3, immediateRender:false}, 50.3);
+      tl.set("#sd0", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd0", {x:40, y:0, opacity:1, scale:1.2}, {x:338, y:0, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd1", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd1", {x:34, y:21, opacity:1, scale:1.2}, {x:366, y:224, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd2", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd2", {x:18, y:36, opacity:1, scale:1.2}, {x:237, y:463, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd3", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd3", {x:20, y:35, opacity:1, scale:1.2}, {x:192, y:332, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd4", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd4", {x:-1, y:40, opacity:1, scale:1.2}, {x:-12, y:474, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd5", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd5", {x:-22, y:34, opacity:1, scale:1.2}, {x:-184, y:284, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd6", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd6", {x:-20, y:35, opacity:1, scale:1.2}, {x:-214, y:372, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd7", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd7", {x:-35, y:19, opacity:1, scale:1.2}, {x:-457, y:248, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd8", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd8", {x:-40, y:-2, opacity:1, scale:1.2}, {x:-383, y:-20, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd9", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd9", {x:-40, y:0, opacity:1, scale:1.2}, {x:-474, y:0, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd10", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd10", {x:-34, y:-21, opacity:1, scale:1.2}, {x:-288, y:-176, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd11", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd11", {x:-18, y:-36, opacity:1, scale:1.2}, {x:-195, y:-382, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd12", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd12", {x:-20, y:-35, opacity:1, scale:1.2}, {x:-260, y:-450, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd13", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd13", {x:1, y:-40, opacity:1, scale:1.2}, {x:10, y:-383, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd14", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd14", {x:22, y:-34, opacity:1, scale:1.2}, {x:258, y:-398, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd15", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd15", {x:20, y:-35, opacity:1, scale:1.2}, {x:169, y:-293, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd16", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd16", {x:35, y:-19, opacity:1, scale:1.2}, {x:377, y:-205, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.set("#sd17", {left:540, top:500, opacity:0}, 0);
+      tl.fromTo("#sd17", {x:40, y:2, opacity:1, scale:1.2}, {x:519, y:26, opacity:0, scale:.3, duration:0.8, ease:"power3.out", immediateRender:false}, 50.40);
+      tl.fromTo("#ctab3 .shine", {x:0}, {x:1400, duration:.7, ease:"power2.inOut"}, 51.30);
+      tl.fromTo("#ctab3 .shine", {x:0}, {x:1400, duration:.7, ease:"power2.inOut"}, 55.00);
+      tl.to("#ctab3", {y:"-=12", rotationY:5, duration:1.30, ease:"sine.inOut", yoyo:true, repeat:5}, 51.00);
+      tl.set("#c0", {opacity:1}, 0);
+      tl.set("#c0 .k b", {scaleX:1}, 0);
+      tl.to("#c0", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 1.65);
+      tl.fromTo("#c1", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 1.80);
+      tl.fromTo("#c1 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 1.92);
+      tl.fromTo("#c1 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 1.92);
+      tl.to("#c1", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 3.85);
+      tl.fromTo("#c2", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 4.00);
+      tl.fromTo("#c2 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 4.12);
+      tl.fromTo("#c2 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 4.12);
+      tl.to("#c2", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 6.35);
+      tl.fromTo("#c3", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 6.50);
+      tl.fromTo("#c3 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 6.62);
+      tl.fromTo("#c3 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 6.62);
+      tl.to("#c3", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 9.35);
+      tl.fromTo("#c4", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 9.50);
+      tl.fromTo("#c4 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 9.62);
+      tl.fromTo("#c4 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 9.62);
+      tl.to("#c4", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 12.35);
+      tl.fromTo("#c5", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 12.50);
+      tl.fromTo("#c5 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 12.62);
+      tl.fromTo("#c5 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 12.62);
+      tl.to("#c5", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 15.35);
+      tl.fromTo("#c6", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 15.50);
+      tl.fromTo("#c6 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 15.62);
+      tl.fromTo("#c6 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 15.62);
+      tl.to("#c6", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 18.85);
+      tl.fromTo("#c7", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 19.00);
+      tl.fromTo("#c7 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 19.12);
+      tl.fromTo("#c7 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 19.12);
+      tl.to("#c7", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 22.35);
+      tl.fromTo("#c8", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 22.50);
+      tl.fromTo("#c8 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 22.62);
+      tl.fromTo("#c8 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 22.62);
+      tl.to("#c8", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 25.85);
+      tl.fromTo("#c9", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 26.00);
+      tl.fromTo("#c9 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 26.12);
+      tl.fromTo("#c9 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 26.12);
+      tl.to("#c9", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 29.35);
+      tl.fromTo("#c10", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 29.50);
+      tl.fromTo("#c10 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 29.62);
+      tl.fromTo("#c10 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 29.62);
+      tl.to("#c10", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 32.85);
+      tl.fromTo("#c11", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 33.00);
+      tl.fromTo("#c11 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 33.12);
+      tl.fromTo("#c11 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 33.12);
+      tl.to("#c11", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 36.85);
+      tl.fromTo("#c12", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 37.00);
+      tl.fromTo("#c12 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 37.12);
+      tl.fromTo("#c12 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 37.12);
+      tl.to("#c12", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 40.85);
+      tl.fromTo("#c13", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 41.00);
+      tl.fromTo("#c13 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 41.12);
+      tl.fromTo("#c13 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 41.12);
+      tl.to("#c13", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 44.85);
+      tl.fromTo("#c14", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 45.00);
+      tl.fromTo("#c14 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 45.12);
+      tl.fromTo("#c14 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 45.12);
+      tl.to("#c14", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 49.85);
+      tl.fromTo("#c15", {opacity:0, y:30, scale:.92}, {opacity:1, y:0, scale:1, duration:.22, ease:"back.out(2.5)"}, 50.00);
+      tl.fromTo("#c15 .k b", {scaleX:0}, {scaleX:1, duration:.25, ease:"expo.out"}, 50.12);
+      tl.fromTo("#c15 .k", {scale:1.25}, {scale:1, duration:.3, ease:"back.out(3)"}, 50.12);
+      tl.to("#c15", {opacity:0, y:-20, duration:.15, ease:"power2.in"}, 59.85);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
