@@ -49,7 +49,8 @@ CSS = P.CSS + """
   #flashm span { position:absolute; left:96px; top:880px; font:900 120px/0.9 'Inter'; letter-spacing:-.05em; }
   #flashm small { position:absolute; left:96px; top:820px; font:700 30px 'IBM Plex Mono'; letter-spacing:.2em; color:var(--g); }
   #av { position:absolute; left:560px; top:1300px; width:500px; height:620px; }
-  #av img { position:absolute; left:0; bottom:0; width:500px; opacity:0; }
+  #av img { position:absolute; left:0; bottom:0; width:500px; opacity:0; filter:drop-shadow(0 0 26px rgba(184,0,240,.55)) drop-shadow(0 30px 40px rgba(0,0,0,.6)); }
+  #avglow { position:absolute; left:520px; top:1330px; width:620px; height:620px; border-radius:50%; background:radial-gradient(circle, rgba(184,0,240,.28), transparent 65%); }
   .capband { top:1300px; } .cap { left:70px; right:520px; text-align:left; font-size:60px; }
   #flash { position:absolute; inset:0; background:#fff; opacity:0; mix-blend-mode:overlay; }
   .ctab3 { position:absolute; left:90px; top:120px; width:900px; padding:56px 50px; border-radius:36px; }
@@ -69,7 +70,7 @@ CAPS = [("k1", 0.0, s("l4"), "Dapat [3] tempahan je."), ("k2", s("l4"), s("l6"),
 
 def body():
     blocks = "".join(f'<div class="blk" id="b{i}"><small>BLOK {i + 1}</small>RM100</div>' for i in range(BLOCKS))
-    av = "".join(f'<img id="av_{p}" src="assets/avatar_{p}.png" alt="host">' for p in AVATAR)
+    av = '<div id="avbob" style="position:absolute;inset:0">' + "".join(f'<img id="av_{p}" src="assets/avatar_{p}.png" alt="host">' for p in AVATAR) + '</div>'
     return f"""
       <div class="hdrline clip" id="hdr" data-start="0" data-duration="{DUR}" data-track-index="2"><span id="hdrl">KE MANA RM1,000?</span><span id="hdrr">BAB 01 / 02 · CONTOH</span></div>
       {''.join(headline(f"l{i}") for i in range(1, 21))}
@@ -94,6 +95,7 @@ def body():
         <div class="ring" id="rg2" style="left:330px;top:120px;width:420px;height:420px"></div>
       </div></div>
       <div id="flashm" class="clip" data-start="{s('l13') - .1:.2f}" data-duration="{s('l15') - s('l13') + .1:.2f}" data-track-index="6"><small>BAB 02 / 02</small><span>Masalahnya<br>bukan bajet.</span></div>
+      <div id="avglow" class="clip" data-start="0" data-duration="{DUR}" data-track-index="5" data-layout-ignore></div>
       <div id="av" class="clip" data-start="0" data-duration="{DUR}" data-track-index="5" data-layout-ignore>{av}</div>
       {P.caps(CAPS)}
       <div id="flash" class="clip" data-start="0" data-duration="{DUR}" data-track-index="8" data-layout-ignore></div>
@@ -191,14 +193,29 @@ def js():
     A(P.pop("#cta", tc + .1, z=-1100, rx=-60, scale=.1, ease="back.out(2.2)", dur=.8))
     A(P.shine("#cta", tc + 1.0, 1000)); A(P.shine("#cta", s("l20") + .6, 1000))
     A(P.floaty("#cta", tc + 1.0, DUR - .2, amp=10, rot=4, period=2.4))
-    # avatar poses (if provided)
+    # avatar: expression swaps that follow the VO + continuous smooth motion (sway, talk bob per word, pops on swaps)
     if AVATAR:
-        A('tl.fromTo("#av", {y:500}, {y:0, duration:.6, ease:"back.out(1.6)"}, 0);')
-        for n, (t, p) in enumerate(POSES):
-            p = p if p in AVATAR else AVATAR[0]
-            nxt = POSES[n + 1][0] if n + 1 < len(POSES) else DUR
+        A('tl.set("#av img", {transformOrigin:"50% 100%"}, 0);')
+        A('tl.fromTo("#av", {y:520}, {y:0, duration:.9, ease:"expo.out"}, 0);')
+        n = int(DUR / 3.4)
+        A(f'tl.fromTo("#av", {{rotation:-1.8, transformOrigin:"50% 100%"}}, {{rotation:1.8, duration:1.7, ease:"sine.inOut", yoyo:true, repeat:{2 * n - 1}}}, 0);')
+        A(f'tl.to("#avglow", {{scale:1.1, opacity:.85, duration:1.7, ease:"sine.inOut", yoyo:true, repeat:{2 * n - 1}}}, 0);')
+        EXPR = [(0, "neutral"), (s("l2"), "shock"), (s("l4"), "think"), (s("l6"), "neutral"), (w("l7", 3), "think"),
+                (s("l8"), "neutral"), (w("l9", 3), "shock"), (s("l10"), "neutral"), (w("l11", 5), "think"),
+                (s("l12"), "neutral"), (s("l13"), "think"), (w("l14", 1), "shock"), (s("l15"), "neutral"),
+                (s("l18"), "neutral"), (s("l19"), "neutral")]
+        prev = None
+        for t, p in EXPR:
+            p = p if p in AVATAR else "neutral"
+            if p == prev: continue
             A(f'tl.set("#av img", {{opacity:0}}, {t:.2f}); tl.set("#av_{p}", {{opacity:1}}, {t:.2f});')
-            A(f'tl.fromTo("#av_{p}", {{y:24, scale:.97}}, {{y:0, scale:1, duration:.25, ease:"back.out(3)", immediateRender:false}}, {t:.2f});')
+            A(f'tl.fromTo("#av_{p}", {{scale:.94, y:30}}, {{scale:1, y:0, duration:.45, ease:"back.out(2.2)", immediateRender:false}}, {t:.2f});')
+            prev = p
+        for i in range(1, 21):
+            l = L[f"l{i}"]
+            for k, wd in enumerate(l["words"]):
+                amp = 9 if k % 3 == 0 else 5
+                A(f'tl.to("#avbob", {{y:-{amp}, duration:.11, ease:"sine.out", yoyo:true, repeat:1}}, {wd["start"]:.2f});')
     j += P.caps_js(CAPS, frame0=True)
     return "\n      ".join(j)
 
